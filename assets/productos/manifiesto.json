@@ -1,0 +1,168 @@
+{
+  "fuente": "https://cuenta.getjusto.com/client/start/jM5QpLn7ETXwZ5SJp/menu",
+  "extraido": "2026-10-18 23:56:51 -0300",
+  "nota": "Copias optimizadas (WebP, calidad 80, lado mayor <= 1000 px, proporcion original, EXIF aplicado). Los originales siguen en ../bar-tirua-justo/originales y no se modificaron. Uso de las fotos en este sitio: pendiente de confirmacion con el local.",
+  "productos": [
+    {
+      "id_justo": "pLzsFuhGfzKymge7H",
+      "id_sitio": "beb-ramajito",
+      "nombre": "Ramajito",
+      "url_origen": "https://cuenta.getjusto.com/client/start/jM5QpLn7ETXwZ5SJp/menu",
+      "original": {
+        "ruta": "../bar-tirua-justo/originales/NM4S7sWKH2bnX7B23.jpg",
+        "ancho": 2432,
+        "alto": 3367,
+        "sha256": "0279615e565f2060634594bf90779b6393c9dab79fb8f74878308f50d80b32aa",
+        "bytes": 1152875
+      },
+      "copia": {
+        "ruta": "assets/productos/ramajito.webp",
+        "ancho": 722,
+        "alto": 1000,
+        "bytes": 34174,
+        "formato": "webp"
+      }
+    },
+    {
+      "id_justo": "wvggyFMrbxTjfqRW6",
+      "id_sitio": "beb-playa-tirua",
+      "nombre": "Playa Tirúa",
+      "url_origen": "https://cuenta.getjusto.com/client/start/jM5QpLn7ETXwZ5SJp/menu",
+      "original": {
+        "ruta": "../bar-tirua-justo/originales/ozE4uffu4ALs9waxp.jpg",
+        "ancho": 3024,
+        "alto": 4032,
+        "sha256": "5a2529fb4e2054a1cd00da9a55331c3c9eaea1f9e9b3209f202579141974b6fc",
+        "bytes": 1575315
+      },
+      "copia": {
+        "ruta": "assets/productos/playa-tirua.webp",
+        "ancho": 750,
+        "alto": 1000,
+        "bytes": 35160,
+        "formato": "webp"
+      }
+    },
+    {
+      "id_justo": "mcuRPXBYjXNBLW2uJ",
+      "id_sitio": "beb-sol-de-fuego",
+      "nombre": "Sol de Fuego",
+      "url_origen": "https://cuenta.getjusto.com/client/start/jM5QpLn7ETXwZ5SJp/menu",
+      "original": {
+        "ruta": "../bar-tirua-justo/originales/ZkpmknSpEQ53Kjyh8.jpg",
+        "ancho": 2675,
+        "alto": 3296,
+        "sha256": "94a71e59cffb75f37b8310980f2d24dc820a55736d8927a827805d7c8f8aa3bf",
+        "bytes": 1053700
+      },
+      "copia": {
+        "ruta": "assets/productos/sol-de-fuego.webp",
+        "ancho": 812,
+        "alto": 1000,
+        "bytes": 24802,
+        "formato": "webp"
+      }
+    },
+    {
+      "id_justo": "fkXLzepMnJ6wPSGcx",
+      "id_sitio": "beb-botanical-collins",
+      "nombre": "Botanical Collins",
+      "url_origen": "https://cuenta.getjusto.com/client/start/jM5QpLn7ETXwZ5SJp/menu",
+      "original": {
+        "ruta": "../bar-tirua-justo/originales/mvXHrZmQfc5byLgLZ.jpg",
+        "ancho": 960,
+        "alto": 1280,
+        "sha256": "53f84bab8643ecb0debae234dd1e515cac402e9d53afafe4f5b26cee8c61172c",
+        "bytes": 63038
+      },
+      "copia": {
+        "ruta": "assets/productos/botanical-collins.webp",
+        "ancho": 750,
+        "alto": 1000,
+        "bytes": 25140,
+        "formato": "webp"
+      }
+    },
+    {
+      "id_justo": "uKkB8dCKbkKgdScQA",
+      "id_sitio": "beb-jackie-jr",
+      "nombre": "Jackie Jr.",
+      "url_origen": "https://cuenta.getjusto.com/client/start/jM5QpLn7ETXwZ5SJp/menu",
+      "original": {
+        "ruta": "../bar-tirua-justo/originales/Cb5WoxweK8RPYsZHb.jpg",
+        "ancho": 1200,
+        "alto": 1600,
+        "sha256": "5463bca1f74762b48448ae2e4a87b72f1e3b1fe9362d35ccc21ac447c57e4dfe",
+        "bytes": 129306
+      },
+      "copia": {
+        "ruta": "assets/productos/jackie-jr.webp",
+        "ancho": 750,
+        "alto": 1000,
+        "bytes": 23704,
+        "formato": "webp"
+      }
+    },
+    {
+      "id_justo": "DogEdPaYp9z32TAQn",
+      "id_sitio": "beb-espresso-vainilla",
+      "nombre": "Espresso Vainilla",
+      "url_origen": "https://cuenta.getjusto.com/client/start/jM5QpLn7ETXwZ5SJp/menu",
+      "original": {
+        "ruta": "../bar-tirua-justo/originales/6ZTHcq2sPRYW3wwJd.jpg",
+        "ancho": 1179,
+        "alto": 1569,
+        "sha256": "27deb6b282a116b41ce24afacb79b789d9299807d58ab2177dbe7ba11bf81a45",
+        "bytes": 1035937
+      },
+      "copia": {
+        "ruta": "assets/productos/espresso-vainilla.webp",
+        "ancho": 751,
+        "alto": 1000,
+        "bytes": 25700,
+        "formato": "webp"
+      }
+    },
+    {
+      "id_justo": "8BKtMNJd3HR9EBvYA",
+      "id_sitio": "beb-ramazzotti-spritz",
+      "nombre": "Ramazzotti Spritz",
+      "url_origen": "https://cuenta.getjusto.com/client/start/jM5QpLn7ETXwZ5SJp/menu",
+      "original": {
+        "ruta": "../bar-tirua-justo/originales/6tqZ6B7F8ep55MJyS.jpg",
+        "ancho": 3024,
+        "alto": 4032,
+        "sha256": "9f01ca5526a8f41594f727f820a6d3388b660d7a4301a0cff75a1c665b29908c",
+        "bytes": 1889308
+      },
+      "copia": {
+        "ruta": "assets/productos/ramazzotti-spritz.webp",
+        "ancho": 750,
+        "alto": 1000,
+        "bytes": 33206,
+        "formato": "webp"
+      }
+    },
+    {
+      "id_justo": "BdLLnnMzRfZYe27sH",
+      "id_sitio": "beb-green-drinks",
+      "nombre": "Green Drinks",
+      "url_origen": "https://cuenta.getjusto.com/client/start/jM5QpLn7ETXwZ5SJp/menu",
+      "original": {
+        "ruta": "../bar-tirua-justo/originales/pAnvGJQztTCc3fhjz.jpg",
+        "ancho": 3024,
+        "alto": 3024,
+        "sha256": "b93396ebe9eaef7fc9eb4540e1e4cca5df665101efe05503b80c69ebfe346e77",
+        "bytes": 1188842
+      },
+      "copia": {
+        "ruta": "assets/productos/green-drinks.webp",
+        "ancho": 1000,
+        "alto": 1000,
+        "bytes": 35308,
+        "formato": "webp"
+      }
+    }
+  ],
+  "total_bytes_copias": 237194
+}

@@ -1,0 +1,590 @@
+/* Bar Tirúa · carta en baraja (integrada al sitio). Negro y blanco del logo; el color vive solo en los palos.
+   TODOS los selectores y variables llevan el prefijo «br-» para no chocar con css/styles.css.
+   Origen: ../bar-tirua-baraja (demo aprobada). Las fuentes las carga css/styles.css. */
+
+/* El acento ambiental cambia suavemente cuando cambia la carta/categoría activa. */
+@property --br-acc { syntax: "<color>"; inherits: true; initial-value: #b3202a; }
+
+.br-carta {
+  /* Los tokens br-* cuelgan de los tokens del sitio (css/styles.css): claro por defecto, oscuro con data-tema="oscuro" */
+  --br-negro: var(--fondo);
+  --br-carta-negro: #fff;
+  --br-franja: var(--fondo-3);
+  --br-blanco: var(--tinta);
+  --br-mute: var(--tinta-3);
+  --br-linea: var(--linea);
+  --br-linea-fuerte: var(--linea-fuerte);
+  --br-joker: #6b46c9;
+  --br-f: var(--sans);
+  --br-fd: var(--display);
+  color-scheme: light;
+  color: var(--br-blanco); font: 400 1.0625rem/1.5 var(--br-f);
+}
+:root[data-tema="oscuro"] .br-carta { --br-carta-negro: #0b0b0b; --br-joker: #b79cff; color-scheme: dark; }
+
+.br-carta, .br-carta * { box-sizing: border-box; }
+.br-carta [hidden] { display: none !important; }
+/* Reinicios con :where() → especificidad 0: igual que los selectores de elemento de la demo, así no pisan las clases br-* */
+:where(.br-carta) img, :where(.br-carta) svg { display: block; max-width: 100%; }
+:where(.br-carta) button { font: inherit; color: inherit; }
+:where(.br-carta) :focus-visible { outline: 2px solid var(--tinta); outline-offset: 3px; }
+:where(.br-carta) input { caret-color: var(--tinta); }
+:where(.br-carta) ::selection { background: var(--tinta); color: var(--fondo); }
+
+.br-sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+.br-palo { fill: currentColor; flex: none; }
+.br-ico { flex: none; }
+
+/* ---------- Único rótulo de demostración (sello fino con detalle desplegable) ---------- */
+.br-rotulo { position: relative; }
+.br-rotulo__btn { min-height: 44px; display: inline-flex; align-items: center; gap: .55rem; padding: .25rem .6rem; background: transparent; border: 0; cursor: pointer; color: var(--br-blanco); }
+.br-rotulo__sello { font: 600 .6875rem/1 var(--br-f); letter-spacing: .12em; text-transform: uppercase; color: var(--fondo); background: var(--br-blanco); padding: .32rem .5rem; }
+.br-rotulo__mas { white-space: nowrap; font: 400 .875rem/1.2 var(--br-f); color: var(--br-mute); text-decoration: underline; text-underline-offset: 3px; }
+.br-rotulo__btn:hover .br-rotulo__mas, .br-rotulo__btn[aria-expanded="true"] .br-rotulo__mas { color: var(--br-blanco); }
+.br-rotulo__detalle {
+  position: absolute; right: 0; top: calc(100% + .25rem); z-index: 70; width: min(23rem, calc(100vw - 1.5rem));
+  background: var(--br-carta-negro); border: 1px solid var(--br-linea-fuerte); padding: .9rem 1rem; box-shadow: var(--sombra);
+}
+@media (max-width: 899px) { .br-rotulo__detalle { left: 0; right: auto; } }
+.br-rotulo__detalle ul { margin: 0; padding-left: 1.1rem; display: grid; gap: .45rem; font-size: .875rem; line-height: 1.45; }
+
+@media (max-width: 400px) {
+  .br-rotulo__btn { gap: .4rem; padding-inline: .3rem; }
+  .br-rotulo__sello { letter-spacing: .08em; padding: .3rem .4rem; }
+  }
+
+/* ---------- Sección ---------- */
+.br-carta { position: relative; overflow: clip; isolation: isolate; overflow-anchor: none; transition: --br-acc .9s ease; }
+.br-carta__fondo { position: absolute; inset: 0; z-index: -1; pointer-events: none; overflow: hidden; }
+.br-carta__brillo {
+  position: absolute; inset: 22% -10% auto -10%; height: 62%;
+  background: radial-gradient(ellipse 50% 50% at 50% 50%, color-mix(in srgb, var(--br-acc) 15%, transparent), transparent 72%);
+  will-change: transform;
+}
+.br-carta__anillos { position: absolute; left: 50%; top: 52%; width: 1300px; height: 1300px; margin: -650px 0 0 -650px; color: rgb(var(--tinta-rgb) / .07); will-change: transform; }
+.br-carta__barra { position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--br-acc); }
+.br-carta__barra::after { content: ""; position: absolute; left: 0; right: 0; top: 3px; height: 90px; background: linear-gradient(color-mix(in srgb, var(--br-acc) 9%, transparent), transparent); }
+.br-carta__in { position: relative; padding: .7rem 0 2.5rem; }
+/* La escena ocupa todo el ancho de la ventana; el resto del contenido se centra. */
+.br-carta__in > :not(.br-bloque):not(.br-chips) { width: min(72rem, calc(100% - 2rem)); margin-inline: auto; }
+.br-carta__in > .br-chips { width: 100%; }
+
+.br-sin-js { border: 1px solid var(--br-linea); padding: 1rem; margin-bottom: 1rem; }
+
+/* ---------- Botones ---------- */
+.br-btn {
+  min-height: 48px; padding: .6rem 1.25rem; display: inline-flex; align-items: center; justify-content: center; gap: .6rem;
+  font: 600 .8125rem/1.1 var(--br-f); letter-spacing: .07em; text-transform: uppercase;
+  background: transparent; color: var(--br-blanco); border: 1px solid var(--br-linea-fuerte); cursor: pointer;
+  transition: background-color .2s, color .2s, border-color .2s, transform .2s; white-space: nowrap;
+}
+.br-btn:hover { background: rgb(var(--tinta-rgb) / .1); }
+.br-btn:active { transform: translateY(1px); }
+.br-btn--blanco { background: var(--br-blanco); color: var(--fondo); border-color: var(--br-blanco); }
+.br-btn--blanco:hover { background: var(--rojo); border-color: var(--rojo); color: #fff; }
+.br-btn--grande { min-height: 52px; padding-inline: 2rem; font-size: .9375rem; }
+.br-btn--fantasma { border-color: var(--br-linea); }
+.br-btn--corto { min-height: 44px; padding-block: .4rem; }
+.br-btn--icono { width: 48px; padding: 0; }
+.br-btn--joker { border-color: var(--br-joker); color: var(--br-joker); white-space: normal; text-align: center; max-width: 100%; }
+.br-btn--joker:hover { background: color-mix(in srgb, var(--br-joker) 14%, var(--br-negro)); }
+.br-btn--joker[aria-pressed="true"] { background: color-mix(in srgb, var(--br-joker) 20%, var(--br-negro)); }
+.br-btn--vincular { text-transform: none; letter-spacing: .01em; font-size: .78rem; padding-inline: .6rem; border-style: dashed; border-color: var(--br-linea-fuerte); color: var(--br-mute); cursor: not-allowed; opacity: 1; margin-top: .6rem; white-space: normal; text-align: center; }
+.br-btn--vincular:hover { background: transparent; }
+
+/* ---------- Herramientas: buscador y lista rápida (una sola fila) ---------- */
+.br-herramientas { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .5rem; align-items: end; max-width: 46rem; margin-bottom: .5rem; }
+.br-btn--lista { min-height: 44px; padding-inline: .85rem; letter-spacing: .05em; }
+.br-txt-largo { display: none; }
+.br-buscador__label { display: block; font: 600 .6875rem/1.2 var(--br-f); letter-spacing: .08em; text-transform: uppercase; margin-bottom: .25rem; }
+.br-buscador__campo { display: flex; align-items: center; min-height: 44px; border: 1px solid var(--br-linea-fuerte); padding-left: .75rem; gap: .5rem; background: rgb(var(--fondo-rgb) / .7); transition: border-color .2s; }
+.br-buscador__campo:focus-within { outline: 2px solid var(--tinta); outline-offset: 3px; border-color: var(--tinta); }
+.br-buscador__campo input { flex: 1; min-width: 0; min-height: 44px; background: transparent; border: 0; color: var(--br-blanco); font: 300 1rem/1.2 var(--br-f); text-overflow: ellipsis; }
+.br-buscador__campo input:focus-visible { outline: none; }
+.br-buscador__campo input::placeholder { color: var(--tinta-3); opacity: 1; }
+.br-buscador__campo input::-webkit-search-cancel-button { display: none; }
+.br-buscador__limpiar { width: 44px; height: 44px; display: grid; place-items: center; background: transparent; border: 0; cursor: pointer; color: var(--br-blanco); }
+.br-buscador__limpiar:hover { background: rgb(var(--tinta-rgb) / .12); }
+
+/* ---------- Chips de categoría (palo): una fila, icono + nombre ---------- */
+.br-chips {
+  display: flex; gap: .5rem; overflow-x: auto; padding: .15rem 1rem .35rem; scroll-snap-type: x proximity; scroll-padding-inline: 1rem;
+  scrollbar-width: none; overscroll-behavior-x: contain;
+}
+.br-chips::-webkit-scrollbar { display: none; }
+/* Centrado «seguro»: centra cuando caben y, si no caben, empiezan al borde y se desplazan (sin cortar el primero) */
+.br-chip:first-child { margin-left: auto; }
+.br-chip:last-child { margin-right: auto; }
+.br-chip {
+  flex: 0 0 auto; scroll-snap-align: start; min-height: 44px; display: flex; align-items: center; gap: .5rem;
+  padding: .3rem .9rem .3rem .75rem; background: transparent; border: 1px solid var(--br-linea); color: var(--br-blanco); cursor: pointer; text-align: left;
+  transition: background-color .25s, border-color .25s, box-shadow .25s;
+}
+.br-chip:hover { border-color: var(--br-chip); }
+.br-chip__palo { width: 20px; height: 20px; fill: var(--br-chip); }
+.br-chip__cuerpo { display: flex; align-items: baseline; gap: .5rem; }
+.br-chip__nombre { font: 600 .8125rem/1.2 var(--br-f); letter-spacing: .02em; white-space: nowrap; }
+.br-chip__estado { font: 400 .75rem/1.2 var(--br-f); color: var(--br-mute); }
+.br-chip[aria-pressed="true"] { border-color: var(--br-chip); background: color-mix(in srgb, var(--br-chip) 14%, var(--br-negro)); box-shadow: inset 0 -3px 0 var(--br-chip); }
+.br-chip.br-is-pronto { border-style: dashed; color: var(--tinta-3); cursor: not-allowed; }
+.br-chip.br-is-pronto:hover { border-color: var(--br-linea); }
+.br-chip.br-is-pronto .br-chip__palo { opacity: .55; }
+.br-chip.br-is-aviso { animation: aviso .5s ease; }
+@keyframes aviso { 0%, 100% { transform: none; } 30% { transform: translateX(-3px); } 60% { transform: translateX(3px); } }
+
+/* ---------- Bloque de la baraja ---------- */
+/* --br-cw = ancho de carta. En móvil depende también del alto de ventana: carta + descripción caben juntas. */
+.br-bloque {
+  /* El margen (28.8rem) suma cabecera fija + cabecera de la carta + buscador + chips + descripción reservada + flechas: así naipe, descripción y flechas caben en el alto de la ventana (390×844 sigue en 70vw). */
+  --br-cw: clamp(180px, min(70vw, calc((100svh - 28.8rem) / 1.4)), 300px);
+  --br-escena-h: calc(var(--br-cw) * 1.4 + 1.3rem);
+  position: relative;
+}
+.br-escena { position: relative; height: var(--br-escena-h); }
+.br-baraja {
+  position: absolute; inset: 0; overflow-x: clip; overflow-y: visible;
+  touch-action: pan-y; user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent; cursor: grab;
+}
+.br-baraja:focus-visible { outline: 2px solid var(--tinta); outline-offset: -4px; }
+/* Con la baraja abierta el foco de teclado se dibuja alrededor de la carta activa (2 px blancos), no como un marco de todo el ancho */
+.br-is-open .br-baraja:focus-visible { outline: none; }
+.br-is-open .br-baraja:focus-visible .br-card.br-is-active .br-face { outline: 2px solid var(--tinta); outline-offset: 4px; }
+.br-baraja.br-is-arrastrando { cursor: grabbing; }
+.br-is-closed .br-baraja { cursor: pointer; }
+.br-sonda { position: absolute; left: 0; top: 0; width: var(--br-cw); height: 0; visibility: hidden; pointer-events: none; }
+.br-pile { position: absolute; inset: 0; perspective: 1400px; perspective-origin: 50% 42%; }
+.br-is-closed .br-pile { animation: respirar 6s ease-in-out infinite; }
+@keyframes respirar {
+  0%, 100% { transform: translateY(0) rotate(-1.2deg); }
+  50% { transform: translateY(-7px) rotate(.7deg); }
+}
+
+.br-vacio {
+  position: absolute; inset: 0; display: grid; place-content: center; justify-items: center; gap: .9rem; text-align: center;
+  border: 1px dashed var(--br-linea); padding: 1.25rem; margin-inline: 1rem;
+}
+.br-vacio__titulo { font: 800 clamp(1.1rem, 4vw, 1.6rem)/1.15 var(--br-f); text-transform: uppercase; text-wrap: balance; overflow-wrap: anywhere; }
+
+/* ---------- Descripción (bajo la carta) y botones de apertura ---------- */
+.br-panel { position: relative; width: min(46rem, calc(100% - 2rem)); margin: .25rem auto 0; min-height: var(--br-panel-min, 4.5rem); }
+.br-panel__cerrada { display: flex; justify-content: center; align-items: flex-start; gap: .75rem; flex-wrap: wrap; }
+.br-panel__desc { font-size: 1rem; line-height: 1.5; color: var(--br-blanco); text-align: center; text-wrap: pretty; }
+.br-panel__joker { font-size: 1rem; line-height: 1.5; text-align: center; }
+.br-panel__producto { display: grid; justify-items: center; }
+/* Elemento oculto que mide el texto más largo para reservar su alto (layout estable) */
+.br-panel__medida { position: absolute; left: 0; right: 0; top: 0; visibility: hidden; pointer-events: none; font-size: 1rem; line-height: 1.5; text-align: center; margin: 0; }
+
+/* ---------- Flechas y contador ---------- */
+.br-controles { display: flex; justify-content: center; align-items: center; gap: 1.25rem; margin-top: 0; min-height: 52px; }
+.br-nav {
+  width: 52px; height: 52px; display: grid; place-items: center; background: rgb(var(--fondo-rgb) / .9); color: var(--tinta);
+  border: 1px solid var(--br-linea-fuerte); cursor: pointer; transition: background-color .2s, color .2s, opacity .2s;
+}
+.br-nav:not([aria-disabled="true"]):hover { background: var(--tinta); color: var(--fondo); }
+.br-nav[aria-disabled="true"] { opacity: .38; cursor: not-allowed; }
+.br-contador { min-width: 5.5rem; text-align: center; white-space: nowrap; font: 600 1rem/1 var(--br-f); letter-spacing: .06em; font-variant-numeric: tabular-nums; }
+.br-is-closed .br-controles, .br-is-opening .br-controles, .br-is-vacio .br-controles { visibility: hidden; }
+.br-bloque.br-is-vacio .br-panel__producto { visibility: hidden; }
+
+.br-acciones { display: flex; flex-wrap: wrap; justify-content: center; gap: .5rem; margin-top: .5rem; min-height: 44px; }
+
+/* ---------- Carta (naipe). Todo el interior escala con la carta: unidades cqw ---------- */
+.br-card {
+  position: absolute; left: calc(50% - var(--br-cw) / 2); top: calc(50% - var(--br-cw) * .7);
+  width: var(--br-cw); aspect-ratio: 5 / 7; container-type: inline-size; perspective: 1100px;
+  will-change: transform; cursor: inherit;
+}
+.br-flip { position: absolute; inset: 0; transform-style: preserve-3d; }
+.br-face {
+  position: absolute; inset: 0; overflow: hidden; background: var(--br-carta-negro);
+  border: 1px solid rgb(var(--tinta-rgb) / .78); backface-visibility: hidden; -webkit-backface-visibility: hidden;
+  box-shadow: 0 26px 40px -22px rgb(var(--tinta-rgb) / .55);
+  transition: box-shadow .5s ease, border-color .5s ease;
+}
+.br-face--back { transform: rotateY(180deg); }
+.br-dim { position: absolute; inset: 0; background: var(--fondo); opacity: var(--br-dim, 0); pointer-events: none; }
+.br-card.br-is-active .br-face { border-color: var(--br-c); box-shadow: inset 0 0 0 1px var(--br-c), 0 34px 44px -20px rgb(var(--tinta-rgb) / .6); }
+/* Brillo de la carta protagonista: luz del palo que cae por debajo (gradiente, no sombra de color) */
+.br-card::before {
+  content: ""; position: absolute; inset: 34% -26% -16% -26%; z-index: -1; pointer-events: none;
+  background: radial-gradient(closest-side, color-mix(in srgb, var(--br-c) 30%, transparent), transparent);
+  opacity: 0; transition: opacity .5s ease;
+}
+.br-card.br-is-active::before { opacity: 1; }
+.br-face--front::before { content: ""; position: absolute; inset: 3cqw; border: 1px solid rgb(var(--tinta-rgb) / .14); pointer-events: none; }
+
+.br-idx { position: absolute; min-width: 14cqw; display: flex; flex-direction: column; align-items: center; color: var(--br-c); line-height: 1; }
+.br-idx__v { font: 800 13cqw/1 var(--br-f); letter-spacing: -.02em; }
+.br-idx__palo { width: 8cqw; height: 8cqw; margin-top: 1.6cqw; }
+.br-idx--tl { left: 5cqw; top: 5cqw; }
+.br-idx--br { right: 5cqw; bottom: 32cqw; transform: rotate(180deg); }
+
+/* Ventana de foto, VERTICAL (60×84 cqw ≈ 5:7) entre los índices de las esquinas: las fotos de bebestibles son verticales (3:4, 1:1).
+   Sin foto: placeholder de anillos finos, sin texto visible. La imagen usa object-fit: cover (recorta, nunca estira) y object-position por foto. */
+.br-foto { position: absolute; left: 20cqw; width: 60cqw; top: 6cqw; height: 94cqw; background: var(--fondo-3); border: 1px solid rgb(var(--tinta-rgb) / .28); overflow: hidden; color: rgb(var(--tinta-rgb) / .22); }
+.br-foto__anillos { position: absolute; inset: 0; width: 100%; height: 100%; }
+.br-foto__img { width: 100%; height: 100%; object-fit: cover; }
+.br-pips { position: absolute; left: 3.5cqw; right: 3.5cqw; top: 31cqw; height: 54cqw; display: flex; justify-content: space-between; color: var(--br-c); pointer-events: none; }
+/* Dos columnas, una a cada lado de la foto: los palos se suman hacia abajo en vertical, centrados entre los índices de las esquinas */
+.br-pips__col { width: 13cqw; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 3.2cqw; }
+.br-pip { width: 7.4cqw; height: 7.4cqw; }
+
+/* Franja inferior sólida: nombre a la izquierda y precio a la derecha, siempre legibles, nunca sobre la foto */
+.br-franja {
+  position: absolute; left: 3cqw; right: 3cqw; bottom: 3cqw; height: 27cqw; background: var(--br-franja);
+  border-top: 2px solid var(--br-c); display: flex; align-items: center; justify-content: space-between; gap: 3cqw; padding: 0 4cqw;
+}
+.br-nombre, .br-precio { opacity: var(--br-txt, 1); }
+.br-nombre { margin: -.12em 0; padding: .12em 0; flex: 1 1 auto; min-width: 0; font: 800 max(14px, 6.2cqw)/1.12 var(--br-f); letter-spacing: .005em; text-transform: uppercase; color: var(--br-blanco); text-wrap: balance; overflow-wrap: anywhere;
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.br-precio { margin: 0; flex: none; font: 800 max(18px, 8.4cqw)/1 var(--br-f); font-variant-numeric: tabular-nums; letter-spacing: -.01em; color: var(--br-c); white-space: nowrap; }
+
+/* Reverso: línea fina, trama sutil y el logo de Tirúa. Monocromo. */
+.br-dorso__trama {
+  position: absolute; inset: 3cqw;
+  background:
+    repeating-linear-gradient(45deg, rgb(var(--tinta-rgb) / .11) 0 1px, transparent 1px 3.4cqw),
+    repeating-linear-gradient(-45deg, rgb(var(--tinta-rgb) / .11) 0 1px, transparent 1px 3.4cqw);
+  -webkit-mask: radial-gradient(circle at 50% 50%, transparent 0 37cqw, #000 37.5cqw);
+  mask: radial-gradient(circle at 50% 50%, transparent 0 37cqw, #000 37.5cqw);
+}
+.br-dorso__marco { position: absolute; inset: 3cqw; border: 1px solid rgb(var(--tinta-rgb) / .5); }
+.br-dorso__logo { position: absolute; left: 50%; top: 50%; width: 88cqw; height: 88cqw; max-width: none; transform: translate(-50%, -50%); }
+/* Reverso de un producto: nombre y precio siguen visibles en la franja (la misma de la cara); el logo se centra en el espacio de arriba */
+.br-face--back-info .br-dorso__logo { top: 55cqw; width: 76cqw; height: 76cqw; }
+.br-face--back-info .br-dorso__trama { -webkit-mask: radial-gradient(circle at 50% 52cqw, transparent 0 32cqw, #000 32.5cqw); mask: radial-gradient(circle at 50% 52cqw, transparent 0 32cqw, #000 32.5cqw); }
+
+/* Joker: blanco y negro con un acento propio. Solo visual. */
+.br-face--joker { border-color: var(--br-c); }
+.br-card--joker .br-dorso__marco { border-color: var(--br-c); }
+.br-card--joker .br-face--back { border-color: var(--br-c); }
+.br-card--joker .br-dorso__trama {
+  background:
+    repeating-linear-gradient(45deg, color-mix(in srgb, var(--br-c) 30%, transparent) 0 1px, transparent 1px 3.4cqw),
+    repeating-linear-gradient(-45deg, color-mix(in srgb, var(--br-c) 30%, transparent) 0 1px, transparent 1px 3.4cqw);
+}
+.br-joker__arte { position: absolute; left: 8cqw; right: 8cqw; top: 26cqw; height: 72cqw; color: var(--br-c); }
+.br-joker__arte svg { width: 100%; height: 100%; }
+.br-joker__arte g { opacity: .55; }
+.br-joker__estrella { fill: var(--br-c); }
+.br-joker__titulo { position: absolute; left: 0; right: 0; top: 104cqw; text-align: center; font: 800 11cqw/1 var(--br-f); letter-spacing: .16em; padding-left: .16em; color: var(--br-blanco); }
+
+/* ---------- Opciones de demostración (joker) ---------- */
+.br-demo { margin-top: 1.25rem; padding: .6rem .75rem; border: 1px dashed var(--br-linea); display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem; }
+.br-demo__titulo { font: 600 .6875rem/1.2 var(--br-f); letter-spacing: .1em; text-transform: uppercase; color: var(--br-mute); }
+
+/* ---------- Lista rápida (hoja) ---------- */
+.br-hoja {
+  padding: 0; border: 1px solid var(--br-linea-fuerte); background: var(--br-carta-negro); color: var(--br-blanco);
+  width: 100%; max-width: none; max-height: 82dvh; margin: auto 0 0;
+}
+.br-hoja[open] { display: flex; flex-direction: column; }
+.br-hoja::backdrop { background: rgb(var(--fondo-rgb) / .78); }
+.br-hoja__cab { display: flex; justify-content: space-between; gap: 1rem; align-items: flex-start; padding: 1rem 1rem .75rem; border-bottom: 1px solid var(--br-linea); }
+.br-hoja__titulo { font: 800 1.25rem/1.1 var(--br-f); text-transform: uppercase; }
+.br-hoja__sub { margin-top: .25rem; font-size: .8125rem; color: var(--br-mute); }
+.br-hoja__lista { list-style: none; margin: 0; padding: 0 1rem 1rem; overflow-y: auto; overscroll-behavior: contain; }
+.br-hoja__vacio { padding: 1.25rem 0; color: var(--br-mute); }
+.br-hoja__item {
+  width: 100%; min-height: 56px; display: grid; grid-template-columns: 3.4rem 1fr auto; gap: .75rem; align-items: center;
+  padding: .5rem .25rem; background: transparent; border: 0; border-bottom: 1px solid rgb(var(--tinta-rgb) / .14); text-align: left; cursor: pointer;
+}
+.br-hoja__item:hover { background: rgb(var(--tinta-rgb) / .07); }
+.br-hoja__item:focus-visible { outline-offset: -2px; }
+.br-hoja__valor { display: flex; align-items: center; gap: .3rem; color: var(--br-c); font: 800 1.125rem/1 var(--br-f); }
+.br-hoja__palo { width: 18px; height: 18px; }
+.br-hoja__nombre { font-weight: 400; }
+.br-hoja__precio { font: 800 1.0625rem/1 var(--br-f); font-variant-numeric: tabular-nums; }
+
+
+/* ---------- Tablet y escritorio ---------- */
+@media (min-width: 700px) {
+  .br-bloque { --br-cw: clamp(250px, min(21vw, calc((100svh - 21rem) / 1.4)), 330px); --br-escena-h: calc(var(--br-cw) * 1.4 + 2.4rem); }
+  .br-btn--lista { padding-inline: 1.1rem; }
+  .br-txt-corto { display: none; }
+  .br-txt-largo { display: inline; }
+  .br-carta__in { padding-top: 1rem; }
+  .br-panel__desc, .br-panel__joker { font-size: 1.0625rem; }
+  .br-panel__medida { font-size: 1.0625rem; }
+  .br-hoja { width: min(34rem, calc(100vw - 2rem)); margin: auto; max-height: 80dvh; }
+}
+@media (min-width: 900px) {
+  /* Flechas a los lados de la carta (hay sitio: solo se ven 2 vecinas por lado) */
+  .br-controles { position: absolute; left: 0; right: 0; top: 0; height: var(--br-escena-h); margin: 0; display: block; pointer-events: none; }
+  .br-controles .br-nav { position: absolute; top: 50%; margin-top: -26px; pointer-events: auto; }
+  /* Las flechas acompañan al abanico: a ~1,55 anchos de carta del centro (borde de la 2.ª vecina) + holgura */
+  .br-nav--prev { left: max(.5rem, calc(50% - var(--br-cw) * 1.55 - 3.75rem)); }
+  .br-nav--next { right: max(.5rem, calc(50% - var(--br-cw) * 1.55 - 3.75rem)); }
+  .br-contador { position: absolute; left: 50%; top: calc(var(--br-escena-h) + .3rem); transform: translateX(-50%); pointer-events: none; }
+  .br-panel { margin-top: 2.1rem; }
+}
+@media (min-width: 1000px) {
+  .br-chip__estado::before { content: "· "; }
+}
+@media (max-width: 999.98px) {
+  /* Hasta 1000 px: «Próximamente» solo para lectores de pantalla (la fila de chips queda compacta y no se corta) */
+  .br-chip__estado { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+}
+
+/* ---------- Movimiento reducido ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .br-carta, .br-carta *, .br-carta *::before, .br-carta *::after { animation: none !important; transition: none !important; }
+}
+.br-sin-movimiento, .br-sin-movimiento * { animation: none !important; transition: none !important; }
+
+
+/* ---------- Integración al sitio de Tirúa ---------- */
+/* Sin scroll anchoring: el navegador no debe mover la página al cambiar el texto de la carta
+   (causa raíz del fallo «20 clics mezclados»). Se conserva también la reserva de alto de la descripción (--br-panel-min). */
+.br-carta, .br-carta * { overflow-anchor: none; }
+.seccion.br-carta { padding-block: 0; border-top: 1px solid var(--linea); background: var(--br-negro); }
+.br-carta .br-encabezado { display: grid; gap: 4px 24px; align-items: start; padding-top: clamp(40px, 5vw, 64px); margin-bottom: .5rem; }
+.br-carta .br-encabezado .titular { font-size: clamp(2.5rem, 8vw, 4.75rem); line-height: .95; }
+.br-carta .br-encabezado .seccion__bajada { margin-top: .35rem; max-width: 46ch; font-size: clamp(1rem, 1.4vw, 1.125rem); }
+.br-carta .br-rotulo { justify-self: start; margin-left: -.6rem; }
+@media (min-width: 900px) {
+  .br-carta .br-encabezado { grid-template-columns: 1fr auto; }
+  .br-carta .br-rotulo { justify-self: end; grid-column: 2; grid-row: 1; margin-left: 0; margin-right: -.6rem; }
+}
+.br-carta .br-carta__in { padding-top: .5rem; padding-bottom: 2rem; }
+/* html ya tiene scroll-padding-top = alto de la cabecera fija; aquí solo se suma un respiro */
+.br-carta .br-herramientas, .br-carta .br-bloque, .br-carta .br-escena { scroll-margin-top: 16px; }
+/* Por debajo de ~350 px «Barajar de nuevo» y «Cerrar baraja» pasan a dos filas al abrirse: se reservan ambas (sin estirar los botones) para que lo de abajo no salte. */
+@media (max-width: 350px) { .br-carta .br-acciones { min-height: 96px; align-content: flex-start; } }
+/* Aviso visible cuando se elige una categoría «Próximamente» (sus chips siguen deshabilitados) */
+.br-carta .br-carta__in > .br-aviso-cat { width: min(46rem, calc(100% - 2rem)); margin: .25rem auto .5rem; padding: .55rem .9rem; border: 1px dashed var(--br-aviso, var(--br-linea-fuerte)); display: flex; gap: .6rem; align-items: center; font-size: .9375rem; line-height: 1.4; }
+.br-carta .br-aviso-cat .br-palo { width: 18px; height: 18px; color: var(--br-aviso, var(--tinta)); }
+.br-carta .br-enlace-carta { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: .25rem .9rem; margin-top: 1.25rem; }
+.br-carta .br-cierre { display: flex; justify-content: flex-end; width: min(72rem, calc(100% - 2rem)); margin: 1rem auto 0; }
+
+/* ---------- Móvil (<700px): cabecera de la carta compacta ----------
+   Objetivo (390×844): naipe completo + descripción + flechas sin desplazar tras llegar a #carta.
+   Solo espaciado y distribución: título y rótulo en la misma fila, bajada debajo; no cambia el tamaño del naipe,
+   la tipografía, el buscador, los chips ni los controles. */
+@media (max-width: 699.98px) {
+  .br-carta .br-encabezado { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "titulo rotulo" "bajada bajada"; align-items: center; gap: 0 .5rem; padding-top: 6px; margin-bottom: 6px; }
+  .br-carta .br-encabezado > div:first-child { display: contents; }
+  .br-carta .br-encabezado .titular { grid-area: titulo; }
+  .br-carta .br-encabezado .seccion__bajada { grid-area: bajada; margin-top: 0; line-height: 1.4; }
+  .br-carta .br-rotulo { grid-area: rotulo; justify-self: end; margin-left: 0; margin-right: -.3rem; }
+  .br-carta .br-rotulo__detalle { left: auto; right: 0; width: min(22rem, calc(100vw - 2rem)); }
+  .br-carta .br-carta__in { padding-top: 0; }
+  .br-carta .br-herramientas { margin-bottom: .25rem; }
+}
+
+/* ---------- Móvil estrecho (<360px): cabecera y herramientas de la carta sin recorte ----------
+   Fallo reproducido a 320 px: el rótulo «Demostración · Qué significa» (206 px) no cabía junto al título y se salía del borde
+   (+23 px, «Qué significa» cortado); «Lista» quedaba 1 px fuera. Aquí solo se compacta ese rótulo, el título y el botón. */
+@media (max-width: 359.98px) {
+  .br-carta .br-encabezado .titular { font-size: 2.25rem; }
+  .br-carta .br-rotulo { margin-right: -.2rem; }
+  .br-rotulo__btn { gap: .3rem; padding-inline: .2rem; }
+  .br-rotulo__sello { letter-spacing: .04em; padding: .28rem .35rem; }
+  .br-rotulo__mas { font-size: .6875rem; }
+  .br-btn--lista { padding-inline: .6rem; gap: .4rem; }
+}
+
+/* ---------- Móvil con poca altura visible (≤760px de alto): naipe, descripción y flechas sin desplazar ----------
+   Fallo reproducido: en 390×664, 375×667 y 360×640 la descripción quedaba al borde y las flechas bajo el pliegue al llegar a #carta
+   (la regla de 390×844 no aplicaba: el alto visible de un teléfono real es menor que el de su pantalla). La bajada de la carta
+   pasa solo a lectores de pantalla y el naipe puede bajar hasta 150 px de ancho; el resto (buscador, chips, controles) no cambia. */
+@media (max-width: 699.98px) and (max-height: 760px) {
+  .br-carta .br-encabezado .seccion__bajada,
+  .br-carta .br-buscador__label { position: absolute; width: 1px; height: 1px; margin: 0; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .br-bloque { --br-cw: clamp(172px, min(70vw, calc((100svh - 25rem) / 1.4)), 300px); }
+}
+
+/* ---------- Naipes pequeños (<206px de ancho): el nombre no se parte a mitad de palabra ----------
+   Fallo reproducido (también en la línea base, con el piso de 180 px): «RAMAZZOTTI» (94 px) no cabía en la franja y se
+   partía en «RAMAZZOTT / I». Solo se afinan los márgenes de la franja, el tamaño del nombre (13 px) y su espaciado;
+   el precio, los colores y el resto de la carta no cambian. Con naipes de 206 px o más (390×844, escritorio) no aplica. */
+@container (max-width: 205.98px) {
+  .br-franja { left: 2.5cqw; right: 2.5cqw; bottom: 2.5cqw; padding: 0 2.5cqw; gap: 2.5cqw; }
+  .br-nombre { font-size: max(13px, 6.2cqw); letter-spacing: -.015em; }
+}
+
+
+/* =====================================================================
+   Tercera vuelta (2026-10-23): la carta como portal + modo inmersivo
+   En la página solo se ve el mazo cerrado y un botón. Al abrirlo (clic, toque, Enter) la sección pasa a pantalla completa
+   (.br-inm, la pone js/baraja.js mientras el mazo no esté cerrado): solo cartas, una X y un botón de opciones.
+   ===================================================================== */
+
+/* ---------- Voz de campo en el naipe ---------- */
+.br-face { border-width: 1.5px; border-color: rgb(var(--tinta-rgb) / .85); }
+.br-idx__v { font-family: var(--br-fd); font-weight: 400; letter-spacing: 0; }
+.br-nombre { font-family: var(--br-fd); font-weight: 400; text-transform: none; letter-spacing: 0; font-size: max(15px, 7.4cqw); line-height: 1.12; margin: -.22em 0; padding: .22em 0; color: var(--br-blanco); }   /* el relleno vertical evita recortar los trazos que bajan (j, p, g) de la serif */
+.br-precio { font-family: var(--br-fd); font-weight: 400; font-size: max(18px, 8.8cqw); letter-spacing: 0; line-height: 1.25; }
+.br-joker__titulo { font-family: var(--br-fd); font-weight: 400; }
+.br-hoja__titulo, .br-vacio__titulo { font-family: var(--br-fd); font-weight: 400; text-transform: none; }
+.br-hoja__valor, .br-hoja__precio { font-family: var(--br-fd); font-weight: 400; }
+.br-btn, .br-chip__nombre, .br-buscador__label, .br-rotulo__sello, .br-demo__titulo { text-transform: none; letter-spacing: .01em; font-weight: 500; }
+.br-btn { font-size: 1rem; }
+.br-buscador__label, .br-demo__titulo { font-size: .875rem; }
+.br-rotulo__sello { font-size: .875rem; font-weight: 700; border-radius: 2px; }
+.br-chip__nombre { font-size: .9375rem; }
+.br-contador { font-family: var(--br-fd); font-weight: 400; font-size: 1.25rem; letter-spacing: .02em; }
+
+/* ---------- Portal: en la página no hay herramientas ---------- */
+.br-carta:not(.br-inm) .br-bandeja,
+.br-carta:not(.br-inm) .br-controles,
+.br-carta:not(.br-inm) .br-acciones,
+.br-carta:not(.br-inm) .br-inm-barra { display: none; }
+.br-inm-barra { display: none; }
+.br-carta:not(.br-inm) .br-panel__cerrada { margin-top: .5rem; }
+
+/* ---------- Modo inmersivo ---------- */
+html.br-inm-abierto { overflow: hidden; }
+.br-carta.br-inm {
+  position: fixed; inset: 0; z-index: 300; overflow: hidden; border: 0; margin: 0;
+  display: grid; align-items: center; background: var(--fondo);
+  animation: br-inm-entra .75s var(--ease) both;
+}
+@keyframes br-inm-entra { from { clip-path: circle(7% at 50% 62%); opacity: .2; } to { clip-path: circle(150% at 50% 62%); opacity: 1; } }
+.br-carta.br-inm .br-carta__anillos { color: rgb(var(--tinta-rgb) / .09); }
+.br-carta.br-inm .br-carta__brillo { inset: 18% -10% auto -10%; height: 70%; }
+/* El título y la bajada siguen para lectores; a la vista solo queda el sello de «demostración» */
+.br-carta.br-inm > .envoltura { position: absolute; top: max(.5rem, env(safe-area-inset-top)); left: .5rem; right: 7.5rem; z-index: 6; pointer-events: none; padding: 0; width: auto; }
+.br-carta.br-inm .br-encabezado { display: block; padding: 0; margin: 0; }
+.br-carta.br-inm .br-encabezado > div:first-child { display: block; position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.br-carta.br-inm .br-rotulo { pointer-events: auto; margin: 0; }
+.br-carta.br-inm .br-carta__in { padding: 0; width: 100%; }
+.br-carta.br-inm .br-carta__in > :not(.br-bloque):not(.br-chips) { width: 100%; }
+.br-carta.br-inm .br-enlace-carta, .br-carta.br-inm .br-cierre, .br-carta.br-inm #cerrar { display: none; }
+.br-carta.br-inm .br-bloque {
+  --br-cw: clamp(210px, min(86vw, calc((100svh - 9rem) / 1.4)), 760px);
+  --br-escena-h: calc(var(--br-cw) * 1.4 + 2rem);
+}
+.br-carta.br-inm .br-panel { width: min(40rem, calc(100% - 2rem)); margin-top: .5rem; }
+.br-carta.br-inm .br-panel__desc, .br-carta.br-inm .br-panel__joker { font-size: clamp(1.0625rem, 1.5vw, 1.3125rem); color: var(--tinta-2); }
+.br-carta.br-inm .br-nav { width: 56px; height: 56px; border-radius: 50%; border: 1.5px solid var(--tinta); background: var(--fondo); }
+@media (min-width: 900px) { .br-carta.br-inm .br-nav { width: 68px; height: 68px; margin-top: -34px; } }
+
+/* Barra mínima: cerrar y opciones */
+.br-carta.br-inm .br-inm-barra { display: flex; position: fixed; top: max(.5rem, env(safe-area-inset-top)); right: .5rem; z-index: 9; gap: .5rem; }
+.br-inm-btn { width: 52px; height: 52px; display: grid; place-items: center; padding: 0; background: var(--fondo); color: var(--tinta); border: 1.5px solid var(--tinta); border-radius: 50%; cursor: pointer; transition: background-color .2s, color .2s, transform .35s var(--ease); }
+.br-inm-btn:hover { background: var(--tinta); color: var(--fondo); }
+.br-inm-btn:active { transform: scale(.94); }
+.br-inm-btn[aria-expanded="true"] { background: var(--tinta); color: var(--fondo); }
+
+/* Bandeja de opciones: buscar, lista, palos y barajar; cerrada por defecto */
+.br-bandeja { display: none; }
+.br-carta.br-inm .br-bandeja {
+  display: grid; gap: .75rem; position: fixed; left: 0; right: 0; bottom: 0; z-index: 8;
+  padding: 1rem max(1rem, env(safe-area-inset-left)) max(1.25rem, env(safe-area-inset-bottom));
+  background: var(--fondo); border-top: 2px solid var(--tinta); box-shadow: 0 -24px 44px -26px rgb(var(--tinta-rgb) / .45);
+  transform: translateY(104%); visibility: hidden; transition: transform .5s var(--ease), visibility 0s .5s;
+  max-height: 80svh; overflow-y: auto;
+}
+.br-carta.br-inm.br-bandeja-abierta .br-bandeja { transform: none; visibility: visible; transition-delay: 0s; }
+.br-carta.br-inm .br-bandeja > * { width: min(46rem, 100%); margin-inline: auto; }
+.br-carta.br-inm .br-bandeja .br-chips { width: min(46rem, 100%); padding-inline: 0; overflow-x: auto; }
+.br-carta.br-inm .br-bandeja .br-chip:first-child, .br-carta.br-inm .br-bandeja .br-chip:last-child { margin-inline: 0; }
+.br-carta.br-inm .br-bandeja .br-acciones { margin-top: 0; justify-content: flex-start; }
+.br-carta.br-inm .br-bandeja .br-demo { margin-top: 0; }
+.br-carta.br-inm .br-herramientas { margin-bottom: 0; }
+.br-carta.br-inm .br-bloque { transition: transform .5s var(--ease), opacity .4s; transform-origin: 50% 0; }
+.br-carta.br-bandeja-abierta .br-bloque { opacity: .55; transform: translateY(.5svh) scale(.7); transform-origin: 50% 0; }   /* la carta se achica sin salirse por arriba */
+.br-carta.br-inm .br-contador { color: var(--tinta); }
+@media (min-width: 900px) { .br-carta.br-inm .br-contador { position: fixed; top: auto; bottom: max(1rem, env(safe-area-inset-bottom)); left: max(1.5rem, env(safe-area-inset-left)); transform: none; } }
+
+/* Dorso de la carta: el logo va en tinta sobre el papel claro */
+.br-dorso__trama { background: repeating-linear-gradient(45deg, rgb(var(--tinta-rgb) / .1) 0 1px, transparent 1px 3.4cqw), repeating-linear-gradient(-45deg, rgb(var(--tinta-rgb) / .1) 0 1px, transparent 1px 3.4cqw); }
+
+/* Portal: título de la sección con la voz del sitio */
+.br-carta:not(.br-inm) .br-panel__cerrada .br-btn--grande { font-family: var(--br-fd); font-weight: 400; font-size: 1.25rem; letter-spacing: .01em; min-height: 58px; padding-inline: 2.4rem; }
+@media (max-width: 480px) { .br-carta.br-inm .br-rotulo__mas { display: none; } .br-carta.br-inm .br-rotulo__btn { padding-inline: .2rem; } }
+
+/* ---------- Pantalla apaisada y baja (celular girado, ventanas anchas y bajas): la carta manda ----------
+   La experiencia pensada es horizontal. Con poco alto la descripción pasa a una leyenda sobre el borde inferior, las flechas
+   salen a los costados y el contador sube a la barra: la carta ocupa casi todo el alto. */
+@media (orientation: landscape) and (max-height: 620px) {
+  .br-carta.br-inm .br-bloque { --br-cw: clamp(120px, min(60vw, calc((100svh - 4.5rem) / 1.4)), 460px); --br-escena-h: calc(var(--br-cw) * 1.4 + .75rem); }
+  .br-carta.br-inm .br-panel { position: fixed; left: 50%; bottom: max(.35rem, env(safe-area-inset-bottom)); transform: translateX(-50%); width: min(44rem, calc(100vw - 12rem)); margin: 0; min-height: 0; z-index: 4; padding: .15rem .75rem; background: rgb(var(--fondo-rgb) / .86); }
+  .br-carta.br-inm .br-panel__desc, .br-carta.br-inm .br-panel__joker { font-size: .9375rem; line-height: 1.3; }
+  .br-carta.br-inm .br-panel__medida { display: none; }
+  .br-carta.br-inm .br-controles { position: absolute; left: 0; right: 0; top: 0; height: var(--br-escena-h); margin: 0; display: block; pointer-events: none; }
+  .br-carta.br-inm .br-controles .br-nav { position: absolute; top: 50%; margin-top: -28px; pointer-events: auto; }
+  .br-carta.br-inm .br-nav--prev { left: max(.5rem, env(safe-area-inset-left)); }
+  .br-carta.br-inm .br-nav--next { right: max(.5rem, env(safe-area-inset-right)); }
+  .br-carta.br-inm .br-contador { position: fixed; top: auto; bottom: max(.5rem, env(safe-area-inset-bottom)); left: max(.75rem, env(safe-area-inset-left)); transform: none; min-width: 0; font-size: 1rem; }
+  .br-carta.br-inm > .envoltura { right: 8rem; }
+  .br-inm-btn { width: 44px; height: 44px; }
+}
+
+/* Cifras alineadas a la línea base (Young Serif trae cifras de texto que suben y bajan; en números grandes se ven desparejas) */
+.br-idx__v, .br-contador, .br-precio, .br-hoja__valor, .br-hoja__precio { font-variant-numeric: lining-nums; font-feature-settings: "lnum" 1; }
+
+
+/* ---------- Reverso con la ficha del trago ----------
+   Mazo cerrado (portal): el reverso muestra el logo de Tirúa. Con la baraja abierta, al voltear una carta, el logo cede su lugar
+   a la ficha de Justo: categoría y descripción tal cual; la franja de nombre y precio sigue abajo. */
+.br-dorso__info { display: none; }
+.br-is-open .br-face--back-info .br-dorso__logo { display: none; }
+.br-is-open .br-face--back-info .br-dorso__trama { -webkit-mask: radial-gradient(circle at 50% 54cqw, transparent 0 45cqw, #000 46cqw); mask: radial-gradient(circle at 50% 54cqw, transparent 0 45cqw, #000 46cqw); }
+.br-is-open .br-dorso__info {
+  position: absolute; left: 10cqw; right: 10cqw; top: 9cqw; bottom: 35cqw; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 3.4cqw; text-align: center; color: var(--br-blanco);
+}
+.br-dorso__palo { width: 10cqw; height: 10cqw; color: var(--br-c); flex: none; }
+.br-dorso__cat { margin: 0; font: 700 max(13px, 5cqw)/1.2 var(--br-f); letter-spacing: .03em; color: var(--br-c); padding-bottom: 3cqw; border-bottom: 1px solid color-mix(in srgb, var(--br-c) 45%, transparent); }
+.br-dorso__desc { margin: 0; font: 400 max(14px, 6.3cqw)/1.32 var(--br-f); text-wrap: pretty; overflow-wrap: anywhere; }
+
+/* Pista de que la carta se voltea: icono discreto abajo a la izquierda (solo en la carta activa) */
+.br-voltear { position: absolute; left: 6cqw; bottom: 34cqw; width: 9cqw; height: 9cqw; color: var(--br-c); opacity: 0; transition: opacity .4s ease; pointer-events: none; }
+.br-voltear svg { width: 100%; height: 100%; }
+.br-is-open .br-card.br-is-active .br-voltear { opacity: .8; }
+
+.br-panel__producto { transition: opacity .35s ease; }
+.br-carta.br-volteada .br-panel__producto { opacity: 0; }
+
+/* ---------- Pista de voltear + «asomo» de la primera apertura ---------- */
+.br-hint { margin: .15rem 0 0; text-align: center; font-size: max(14px, .9375rem); color: var(--tinta-3); transition: opacity .5s ease; pointer-events: none; }
+.br-carta:not(.br-is-open) .br-hint, .br-carta.br-ya-volteo .br-hint, .br-carta.br-volteada .br-hint { opacity: 0; }
+@keyframes br-peek { 0%, 100% { transform: rotateY(0); } 38% { transform: rotateY(-17deg) translateY(-8px); } 62% { transform: rotateY(-17deg) translateY(-8px); } }
+.br-carta.br-peek .br-card.br-is-active .br-flip { animation: br-peek 1.15s var(--ease) 1; }
+@media (orientation: landscape) and (max-height: 620px) { .br-hint { display: none; } }
+
+/* ---------- Contador en palos: el texto queda para lectores; a la vista, una fila que se va llenando ---------- */
+.br-contador { display: inline-flex; align-items: center; min-width: 0; }
+.br-contador__txt { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.br-contador:not(:has(.br-puntos)) .br-contador__txt { position: static; width: auto; height: auto; clip-path: none; overflow: visible; }
+.br-puntos { display: inline-flex; gap: .42rem; align-items: center; }
+.br-punto { display: block; width: 14px; height: 14px; color: var(--br-c, var(--rojo)); opacity: .28; transform: scale(.8); transition: opacity .4s ease, transform .5s cubic-bezier(.34, 1.56, .64, 1); }
+.br-punto svg { width: 100%; height: 100%; fill: currentColor; }
+.br-punto--visto { opacity: .6; transform: scale(.9); }
+.br-punto--ahora { opacity: 1; transform: scale(1.35); }
+.br-carta { --br-c: var(--br-acc); }
+@media (max-width: 400px) { .br-puntos { gap: .3rem; } .br-punto { width: 12px; height: 12px; } }
+
+
+/* =====================================================================
+   Ciclo 3 (2026-10-23): hallazgos del verificador independiente
+   ===================================================================== */
+/* Aviso «Próximamente» visible en la página (bajo el mazo) cuando se llega desde un bloque de categoría */
+.br-portal-aviso { width: min(46rem, calc(100% - 2rem)); margin: .75rem auto 0; padding: .6rem .95rem; border: 1px dashed var(--br-aviso, var(--linea-fuerte)); display: flex; gap: .6rem; align-items: center; justify-content: center; text-align: center; font-size: 1rem; color: var(--tinta); }
+.br-portal-aviso[hidden] { display: none; }
+.br-portal-aviso .br-palo { width: 18px; height: 18px; color: var(--br-aviso, var(--tinta)); flex: none; }
+.br-carta.br-inm .br-portal-aviso { display: none; }
+
+/* En la carta inmersiva no hay scroll de página útil: el arrastre en cualquier dirección es de la baraja (y no se arrastra la página en iOS) */
+.br-carta.br-inm, .br-carta.br-inm .br-baraja { touch-action: none; overscroll-behavior: none; }
+
+/* Inclinación y brillo del naipe activo con el puntero (solo ratón; la estructura 3D del volteo no se toca: se inclina la cara frontal) */
+@media (hover: hover) and (pointer: fine) {
+  .br-carta.br-inm .br-card.br-is-active .br-face--front { transform: perspective(1800px) rotateX(var(--br-rx, 0deg)) rotateY(var(--br-ry, 0deg)); transition: transform .35s var(--ease), box-shadow .5s ease, border-color .5s ease; will-change: transform; }
+  .br-face--front::after { content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .4s ease; background: radial-gradient(circle at var(--br-gx, 50%) var(--br-gy, 30%), rgb(255 255 255 / .55), transparent 46%); mix-blend-mode: soft-light; }
+  .br-card.br-brilla .br-face--front::after { opacity: 1; }
+}
+
+/* Contador de palos: un poco más visible */
+.br-punto { width: 16px; height: 16px; opacity: .34; }
+.br-punto--visto { opacity: .65; }
+
+/* Apaisado y bajo: la leyenda no pisa el contador y deja sitio a 2 líneas sin tapar el pie de la carta */
+@media (orientation: landscape) and (max-height: 620px) {
+  .br-carta.br-inm .br-bloque { --br-cw: clamp(120px, min(60vw, calc((100svh - 6rem) / 1.4)), 460px); }
+  .br-carta.br-inm .br-panel { width: min(44rem, calc(100vw - 20rem)); }
+  .br-carta.br-inm .br-punto { width: 11px; height: 11px; }
+  .br-carta.br-inm .br-puntos { gap: .2rem; }
+}

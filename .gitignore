@@ -1,0 +1,9 @@
+node_modules/
+.DS_Store
+# Salidas de las pruebas (se regeneran con `npm run verificar`)
+capturas/
+pruebas/resultados/
+# Originales de Justo (~203 MB): viven fuera del repo; ver README
+datos/justo/originales/
+datos/justo/crudo/
+.impeccable/

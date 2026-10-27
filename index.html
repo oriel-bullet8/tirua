@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Tirúa · Bar Restorán</title>
+  <meta name="description" content="Tirúa Bar-Restorán en Pirque. Sitio en construcción: adelanto de la carta en formato baraja, con 8 bebestibles de la carta de Justo del bar; reservas por WhatsApp y delivery.">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" type="image/png" href="assets/brand/favicon.png">
+  <link rel="preload" href="assets/fonts/YoungSerif-Regular.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="preload" href="assets/fonts/AlegreyaSans-Regular.ttf" as="font" type="font/ttf" crossorigin>
+  <script>document.documentElement.classList.add('js');</script>
+  <script>(function(){try{var q=new URLSearchParams(location.search).get('tema');if(q==='oscuro'||q==='claro'){localStorage.setItem('tirua-tema',q);}var t=localStorage.getItem('tirua-tema');if(t==='oscuro'){document.documentElement.setAttribute('data-tema','oscuro');var m=document.querySelector('meta[name=theme-color]');if(m){m.content='#000000';}}}catch(e){}})();</script>
+  <link rel="stylesheet" href="css/styles.css?v=20261024b">
+  <link rel="stylesheet" href="css/baraja.css?v=20261024b">
+</head>
+<body>
+  <a class="saltar" href="#contenido">Saltar al contenido</a>
+
+  <noscript><p class="sin-js">Este sitio necesita JavaScript para mostrar el menú, las categorías y el logo.</p></noscript>
+
+  <header class="cabecera" data-cabecera>
+    <!-- Barra fina superior (texto en js/contenido.js → aviso) -->
+    <p class="aviso" data-texto="aviso"></p>
+    <div class="cabecera__fila">
+      <button class="menu__boton" type="button" data-menu-boton aria-expanded="false" aria-controls="menu-principal" aria-label="Menú">
+        <span class="menu__barras" aria-hidden="true"><span></span><span></span><span></span></span>
+      </button>
+      <a class="marca" href="#inicio" aria-label="Tirúa, ir al inicio">
+        <img data-logo="cabecera" alt="">
+      </a>
+      <nav class="menu" id="menu-principal" aria-label="Principal" data-menu>
+        <ul class="menu__lista" data-nav></ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="contenido" tabindex="-1">
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="inicio" tabindex="-1" aria-label="Inicio" data-hero>
+      <div class="hero__fondo" aria-hidden="true">
+        <!-- Portada estática (se ve siempre que no haya video reproduciéndose) -->
+        <div class="portada" data-portada>
+          <div class="portada__luz"></div>
+          <div class="portada__grano"></div>
+        </div>
+
+        <!--
+          VIDEO DE FONDO. Pon el archivo en assets/video/hero.mp4 (y, si quieres, hero.webm y
+          escribe su ruta en data-webm). data-video: "auto" comprueba UNA vez con HEAD si existe;
+          "si" lo carga sin comprobar; "no" no lo intenta (portada fija).
+        -->
+        <video class="hero__video" data-video="auto"
+               data-mp4="assets/video/hero.mp4" data-mp4-vertical="assets/video/hero-vertical.mp4" data-webm=""
+               muted loop playsinline preload="none" tabindex="-1"
+               aria-hidden="true" disablepictureinpicture disableremoteplayback></video>
+        <div class="hero__velo"></div>
+      </div>
+
+      <div class="hero__contenido">
+        <h1 class="hero__logo">
+          <span class="logo">
+            <span class="logo__img">
+              <!-- Logo: ruta en js/contenido.js → marca.principal -->
+              <img data-logo="principal" data-alt fetchpriority="high" alt="Tirúa, bar restorán">
+            </span>
+            <svg class="logo__anillos" viewBox="-400 -400 800 800" aria-hidden="true" focusable="false">
+              <g class="anillo anillo--1"><ellipse rx="112" ry="105" pathLength="1"/></g>
+              <g class="anillo anillo--2"><ellipse rx="126" ry="116" pathLength="1"/></g>
+              <g class="anillo anillo--3"><ellipse rx="146" ry="140" pathLength="1"/></g>
+              <g class="anillo anillo--4"><ellipse rx="184" ry="170" pathLength="1"/></g>
+              <g class="anillo anillo--5"><ellipse rx="236" ry="222" pathLength="1"/></g>
+              <g class="anillo anillo--6"><ellipse rx="300" ry="284" pathLength="1"/></g>
+            </svg>
+          </span>
+        </h1>
+        <p class="hero__frase" data-texto="local.frase"></p>
+        <div class="hero__acciones">
+          <a class="btn btn--principal" href="#carta"><span>Ver carta</span><svg class="btn__flecha" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M6 13l6 6 6-6"/></svg></a>
+          <a class="btn btn--linea" href="reservar.html"><span>Reservar</span></a>
+        </div>
+        <!-- Novedades del Instagram del bar (js/historias.js, datos/instagram.json). Sin publicaciones reales muestra ejemplos marcados (datos/instagram.demo.json). -->
+        <nav class="historias" data-historias aria-label="Novedades del bar en Instagram" hidden>
+          <p class="historias__titulo">Novedades <span class="historias__cuenta"></span></p>
+          <ul class="historias__lista"></ul>
+        </nav>
+      </div>
+
+      <a class="bajar" href="#categorias" aria-label="Bajar a las categorías"><span class="bajar__linea" aria-hidden="true"></span></a>
+
+      <button class="hero__pausa" type="button" data-pausa hidden aria-pressed="false" aria-label="Pausar video de fondo">
+        <svg class="ico-pausa" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 6v12M15 6v12"/></svg>
+        <svg class="ico-play" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 6.5v11l9-5.5z"/></svg>
+      </button>
+    </section>
+
+    <!-- ============ CATEGORÍAS ============ -->
+    <section class="seccion categorias" id="categorias" aria-labelledby="categorias-titulo">
+      <div class="envoltura">
+        <div class="seccion__cab">
+          <h2 class="titular titular--medio" id="categorias-titulo" data-texto="categorias.titulo"></h2>
+          <p class="seccion__bajada" data-texto="categorias.bajada"></p>
+        </div>
+        <!-- Los bloques se generan desde js/contenido.js → categorias.items -->
+        <ul class="cats" data-categorias></ul>
+      </div>
+    </section>
+
+    <!-- ============ CARTA (baraja) ============ -->
+    <section class="seccion carta br-carta br-is-closed" id="carta" aria-labelledby="carta-titulo" style="--br-acc:#ff5c6c">
+      <div class="br-carta__fondo" aria-hidden="true">
+        <div class="br-carta__brillo"></div>
+        <svg class="br-carta__anillos" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice"><g fill="none" stroke="currentColor" stroke-width="1"><circle cx="500" cy="500" r="470"/><circle cx="500" cy="500" r="458"/><circle cx="500" cy="500" r="446"/><circle cx="500" cy="500" r="330"/></g></svg>
+      </div>
+      <div class="br-carta__barra" aria-hidden="true"></div>
+      <div class="br-inm-barra">
+        <button type="button" class="br-inm-btn" id="inm-opciones" aria-expanded="false" aria-controls="bandeja" aria-label="Buscar y elegir categoría">
+          <svg class="br-ico" width="22" height="22" aria-hidden="true" focusable="false"><use href="#ico-lupa"/></svg>
+        </button>
+        <button type="button" class="br-inm-btn" id="inm-cerrar" aria-label="Cerrar la carta">
+          <svg class="br-ico" width="22" height="22" aria-hidden="true" focusable="false"><use href="#ico-cerrar"/></svg>
+        </button>
+      </div>
+    
+    <svg class="br-sprite" width="0" height="0" aria-hidden="true" focusable="false">
+      <symbol id="palo-corazones" viewBox="0 0 100 100"><path d="M50 90C22 68 5 50 5 31 5 17 15 8 28 8c9 0 18 5 22 14 4-9 13-14 22-14 13 0 23 9 23 23 0 19-17 37-45 59Z"/></symbol>
+      <symbol id="palo-diamantes" viewBox="0 0 100 100"><path d="M50 3 89 50 50 97 11 50Z"/></symbol>
+      <symbol id="palo-picas" viewBox="0 0 100 100"><path d="M50 4C50 4 93 34 93 60c0 14-10 22-21 22-8 0-14-4-18-10 1 11 4 18 13 23H33c9-5 12-12 13-23-4 6-10 10-18 10-11 0-21-8-21-22C7 34 50 4 50 4Z"/></symbol>
+      <symbol id="palo-treboles" viewBox="0 0 100 100"><circle cx="50" cy="28" r="22"/><circle cx="26" cy="63" r="22"/><circle cx="74" cy="63" r="22"/><path d="M50 50h0c1 24-4 38-15 47h30C54 88 49 74 50 50Z"/></symbol>
+      <symbol id="palo-joker" viewBox="0 0 100 100"><path d="M50 2l9 31 31-9-22 24 22 24-31-9-9 31-9-31-31 9 22-24L10 24l31 9Z"/></symbol>
+      <symbol id="ico-lupa" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="m15.5 15.5 5 5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square"/></symbol>
+      <symbol id="ico-cerrar" viewBox="0 0 24 24"><path d="m5 5 14 14M19 5 5 19" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"/></symbol>
+      <symbol id="ico-izq" viewBox="0 0 24 24"><path d="M15 4 7 12l8 8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"/></symbol>
+      <symbol id="ico-der" viewBox="0 0 24 24"><path d="m9 4 8 8-8 8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="square"/></symbol>
+      <symbol id="ico-lista" viewBox="0 0 24 24"><path d="M9 6h11M9 12h11M9 18h11" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="square"/><path d="M4 6h1M4 12h1M4 18h1" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"/></symbol>
+    </svg>
+    
+      <div class="envoltura">
+        <div class="br-encabezado">
+          <div>
+            <h2 class="titular" id="carta-titulo" data-texto="carta.titulo"></h2>
+            <p class="seccion__bajada" data-texto="carta.bajada"></p>
+          </div>
+          <!-- ÚNICO rótulo de demostración: sello visible + detalle desplegable (textos en js/baraja-datos.js) -->
+          <div class="br-rotulo" id="rotulo">
+            <button type="button" class="br-rotulo__btn" id="rotulo-btn" aria-expanded="false" aria-controls="rotulo-detalle">
+              <span class="br-rotulo__sello">Demostración</span><span class="br-rotulo__mas">Qué significa</span>
+            </button>
+            <div class="br-rotulo__detalle" id="rotulo-detalle" role="region" aria-label="Qué significa «demostración»" hidden></div>
+          </div>
+        </div>
+      </div>
+    
+      <div class="br-carta__in">
+    
+        <noscript><p class="br-sin-js">Esta demostración necesita JavaScript para mostrar la baraja.</p></noscript>
+    
+    
+        <div class="br-bloque" id="bloque">
+          <div class="br-escena" id="escena">
+            <div class="br-baraja" id="baraja" role="region" aria-roledescription="baraja" aria-label="Baraja de la carta" tabindex="0" aria-describedby="baraja-ayuda">
+              <div class="br-sonda" aria-hidden="true"></div>
+              <div class="br-pile" id="pile"></div>
+            </div>
+            <p class="solo-lectores" id="baraja-ayuda">Usa las flechas izquierda y derecha para cambiar de carta, Inicio y Fin para ir a los extremos, Enter o Espacio para voltear la carta.</p>
+    
+            <div class="br-vacio" id="vacio" hidden>
+              <p class="br-vacio__titulo" id="vacio-titulo">No hay resultados</p>
+              <button type="button" class="br-btn br-btn--blanco" id="restablecer">Restablecer filtros</button>
+            </div>
+          </div>
+          <p class="solo-lectores" id="anuncio" role="status" aria-live="polite"></p>
+    
+          <p class="br-hint" id="hint-voltear" aria-hidden="true">Toca la carta para darle la vuelta</p>
+          <div class="br-panel" id="panel">
+            <div class="br-panel__cerrada" id="panel-cerrada">
+              <button type="button" class="br-btn br-btn--blanco br-btn--grande" id="abrir">Abrir la carta</button>
+              <button type="button" class="br-btn br-btn--fantasma" id="saltar" hidden>Saltar animación</button>
+            </div>
+            <div class="br-panel__producto" id="panel-producto" hidden>
+              <p class="br-panel__desc" id="p-desc">Descripción</p>
+              <p class="br-panel__joker" id="p-joker" hidden></p>
+              <button type="button" class="br-btn br-btn--vincular" id="p-vincular" disabled aria-disabled="true" hidden></button>
+            </div>
+            <p class="br-panel__medida" id="panel-medida" aria-hidden="true"></p>
+          </div>
+    
+          <div class="br-controles" id="controles">
+            <button type="button" class="br-nav br-nav--prev" id="prev" aria-label="Carta anterior" aria-disabled="true">
+              <svg class="br-ico" width="24" height="24" aria-hidden="true" focusable="false"><use href="#ico-izq"/></svg>
+            </button>
+            <p class="br-contador" id="contador" aria-hidden="true">1 de 8</p>
+            <button type="button" class="br-nav br-nav--next" id="next" aria-label="Carta siguiente" aria-disabled="false">
+              <svg class="br-ico" width="24" height="24" aria-hidden="true" focusable="false"><use href="#ico-der"/></svg>
+            </button>
+          </div>
+    
+        </div>
+    
+    
+        <!-- Bandeja de opciones (solo en modo inmersivo; se abre con el botón de la esquina) -->
+        <div class="br-bandeja" id="bandeja" role="group" aria-label="Opciones de la carta">
+        <div class="br-herramientas">
+          <form class="br-buscador" role="search" id="form-busqueda" autocomplete="off">
+            <label class="br-buscador__label" for="buscar">Buscar en la carta</label>
+            <div class="br-buscador__campo">
+              <svg class="br-ico" width="18" height="18" aria-hidden="true" focusable="false"><use href="#ico-lupa"/></svg>
+              <input id="buscar" name="q" type="search" inputmode="search" enterkeyhint="search" placeholder="Nombre o descripción" aria-describedby="estado-busqueda">
+              <button type="button" class="br-buscador__limpiar" id="limpiar" hidden aria-label="Limpiar búsqueda">
+                <svg class="br-ico" width="18" height="18" aria-hidden="true" focusable="false"><use href="#ico-cerrar"/></svg>
+              </button>
+            </div>
+          </form>
+          <button type="button" class="br-btn br-btn--lista" id="abrir-lista" aria-haspopup="dialog" aria-label="Ver lista rápida">
+            <svg class="br-ico" width="20" height="20" aria-hidden="true" focusable="false"><use href="#ico-lista"/></svg>
+            <span class="br-txt-corto" aria-hidden="true">Lista</span><span class="br-txt-largo" aria-hidden="true">Ver lista rápida</span>
+          </button>
+        </div>
+        <p class="solo-lectores" id="estado-busqueda" role="status" aria-live="polite"></p>
+    
+        <div class="br-chips" id="chips" role="group" aria-label="Categorías de la carta"></div>
+        <p class="solo-lectores" id="chips-nota">Las categorías marcadas como próximamente se activan cuando el local entregue su carta.</p>
+        <p class="br-aviso-cat" id="aviso-cat" hidden></p>
+          <div class="br-acciones" id="acciones">
+            <button type="button" class="br-btn br-btn--fantasma br-btn--corto" id="barajar" hidden>Barajar de nuevo</button>
+            <button type="button" class="br-btn br-btn--fantasma br-btn--corto" id="cerrar" hidden>Cerrar baraja</button>
+          </div>
+        <div class="br-demo" role="group" aria-labelledby="demo-titulo">
+          <p class="br-demo__titulo" id="demo-titulo">Opciones de demostración</p>
+          <button type="button" class="br-btn br-btn--joker br-btn--corto" id="joker-btn" aria-pressed="false">
+            <svg class="br-palo" width="18" height="18" aria-hidden="true" focusable="false"><use href="#palo-joker"/></svg>
+            <span>Vista previa del joker (demostración)</span>
+          </button>
+        </div>
+        </div>
+
+        <p class="br-portal-aviso br-aviso-cat" id="aviso-portal" role="status" hidden></p>
+
+        <p class="br-enlace-carta">
+          <a class="enlace-ext" href="#" target="_blank" rel="noopener noreferrer" aria-describedby="carta-enlace-nota" data-carta-enlace><span data-texto="carta.enlaceCompleta"></span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+          <span class="carta__enlace-nota" id="carta-enlace-nota" data-texto="carta.enlaceNota"></span>
+        </p>
+      </div>
+    
+      <div class="br-cierre">
+        <a class="volver" href="#inicio">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 19V5M6 11l6-6 6 6"/></svg>
+          <span>Volver arriba</span>
+        </a>
+      </div>
+    
+    <dialog class="br-hoja" id="hoja" aria-labelledby="hoja-titulo">
+      <div class="br-hoja__cab">
+        <div>
+          <h2 class="br-hoja__titulo" id="hoja-titulo">Lista rápida</h2>
+          <p class="br-hoja__sub" id="hoja-sub"></p>
+        </div>
+        <button type="button" class="br-btn br-btn--icono" id="hoja-cerrar" aria-label="Cerrar lista rápida">
+          <svg class="br-ico" width="22" height="22" aria-hidden="true" focusable="false"><use href="#ico-cerrar"/></svg>
+        </button>
+      </div>
+      <ul class="br-hoja__lista" id="hoja-lista"></ul>
+    </dialog>
+    </section>
+
+    <!-- ============ RESERVAS ============ -->
+    <section class="seccion reservas" id="reservas" aria-labelledby="reservas-titulo">
+      <svg class="reservas__anillos" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="1"><circle cx="500" cy="500" r="470"/><circle cx="500" cy="500" r="400"/><circle cx="500" cy="500" r="320"/><circle cx="500" cy="500" r="230"/></g></svg>
+      <div class="envoltura">
+        <div class="seccion__cab">
+          <h2 class="titular" id="reservas-titulo" data-texto="reservas.titulo"></h2>
+          <p class="seccion__bajada" data-texto="reservas.bajada"></p>
+        </div>
+        <div class="reservas__caja reveal">
+          <!-- Los tres pasos del asistente, a gran tamaño: la lectura es «Personas → Fecha → Hora» -->
+          <p class="reservas__titulo">
+            <span class="reservas__paso" data-texto="reserva.etapas.personas"></span>
+            <span class="reservas__sep" aria-hidden="true"></span>
+            <span class="reservas__paso" data-texto="reserva.etapas.fecha"></span>
+            <span class="reservas__sep" aria-hidden="true"></span>
+            <span class="reservas__paso" data-texto="reserva.etapas.hora"></span>
+          </p>
+          <div class="reservas__pie">
+            <p class="reservas__detalle" data-texto="reservas.nota"></p>
+            <a class="cta" href="reservar.html" data-reservas-cta><span class="cta__texto" data-texto="reservas.cta"></span><svg class="cta__flecha" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 12h16M14 6l6 6-6 6"/></svg></a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ MAPA ============ -->
+    <section class="seccion seccion--carbon mapa" id="mapa" aria-labelledby="mapa-titulo">
+      <div class="envoltura">
+        <div class="seccion__cab">
+          <h2 class="titular" id="mapa-titulo" data-texto="mapa.titulo"></h2>
+          <p class="seccion__bajada" data-texto="mapa.bajada"></p>
+        </div>
+        <div class="mapa__cuerpo reveal">
+          <!-- Mapa de Google (iframe sin clave, carga diferida) con marco tipo visor. tabindex="-1": el mapa se usa con puntero y el teclado no queda atrapado dentro del iframe de Google; el equivalente con teclado es el enlace «Cómo llegar» (abre Google Maps). -->
+          <div class="mapa__marco" data-mapa-marco>
+            <iframe class="mapa__iframe" data-mapa-iframe tabindex="-1" title="Mapa de Google: Tirúa Bar-Restorán, Ramón Subercaseaux 455, Pirque" loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+            <div class="mapa__visor" aria-hidden="true">
+              <span class="mapa__esq mapa__esq--a"></span><span class="mapa__esq mapa__esq--b"></span><span class="mapa__esq mapa__esq--c"></span><span class="mapa__esq mapa__esq--d"></span>
+              <span class="mapa__rotulo" data-texto="mapa.rotulo"></span>
+              <span class="mapa__mira"><i></i></span>
+            </div>
+            <p class="mapa__texto" data-texto="mapa.marcoTexto"></p>
+          </div>
+          <ul class="sedes" data-sedes></ul>
+        </div>
+      </div>
+      <!-- Cinta con datos reales del local (se llena desde js/contenido.js → mapa.cinta) -->
+      <div class="cinta" data-cinta aria-hidden="true"><div class="cinta__pista" data-cinta-pista></div></div>
+    </section>
+
+    <!-- ============ DELIVERY ============ -->
+    <section class="seccion delivery" id="delivery" aria-labelledby="delivery-titulo">
+      <div class="envoltura">
+        <div class="seccion__cab">
+          <h2 class="titular" id="delivery-titulo" data-texto="delivery.titulo"></h2>
+        </div>
+        <div class="delivery__caja reveal" data-delivery>
+          <div class="delivery__collage" data-collage aria-hidden="true"></div>
+          <div class="delivery__texto">
+            <p class="delivery__titulo" data-texto="delivery.texto"></p>
+            <p class="delivery__detalle" data-texto="delivery.detalle"></p>
+            <div class="delivery__accion" data-delivery-accion></div>
+          </div>
+          <!-- Vista previa de la carta de pedidos (estilo de la plataforma del bar): se llena desde js/baraja-datos.js. Cada fila abre la plataforma. -->
+          <div class="pedido" data-pedido hidden>
+            <p class="pedido__cab"><span data-texto="delivery.vistaTitulo"></span><span class="pedido__nota" data-texto="delivery.vistaNota"></span></p>
+            <ul class="pedido__lista" data-pedido-lista></ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="pie">
+    <div class="envoltura">
+      <div class="pie__fila">
+        <a class="marca pie__marca" href="#inicio" aria-label="Tirúa, ir al inicio"><img data-logo="cabecera" alt=""></a>
+        <nav aria-label="Secciones del sitio">
+          <ul class="pie__nav" data-nav-pie></ul>
+        </nav>
+      </div>
+      <div class="pie__fila pie__fila--base">
+        <p class="pie__redes" data-pie-instagram></p>
+        <p class="pie__aviso" data-texto="pie.aviso"></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/contenido.js?v=20261024b"></script>
+  <script src="js/baraja-datos.js?v=20261024b"></script>
+  <script src="js/render.js?v=20261024b"></script>
+  <script src="js/main.js?v=20261024b" defer></script>
+  <script src="js/menu.js?v=20261024b" defer></script>
+  <script src="js/baraja.js?v=20261024b" defer></script>
+  <script src="js/carta.js?v=20261024b" defer></script>
+  <script src="js/hero.js?v=20261024b" defer></script>
+  <script src="js/historias.js?v=20261026a" defer></script>
+</body>
+</html>

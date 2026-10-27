@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="es-CL">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Reservar mesa · Tirúa</title>
+  <meta name="description" content="Reservar mesa en Tirúa: elige personas, fecha y hora y envía la solicitud por WhatsApp. El bar te confirma a mano.">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" type="image/png" href="assets/brand/favicon.png">
+  <link rel="preload" href="assets/fonts/YoungSerif-Regular.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="preload" href="assets/fonts/AlegreyaSans-Regular.ttf" as="font" type="font/ttf" crossorigin>
+  <script>document.documentElement.classList.add('js');</script>
+  <script>(function(){try{var q=new URLSearchParams(location.search).get('tema');if(q==='oscuro'||q==='claro'){localStorage.setItem('tirua-tema',q);}var t=localStorage.getItem('tirua-tema');if(t==='oscuro'){document.documentElement.setAttribute('data-tema','oscuro');var m=document.querySelector('meta[name=theme-color]');if(m){m.content='#000000';}}}catch(e){}})();</script>
+  <link rel="stylesheet" href="css/styles.css?v=20261024b">
+</head>
+<body data-pagina="reservar">
+  <a class="saltar" href="#contenido">Saltar al contenido</a>
+
+  <noscript><p class="sin-js">Este sitio necesita JavaScript para mostrar el menú, las categorías y el logo.</p></noscript>
+
+  <header class="cabecera es-solida" data-cabecera>
+    <!-- Barra fina superior (texto en js/contenido.js → aviso) -->
+    <p class="aviso" data-texto="aviso"></p>
+    <div class="cabecera__fila">
+      <button class="menu__boton" type="button" data-menu-boton aria-expanded="false" aria-controls="menu-principal" aria-label="Menú">
+        <span class="menu__barras" aria-hidden="true"><span></span><span></span><span></span></span>
+      </button>
+      <a class="marca" href="#inicio" aria-label="Tirúa, ir al inicio">
+        <img data-logo="cabecera" alt="">
+      </a>
+      <nav class="menu" id="menu-principal" aria-label="Principal" data-menu>
+        <ul class="menu__lista" data-nav></ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="contenido" tabindex="-1">
+    <section class="rsv" data-rsv aria-labelledby="rsv-titulo">
+      <div class="envoltura">
+        <div class="rsv__cab">
+          <h1 class="titular titular--medio" id="rsv-titulo" data-rsv-titulo></h1>
+          <p class="rsv__muestra" data-rsv-muestra></p>
+        </div>
+
+        <div class="rsv__cols">
+          <ol class="etapas" data-etapas></ol>
+          <!-- Mensaje que se arma en vivo; aparece al responder la primera pregunta -->
+          <aside class="vista" data-vista aria-label="Tu solicitud" hidden></aside>
+        </div>
+
+        <!-- Mensajes para lectores de pantalla (cambios de paso, elecciones, avisos) -->
+        <p class="solo-lectores" role="status" aria-live="polite" data-estado></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="pie">
+    <div class="envoltura">
+      <div class="pie__fila">
+        <a class="marca pie__marca" href="#inicio" aria-label="Tirúa, ir al inicio"><img data-logo="cabecera" alt=""></a>
+        <nav aria-label="Secciones del sitio">
+          <ul class="pie__nav" data-nav-pie></ul>
+        </nav>
+      </div>
+      <div class="pie__fila pie__fila--base">
+        <p class="pie__redes" data-pie-instagram></p>
+        <p class="pie__aviso" data-texto="pie.aviso"></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/contenido.js?v=20261024b"></script>
+  <script src="js/render.js?v=20261024b"></script>
+  <script src="js/main.js?v=20261024b" defer></script>
+  <script src="js/menu.js?v=20261024b" defer></script>
+  <script src="js/reservar.js?v=20261024b" defer></script>
+</body>
+</html>
