@@ -1,0 +1,37 @@
+{
+ "individuales": {
+  "producto": "Classic Burger",
+  "original": "originales/Q4SQvngneeu7WZyEN.jpg",
+  "sha256_original": "76bc22b8139908f8a9cff05d6fbcea2b2d75570a8ec313ae975ce98e91a05d3b",
+  "copia": "assets/img/individuales.webp",
+  "dim": [
+   1200,
+   1200
+  ]
+ },
+ "postres": {
+  "producto": "Volcán de Chocolate",
+  "original": "originales/tXqNgbjRdkko3Pdue.jpg",
+  "sha256_original": "caf71990ce99ab27bce1a3eba1424be37852032a6e4591e905e295ebade16db9",
+  "copia": "assets/img/postres.webp",
+  "dim": [
+   1200,
+   1200
+  ]
+ },
+ "compartir": {
+  "producto": "Tabla Marina",
+  "original": "originales/kgHfzuYAv7AzBRmrt.jpg",
+  "sha256_original": "7ff371a15ce40fcc96ca2599a49f7634096117f43a9bd20a954e6d69d0bcadb7",
+  "copia": "assets/img/compartir.webp",
+  "dim": [
+   1200,
+   982
+  ]
+ },
+ "bebestibles": {
+  "producto": "Playa Tirúa",
+  "copia": "assets/img/bebestibles.webp",
+  "nota": "copia de assets/productos/playa-tirua.webp"
+ }
+}

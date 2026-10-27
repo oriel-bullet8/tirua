@@ -1,0 +1,27 @@
+# Sincroniza las novedades de @bartirua cada 6 horas. INERTE hasta que el repo esté en GitHub y exista el secreto IG_TOKEN.
+# Hace commit directo a main con datos/instagram.json y assets/instagram/ (revisa que quieras ese comportamiento antes de activarlo).
+name: Sincronizar Instagram
+on:
+  schedule: [{ cron: '17 */6 * * *' }]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - name: Traer publicaciones (se omite si aún no existe el secreto IG_TOKEN)
+        run: |
+          if [ -z "$IG_TOKEN" ]; then echo "Sin IG_TOKEN: nada que sincronizar"; exit 0; fi
+          IG_REFRESH=1 node scripts/instagram-sync.mjs
+        env:
+          IG_TOKEN: ${{ secrets.IG_TOKEN }}
+      - name: Guardar cambios
+        run: |
+          git config user.name "tirua-bot"
+          git config user.email "tirua-bot@users.noreply.github.com"
+          git add datos/instagram.json assets/instagram
+          git diff --cached --quiet || git commit -m "chore(instagram): actualizar novedades" && git push

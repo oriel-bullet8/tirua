@@ -1,0 +1,357 @@
+{
+  "assets/img/manifiesto.json": {
+    "mtime": 1792503038.0,
+    "ast_hash": "1606519834d7dabec5faef63c976bc99",
+    "semantic_hash": ""
+  },
+  "assets/productos/manifiesto.json": {
+    "mtime": 1792416272.0,
+    "ast_hash": "5413de99af36f93c873b7955c2a864bb",
+    "semantic_hash": ""
+  },
+  "datos/instagram.demo.json": {
+    "mtime": 1792811047.9666643,
+    "ast_hash": "dbb1482c1c236003f363240e519b68d8",
+    "semantic_hash": ""
+  },
+  "datos/instagram.json": {
+    "mtime": 1792811047.9605503,
+    "ast_hash": "7b8b96ed083cdfc10d98773541e23111",
+    "semantic_hash": ""
+  },
+  "datos/justo/carta-justo.json": {
+    "mtime": 1792767701.8194807,
+    "ast_hash": "a90a7559dae5bb19ac1dfc3e695817c8",
+    "semantic_hash": ""
+  },
+  "js/baraja-datos.js": {
+    "mtime": 1792785620.6119013,
+    "ast_hash": "de55c0a05af8970bed866480f1e5a484",
+    "semantic_hash": ""
+  },
+  "js/baraja.js": {
+    "mtime": 1792807108.4007685,
+    "ast_hash": "8fdb9a009cf853c3e1ee282c81391856",
+    "semantic_hash": ""
+  },
+  "js/carta.js": {
+    "mtime": 1792807108.4017467,
+    "ast_hash": "8aea86f113990bd3cee2b7b9ba949882",
+    "semantic_hash": ""
+  },
+  "js/contenido.js": {
+    "mtime": 1792855655.075244,
+    "ast_hash": "e33e060b2bd516fab1e4d6bb1affd9ae",
+    "semantic_hash": ""
+  },
+  "js/hero.js": {
+    "mtime": 1792811556.6987858,
+    "ast_hash": "48da47f872b9f1af729182dc6046eed3",
+    "semantic_hash": ""
+  },
+  "js/historias.js": {
+    "mtime": 1792811073.6481452,
+    "ast_hash": "5fa325bea87c1ef3ae3ad17c2ebc65d9",
+    "semantic_hash": ""
+  },
+  "js/main.js": {
+    "mtime": 1792804094.3014598,
+    "ast_hash": "caf95c9a9456c9f183f4e9d4809bef6a",
+    "semantic_hash": ""
+  },
+  "js/menu.js": {
+    "mtime": 1792196663.0,
+    "ast_hash": "eeb4925b82090aef107eee98c9e84a4f",
+    "semantic_hash": ""
+  },
+  "js/render.js": {
+    "mtime": 1792506411.0,
+    "ast_hash": "efa081e305578036a8bb2c5610ae75e8",
+    "semantic_hash": ""
+  },
+  "js/reservar.js": {
+    "mtime": 1792855643.2869623,
+    "ast_hash": "8d470c2dae20b83dfbaefc5f7115b453",
+    "semantic_hash": ""
+  },
+  "package.json": {
+    "mtime": 1792811566.4885583,
+    "ast_hash": "fb7a9b8863acb163f3281a3065a30e16",
+    "semantic_hash": ""
+  },
+  "pruebas/_lib.cjs": {
+    "mtime": 1792767720.852084,
+    "ast_hash": "06d30b911774f5f35a5f5226b4cc3f6c",
+    "semantic_hash": ""
+  },
+  "pruebas/baraja-campana.cjs": {
+    "mtime": 1792767743.4808104,
+    "ast_hash": "d246f04ac9e6a35507a3b78c84256b8c",
+    "semantic_hash": ""
+  },
+  "pruebas/baraja-extra.cjs": {
+    "mtime": 1792812011.4656823,
+    "ast_hash": "123a84cc76b934f7c0bfa217d5a5fffa",
+    "semantic_hash": ""
+  },
+  "pruebas/baraja-fotos.cjs": {
+    "mtime": 1792812011.466665,
+    "ast_hash": "b7bd768b527ab7012aa8ca18f821c0f2",
+    "semantic_hash": ""
+  },
+  "pruebas/baraja-funcional.cjs": {
+    "mtime": 1792812011.4677525,
+    "ast_hash": "a70387388c0cab939bd08f9a99ece9ef",
+    "semantic_hash": ""
+  },
+  "pruebas/comparar-fotos.py": {
+    "mtime": 1792416945.0,
+    "ast_hash": "94e6cda331175cccf5c9297811718b1d",
+    "semantic_hash": ""
+  },
+  "pruebas/historias.cjs": {
+    "mtime": 1792811566.4880931,
+    "ast_hash": "ed81e38f9459608c46f695ce74856ac9",
+    "semantic_hash": ""
+  },
+  "pruebas/inmersivo.cjs": {
+    "mtime": 1792812011.4716978,
+    "ast_hash": "9a718f73dac862e0293ec8ef812f5076",
+    "semantic_hash": ""
+  },
+  "pruebas/instagram-sync.test.mjs": {
+    "mtime": 1792811524.3326805,
+    "ast_hash": "e664f404a4db4ac933967a2291aa7f9c",
+    "semantic_hash": ""
+  },
+  "pruebas/movil-estrecho.cjs": {
+    "mtime": 1792498199.0,
+    "ast_hash": "f5fd415905f784769b37acf37e3eb316",
+    "semantic_hash": ""
+  },
+  "pruebas/optimizar-imagenes.py": {
+    "mtime": 1792767734.1870706,
+    "ast_hash": "c029dd796e9608699c5e0c92997292fd",
+    "semantic_hash": ""
+  },
+  "pruebas/prueba.cjs": {
+    "mtime": 1792767743.4848933,
+    "ast_hash": "742ea692c5c9943c382d4eae3205f23e",
+    "semantic_hash": ""
+  },
+  "pruebas/recursos.cjs": {
+    "mtime": 1792812011.4743943,
+    "ast_hash": "99a7a3894555128c34a80580da6a5949",
+    "semantic_hash": ""
+  },
+  "pruebas/reservas-datos.cjs": {
+    "mtime": 1792855895.8124,
+    "ast_hash": "3f1f0a36cf34171fbbe0a55dc570fbee",
+    "semantic_hash": ""
+  },
+  "pruebas/reservas.cjs": {
+    "mtime": 1792767781.9426281,
+    "ast_hash": "e78cd0c4adf30e44c7319195942ae0d9",
+    "semantic_hash": ""
+  },
+  "pruebas/sondeo-pliegue-movil.cjs": {
+    "mtime": 1792416250.0,
+    "ast_hash": "41c19b0508aaac793b3150041c427102",
+    "semantic_hash": ""
+  },
+  "pruebas/sondeo.cjs": {
+    "mtime": 1792855848.3249552,
+    "ast_hash": "654d21745939ecee65ac8d384709c5a0",
+    "semantic_hash": ""
+  },
+  "pruebas/verificar-fotos-json.py": {
+    "mtime": 1792767734.187242,
+    "ast_hash": "143c4277afc3f412c6431f42102c25d8",
+    "semantic_hash": ""
+  },
+  "pruebas/vuelta2.cjs": {
+    "mtime": 1792780418.0455742,
+    "ast_hash": "0cf36b901b2668e9852c40cf8bb2a3e9",
+    "semantic_hash": ""
+  },
+  "scripts/instagram-sync.mjs": {
+    "mtime": 1792811396.377786,
+    "ast_hash": "de4da200d1d2c5970874298b30f20838",
+    "semantic_hash": ""
+  },
+  "servir.py": {
+    "mtime": 1792767709.486832,
+    "ast_hash": "926006406641628d6e835c50c410567e",
+    "semantic_hash": ""
+  },
+  ".github/workflows/instagram.yml": {
+    "mtime": 1792811396.377979,
+    "ast_hash": "70df9b523d6eb6ca0f6252a85a4c0bc6",
+    "semantic_hash": ""
+  },
+  "CONTINUIDAD.md": {
+    "mtime": 1792855959.6320913,
+    "ast_hash": "df13548c131e4cf65cc3a7909a105339",
+    "semantic_hash": ""
+  },
+  "DESIGN.md": {
+    "mtime": 1792780940.4192994,
+    "ast_hash": "e29ebfec345edcb29c3136c353a80e75",
+    "semantic_hash": ""
+  },
+  "PRODUCT.md": {
+    "mtime": 1792779514.7139091,
+    "ast_hash": "3cf0ca668a61745aa280cca775b88e3e",
+    "semantic_hash": ""
+  },
+  "README.md": {
+    "mtime": 1792855951.6760871,
+    "ast_hash": "25b616e92cb4c216a9f81ac0c765f352",
+    "semantic_hash": ""
+  },
+  "assets/fonts/LICENSE-alegreyasans-OFL.txt": {
+    "mtime": 1792779869.9727232,
+    "ast_hash": "2feaaabf4a3857da202c9b99f2059c6f",
+    "semantic_hash": ""
+  },
+  "assets/fonts/LICENSE-youngserif-OFL.txt": {
+    "mtime": 1792779865.504065,
+    "ast_hash": "0583dc82b4d25a1a0321e2f2ee77dc80",
+    "semantic_hash": ""
+  },
+  "datos/justo/LEEME.md": {
+    "mtime": 1792767701.8197358,
+    "ast_hash": "508576ea22d77d710b4f6b29a7e0d0d9",
+    "semantic_hash": ""
+  },
+  "docs/DEMO-README.md": {
+    "mtime": 1792767701.8176458,
+    "ast_hash": "19713e8b8c452d92c776b565781d494d",
+    "semantic_hash": ""
+  },
+  "docs/GUIA-VIDEO-HERO.md": {
+    "mtime": 1792811556.7258418,
+    "ast_hash": "5e5c6338790159978bebf8051bc0f6c0",
+    "semantic_hash": ""
+  },
+  "docs/INFORME.md": {
+    "mtime": 1792507870.0,
+    "ast_hash": "0c57a92f69fabdad290824a0fe828bb8",
+    "semantic_hash": ""
+  },
+  "docs/INSTAGRAM-PLAN.md": {
+    "mtime": 1792811556.7421362,
+    "ast_hash": "569999acca651ba37276f4f536ee236e",
+    "semantic_hash": ""
+  },
+  "index.html": {
+    "mtime": 1792855660.6802382,
+    "ast_hash": "d223572bf2d59f88109ba63394805594",
+    "semantic_hash": ""
+  },
+  "loops/demo-completa.md": {
+    "mtime": 1792499036.0,
+    "ast_hash": "f7b68bf56ee471a1b241cd0398e172a6",
+    "semantic_hash": ""
+  },
+  "loops/imagenes-bebestibles.md": {
+    "mtime": 1792418544.0,
+    "ast_hash": "0bf3ee12e99d081b2d9dc35ea092d9b4",
+    "semantic_hash": ""
+  },
+  "loops/pagina-casi-lista.md": {
+    "mtime": 1792812555.7007,
+    "ast_hash": "0b42dee79700f15be822813991e9c538",
+    "semantic_hash": ""
+  },
+  "reservar.html": {
+    "mtime": 1792855660.681186,
+    "ast_hash": "aa3475a7d3b18c002acac77cab7c6637",
+    "semantic_hash": ""
+  },
+  "assets/brand/favicon.png": {
+    "mtime": 1792197314.0,
+    "ast_hash": "8a30b6cf94152eb2965b690092d54114",
+    "semantic_hash": ""
+  },
+  "assets/brand/logo-blanco-recorte.png": {
+    "mtime": 1792196290.0,
+    "ast_hash": "4d27a9449f695e930b20745abda670ab",
+    "semantic_hash": ""
+  },
+  "assets/brand/logo-blanco-wordmark.png": {
+    "mtime": 1792193272.0,
+    "ast_hash": "de29f2f2917702966e20022c92dd8c35",
+    "semantic_hash": ""
+  },
+  "assets/brand/logo-blanco.png": {
+    "mtime": 1792193053.0,
+    "ast_hash": "b38f1d06f8252a9d3a0cd9630b077473",
+    "semantic_hash": ""
+  },
+  "assets/brand/logo-original.png": {
+    "mtime": 1792193052.0,
+    "ast_hash": "46610c4301536907dddab96691ef87df",
+    "semantic_hash": ""
+  },
+  "assets/img/bebestibles.webp": {
+    "mtime": 1792503038.0,
+    "ast_hash": "0ae9370c9a595aacbd786717bd651ace",
+    "semantic_hash": ""
+  },
+  "assets/img/compartir.webp": {
+    "mtime": 1792503038.0,
+    "ast_hash": "535f692c50f9b3c57c7f359400f497e0",
+    "semantic_hash": ""
+  },
+  "assets/img/individuales.webp": {
+    "mtime": 1792503038.0,
+    "ast_hash": "9b7963ccf206f15040b7e9e0f554f0ed",
+    "semantic_hash": ""
+  },
+  "assets/img/postres.webp": {
+    "mtime": 1792503038.0,
+    "ast_hash": "ad2f2e75f1624419fde90e4c63ed306a",
+    "semantic_hash": ""
+  },
+  "assets/productos/botanical-collins.webp": {
+    "mtime": 1792416272.0,
+    "ast_hash": "5e445e010a2666e31cb44861818835df",
+    "semantic_hash": ""
+  },
+  "assets/productos/espresso-vainilla.webp": {
+    "mtime": 1792416272.0,
+    "ast_hash": "9d43aef630b000e6d1f7d41473c09535",
+    "semantic_hash": ""
+  },
+  "assets/productos/green-drinks.webp": {
+    "mtime": 1792416272.0,
+    "ast_hash": "6e2cd3e608869de03d9681fb027679ba",
+    "semantic_hash": ""
+  },
+  "assets/productos/jackie-jr.webp": {
+    "mtime": 1792416272.0,
+    "ast_hash": "3c10a12e1a20b1befe0743739fb04f92",
+    "semantic_hash": ""
+  },
+  "assets/productos/playa-tirua.webp": {
+    "mtime": 1792416272.0,
+    "ast_hash": "0ae9370c9a595aacbd786717bd651ace",
+    "semantic_hash": ""
+  },
+  "assets/productos/ramajito.webp": {
+    "mtime": 1792416272.0,
+    "ast_hash": "9018cd6d30770414d38bed0666f00065",
+    "semantic_hash": ""
+  },
+  "assets/productos/ramazzotti-spritz.webp": {
+    "mtime": 1792416272.0,
+    "ast_hash": "b0f75a58086ddf22358499d171e6443b",
+    "semantic_hash": ""
+  },
+  "assets/productos/sol-de-fuego.webp": {
+    "mtime": 1792416272.0,
+    "ast_hash": "434e5ddcaa865b0444c5d6937bd62f78",
+    "semantic_hash": ""
+  }
+}

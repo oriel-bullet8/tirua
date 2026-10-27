@@ -1,0 +1,24 @@
+{
+  "name": "tirua",
+  "version": "4.0.1",
+  "private": true,
+  "description": "Sitio de Tirúa Bar-Restorán (HTML/CSS/JS estático) con servidor local sin caché y pruebas Playwright.",
+  "scripts": {
+    "start": "python3 servir.py 4195",
+    "test:recursos": "node pruebas/recursos.cjs",
+    "test:inmersivo": "node pruebas/inmersivo.cjs",
+    "test:baraja:fotos": "node pruebas/baraja-fotos.cjs",
+    "test:vuelta2": "node pruebas/vuelta2.cjs",
+    "test:reservas-datos": "node pruebas/reservas-datos.cjs",
+    "verificar": "npm run test:recursos && npm run test:inmersivo && npm run test:historias && npm run test:instagram-sync && npm run test:baraja:fotos && npm run test:vuelta2 && npm run test:reservas-datos",
+    "sondeo": "node pruebas/sondeo.cjs",
+    "test:historias": "node pruebas/historias.cjs",
+    "test:instagram-sync": "node --test pruebas/instagram-sync.test.mjs"
+  },
+  "devDependencies": {
+    "playwright-core": "1.58.2"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
