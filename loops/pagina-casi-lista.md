@@ -36,7 +36,7 @@ Estado de cada uno vive en la tabla CHECKS (abajo). SUCCESS = todos los automati
 - H2 Video real del hero, WhatsApp del bar, horarios y textos reales · externos → PENDING [USER/INFERRED]
 
 ## Initial State
-Ver STATE. Sitio en `/Users/pablito/Documents/Codex/Proyectos/tirua`, servidor `python3 servir.py` en 127.0.0.1:4195, suite verde al 2026-10-23 (recursos 41/41, inmersivo 94, fotos 188, vuelta2 40, reservas-datos 22). Pruebas heredadas de geometría de la baraja (baraja-funcional/extra/campana, movil-estrecho, prueba.cjs) desactualizadas.
+Ver STATE. Sitio en la raíz de este repo, servidor `python3 servir.py` en 127.0.0.1:4195, suite verde al 2026-10-23 (recursos 41/41, inmersivo 94, fotos 188, vuelta2 40, reservas-datos 22). Pruebas heredadas de geometría de la baraja (baraja-funcional/extra/campana, movil-estrecho, prueba.cjs) desactualizadas.
 
 ## State Variables
 ciclo, CHECKS (estado + evidencia + frescura + limitación), lista de defectos (id, repro, estado), cambios hechos por ciclo, iteraciones sin progreso.
@@ -81,7 +81,7 @@ No se pide aprobación intermedia: todo lo previo es reversible, local y sin pub
 
 ## Guardrails
 - Sin commit, push, deploy ni mensajes externos [USER, instrucción vigente del proyecto]
-- No tocar las carpetas originales `…/est-2/outputs/*` ni los respaldos [USER]
+- No tocar las carpetas originales anteriores a la migración ni los respaldos (en el Mac de Pablo) [USER]
 - No inventar contenido del bar (precios, horarios, ingredientes, fotos, WhatsApp) [USER]
 - Código solo tras reproducir un fallo o por un ítem de diseño de C7 [INFERRED, loop-runner]
 - Una sola mejora «de gusto» a la vez, verificada, para no acumular regresiones [SUGGESTED]

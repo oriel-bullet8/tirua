@@ -1,6 +1,6 @@
 // «Novedades» en el hero: burbujas al estilo historias de Instagram + visor a pantalla completa.
 // Lee datos/instagram.json (lo escribe a mano el equipo o scripts/instagram-sync.mjs desde la API oficial de Instagram).
-// Sin datos o sin red el bloque queda oculto y el hero se ve como siempre. Sin scripts ni imágenes de terceros:
+// Sin datos o sin red el bloque se oculta y el hero se ve como siempre (mientras carga reserva su alto para que nada salte). Sin scripts ni imágenes de terceros:
 // las imágenes viven en assets/instagram/ y los enlaces salen a instagram.com solo al pulsarlos.
 // Mientras datos/instagram.json no tenga publicaciones, se muestran los ejemplos de datos/instagram.demo.json (marcados «Ejemplo»,
 // con su etiqueta en el visor). En cuanto el bar cargue publicaciones reales, estas los reemplazan solas.
@@ -45,7 +45,7 @@
   function limpiar(d) {
     var lista = (d && Array.isArray(d.items) ? d.items : []).map(function (x, i) {
       if (!x || !x.titulo) return null;
-      return { id: String(x.id || 'i' + i), titulo: recortar(x.titulo, 80), texto: recortar(x.texto, 240), imagen: imagenSegura(x.imagen), url: enlaceSeguro(x.url), fecha: x.fecha || '', tipo: x.tipo || (x.imagen ? 'imagen' : 'texto'), demo: !!(x.demo || d.demo) };
+      return { id: String(x.id || 'i' + i), titulo: recortar(x.titulo, 80), texto: recortar(x.texto, 240), evento: recortar(x.evento, 40), reservar: x.reservar === true, imagen: imagenSegura(x.imagen), url: enlaceSeguro(x.url), fecha: x.fecha || '', tipo: x.tipo || (x.imagen ? 'imagen' : 'texto'), demo: !!(x.demo || d.demo) };
     }).filter(Boolean).slice(0, 12);
     cuenta = (d && /^[\w.]{1,30}$/.test(d.cuenta || '')) ? d.cuenta : 'bartirua';
     return lista;
@@ -75,8 +75,8 @@
         '<div class="hv__barras" aria-hidden="true"></div>' +
         '<div class="hv__cab"><span class="hv__avatar"><img alt="" width="36" height="36"></span><span class="hv__cuenta"></span><span class="hv__tiempo"></span><span class="hv__demo" hidden>Ejemplo</span><button type="button" class="hv__cerrar" aria-label="Cerrar novedades"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m5 5 14 14M19 5 5 19"/></svg></button></div>' +
         '<div class="hv__medio" aria-hidden="true"></div>' +
-        '<div class="hv__texto"><h2 class="hv__titulo"></h2><p class="hv__desc"></p></div>' +
-        '<a class="hv__cta" target="_blank" rel="noopener noreferrer"><span>Ver en Instagram</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 17 17 7M8 7h9v9"/></svg></a>' +
+        '<div class="hv__texto"><p class="hv__evento" hidden></p><h2 class="hv__titulo"></h2><p class="hv__desc"></p></div>' +
+        '<div class="hv__acciones"><a class="hv__reservar" href="reservar.html" hidden><span>Reservar</span></a><a class="hv__cta" target="_blank" rel="noopener noreferrer"><span>Ver en Instagram</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 17 17 7M8 7h9v9"/></svg></a></div>' +
         '<button type="button" class="hv__zona hv__zona--izq" aria-label="Anterior"></button><button type="button" class="hv__zona hv__zona--der" aria-label="Siguiente"></button>' +
         '<p class="solo-lectores" role="status" aria-live="polite"></p>' +
       '</div>';
@@ -120,11 +120,13 @@
     visor.querySelector('.hv__cuenta').textContent = '@' + cuenta;
     visor.querySelector('.hv__tiempo').textContent = it.fecha ? hace(it.fecha) : '';
     visor.querySelector('.hv__demo').hidden = !it.demo;
+    var ev = visor.querySelector('.hv__evento'); ev.textContent = it.evento; ev.hidden = !it.evento;
     visor.querySelector('.hv__titulo').textContent = it.titulo;
     visor.querySelector('.hv__desc').textContent = it.texto;
     var a = visor.querySelector('.hv__cta'); if (it.url) { a.href = it.url; a.hidden = false; } else { a.removeAttribute('href'); a.hidden = true; }
+    visor.querySelector('.hv__reservar').hidden = !it.reservar;
     visor.querySelector('.hv__marco').setAttribute('aria-label', 'Novedad ' + (i + 1) + ' de ' + items.length);
-    visor.querySelector('[role=status]').textContent = (it.demo ? 'Ejemplo. ' : '') + it.titulo + '. ' + it.texto;
+    visor.querySelector('[role=status]').textContent = (it.demo ? 'Ejemplo. ' : '') + (it.evento ? it.evento + '. ' : '') + it.titulo + '. ' + it.texto;
     visor.querySelector('.hv__zona--izq').disabled = false;
     marcarVista(it.id);
     var burbuja = raiz.querySelector('[data-i="' + i + '"]'); if (burbuja) burbuja.classList.add('historia--vista');
@@ -165,7 +167,8 @@
   function pintarBurbujasEstado() { var vs = vistas(); raiz.querySelectorAll('.historia').forEach(function (b) { var it = items[+b.getAttribute('data-i')]; b.classList.toggle('historia--vista', vs.indexOf(it.id) >= 0); }); }
 
   // ---------- Carga ----------
-  if (!window.fetch) return;
+  function sinNovedades() { raiz.hidden = true; raiz.classList.remove('historias--espera'); hero.classList.add('sin-historias'); }
+  if (!window.fetch) { sinNovedades(); return; }
   function traer(ruta) { return fetch(ruta, { cache: 'no-store' }).then(function (r) { if (!r.ok) throw new Error('sin datos'); return r.json(); }).then(limpiar); }
   function sinDatos() { return []; }
   var real = forzarDemo ? Promise.resolve([]) : traer('datos/instagram.json').catch(sinDatos);
@@ -174,11 +177,11 @@
     return traer('datos/instagram.demo.json').catch(sinDatos);   // todavía no hay publicaciones reales: ejemplos marcados
   }).then(function (lista) {
     items = lista;
-    if (!items.length) return;
+    if (!items.length) { sinNovedades(); return; }   // el CSS reserva el tamaño del hero con historias
     raiz.querySelector('.historias__cuenta').textContent = '@' + cuenta;
     pintarBurbujas();
-    raiz.hidden = false;
+    raiz.classList.remove('historias--espera'); raiz.hidden = false;
     hero.classList.add('hay-historias');
     window.TIRUA = window.TIRUA || {}; window.TIRUA.historias = { abrir: abrir, cerrar: cerrar, total: items.length };
-  }).catch(function () { /* sin archivo o sin red: el hero queda como estaba */ });
+  }).catch(sinNovedades);
 })();

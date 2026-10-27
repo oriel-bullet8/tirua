@@ -35,7 +35,9 @@ Lo ideal: 1–2 clips **originales en horizontal** (1920×1080, 8–15 s, sin ha
 
 **Cómo entra el contenido real (dos caminos, mismo archivo):**
 1. **A mano** (ya funciona): se editan `datos/instagram.json` y se dejan las imágenes en `assets/instagram/` (formato en `datos/instagram.demo.json`). Útil mientras no haya API.
-2. **Automático:** `scripts/instagram-sync.mjs` (API oficial, cuenta Business/Creator) descarga las últimas 12 publicaciones y escribe ese mismo JSON + miniaturas; `.github/workflows/instagram.yml` lo corre cada 6 h y renueva el token. **Inerte** hasta subir el repo a GitHub y crear el secreto `IG_TOKEN`. El script está probado contra una API simulada (`node --test pruebas/instagram-sync.test.mjs`); **no** se ha probado con Instagram real: falta el token.
+2. **Automático:** `scripts/instagram-sync.mjs` (API oficial, cuenta Business/Creator) descarga las últimas 12 publicaciones y escribe ese mismo JSON + miniaturas; el workflow `docs/instagram-sync.workflow.yml` lo corre cada 6 h y renueva el token. **Inerte**: para activarlo se copia a `.github/workflows/instagram.yml` (desde la web de GitHub, porque subirlo por terminal exige un token con permiso `workflow`) y se crea el secreto `IG_TOKEN`. El script está probado contra una API simulada (`node --test pruebas/instagram-sync.test.mjs`); **no** se ha probado con Instagram real: falta el token.
+
+**Campos opcionales por publicación** (`datos/instagram.json`): `"evento": "Sáb 31 · 21:00"` muestra una etiqueta roja sobre el título (máx. 40 caracteres, texto libre) y `"reservar": true` agrega el botón «Reservar» que lleva a `reservar.html`. Sin ellos la publicación se ve como siempre.
 
 **Qué hace falta de la cuenta del bar:** que sea Business o Creator, una app en Meta for Developers con la cuenta agregada como probador y un token de larga duración (60 días, el workflow lo renueva). Lo hace el dueño de la cuenta, no se comparte la contraseña.
 

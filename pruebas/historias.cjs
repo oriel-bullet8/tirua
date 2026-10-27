@@ -5,7 +5,7 @@ const R = [];
 function ok(g, nombre, cond, detalle) { R.push({ g, nombre, ok: !!cond }); console.log((cond ? 'OK   ' : 'FALLA') + ' [' + g + '] ' + nombre + (detalle !== undefined && detalle !== '' ? ' → ' + String(detalle).slice(0, 200) : '')); }
 const DATOS = { cuenta: 'bartirua', items: [
   { id: 'a1', titulo: 'Concurso de bandas', texto: 'Cada miércoles nuevas bandas.', imagen: 'assets/productos/ramajito.webp', url: 'https://www.instagram.com/p/AAA/', fecha: new Date(Date.now() - 3 * 3600e3).toISOString() },
-  { id: 'a2', titulo: 'Open mic', texto: 'Sube al escenario.', url: 'https://www.instagram.com/reel/BBB/', fecha: new Date(Date.now() - 2 * 86400e3).toISOString() },
+  { id: 'a2', titulo: 'Open mic', evento: 'Sáb 31 · 21:00', reservar: true, texto: 'Sube al escenario.', url: 'https://www.instagram.com/reel/BBB/', fecha: new Date(Date.now() - 2 * 86400e3).toISOString() },
   { id: 'a3', titulo: 'Sorpresa del viernes', texto: 'Texto largo '.repeat(40), imagen: 'assets/productos/sol-de-fuego.webp', url: 'https://www.instagram.com/p/CCC/' },
   { id: 'x1', titulo: 'Enlace y foto peligrosos', texto: 'No deben pasar', imagen: 'https://evil.example/x.png', url: 'javascript:alert(1)' },
   { titulo: '' }
@@ -36,7 +36,12 @@ async function recorrido(b, g, vp) {
   await page.keyboard.press('ArrowRight'); await esperar(500);
   ok(g, 'flecha derecha pasa a la siguiente (Open mic)', (await page.evaluate(() => document.querySelector('.hv__titulo').textContent)) === 'Open mic', '');
   ok(g, 'una publicación sin imagen se muestra como tarjeta de texto sobre el rojo', await page.evaluate(() => document.querySelector('.hv__medio').classList.contains('hv__medio--texto')), '');
+  { const e = await page.evaluate(() => { const d = document.querySelector('dialog.hv'); const ev = d.querySelector('.hv__evento'), rs = d.querySelector('.hv__reservar'), cta = d.querySelector('.hv__cta'); const r1 = rs.getBoundingClientRect(), r2 = cta.getBoundingClientRect(), m = d.querySelector('.hv__marco').getBoundingClientRect(); return { ev: !ev.hidden && ev.textContent, rs: !rs.hidden, href: rs.getAttribute('href'), mismaFila: Math.abs(r1.top - r2.top) < 2, dentro: r1.left >= m.left && r2.right <= m.right + 1, solapa: r1.right > r2.left, status: d.querySelector('[role=status]').textContent }; });
+    ok(g, 'una publicación con «evento» muestra la etiqueta y «Reservar» (que lleva a reservar.html) junto a «Ver en Instagram»', e.ev === 'Sáb 31 · 21:00' && e.rs && e.href === 'reservar.html' && e.mismaFila && e.dentro && !e.solapa, JSON.stringify(e));
+    ok(g, 'el evento también se anuncia a lectores de pantalla', /Sáb 31 · 21:00/.test(e.status), e.status); }
   await page.keyboard.press('ArrowLeft'); await esperar(400);
+  { const n = await page.evaluate(() => { const d = document.querySelector('dialog.hv'); return { ev: d.querySelector('.hv__evento').hidden, rs: d.querySelector('.hv__reservar').hidden }; });
+    ok(g, 'una publicación sin «evento» ni «reservar» no muestra ni etiqueta ni botón', n.ev && n.rs, JSON.stringify(n)); }
   ok(g, 'flecha izquierda vuelve', (await page.evaluate(() => document.querySelector('.hv__titulo').textContent)) === 'Concurso de bandas', '');
   await page.click('.hv__zona--der'); await esperar(400);
   ok(g, 'tocar la mitad derecha avanza', (await page.evaluate(() => document.querySelector('.hv__titulo').textContent)) === 'Open mic', '');

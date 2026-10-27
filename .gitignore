@@ -7,3 +7,5 @@ pruebas/resultados/
 datos/justo/originales/
 datos/justo/crudo/
 .impeccable/
+# Cache de graphify (se regenera con `graphify update .`; trae rutas absolutas de la máquina)
+graphify-out/cache/

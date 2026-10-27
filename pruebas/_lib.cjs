@@ -26,6 +26,7 @@ function ejecutableEnCache() {
 const MAPAS = /^https:\/\/([a-z0-9-]+\.)?(google\.com|gstatic\.com|googleapis\.com|googleusercontent\.com)\//;
 const CAP = path.join(__dirname, '..', 'capturas');
 fs.mkdirSync(CAP, { recursive: true });
+fs.mkdirSync(path.join(__dirname, 'resultados'), { recursive: true });   // carpeta ignorada por git: no existe tras clonar
 async function lanzar() {
   if (process.env.TIRUA_CHROMIUM) return chromium.launch({ executablePath: process.env.TIRUA_CHROMIUM });
   try { return await chromium.launch(); }

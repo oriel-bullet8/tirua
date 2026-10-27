@@ -35,7 +35,7 @@ Missing information [MISSING]: decisión de Oriel sobre cómo agrupar las 27 cat
 - Ningún archivo de otro agente revertido; `bar-tirua-justo` y `bar-tirua-baraja` intactos (hashes) [USER, INFERRED].
 
 ## Initial State
-Sitio en `/Users/pablito/Documents/Codex/2026-10-15/est-2/outputs/bar-tirua-sitio`; baraja ya integrada (README); 8 bebestibles reales con foto; `assets/video` vacío; servidor 4195 colgado (responde vacío), 4198 también. Baseline de hoy en puerto 4201: funcional 88/88 (390) y 84/84 (1440), extra 102/102, `prueba.cjs` sin fallas salvo `con-video` (necesita un `hero.mp4` que no existe). Sin otro escritor detectado (`ps`).
+Sitio en la carpeta `bar-tirua-sitio` de entonces (ya migrada a este repo); baraja ya integrada (README); 8 bebestibles reales con foto; `assets/video` vacío; servidor 4195 colgado (responde vacío), 4198 también. Baseline de hoy en puerto 4201: funcional 88/88 (390) y 84/84 (1440), extra 102/102, `prueba.cjs` sin fallas salvo `con-video` (necesita un `hero.mp4` que no existe). Sin otro escritor detectado (`ps`).
 
 ## State Variables
 - Estado de cada check de la DoD (PENDING/PASS/FAIL/BLOCKED) con su evidencia y frescura.

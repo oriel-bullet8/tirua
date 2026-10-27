@@ -7,8 +7,8 @@ Esta hoja resume dónde vamos. El detalle técnico vive en `CONTINUIDAD.md`; las
 | | |
 |---|---|
 | Qué es | Sitio de Tirúa Bar-Restorán (Pirque): carta en baraja, reservas por WhatsApp, mapa, delivery con Justo. |
-| Dónde está | `~/Documents/Codex/Proyectos/tirua` · se ve con `python3 servir.py` en http://127.0.0.1:4195/ |
-| Último paquete | `~/Documents/Codex/respaldos-tirua/tirua-vol4-fogon-2026-10-24-final.zip` (incluye la demo de Instagram y el bloqueo de domingo/lunes) |
+| Dónde está | https://github.com/oriel-bullet8/tirua · se ve con `python3 servir.py` en http://127.0.0.1:4195/ (ver README) |
+| Último paquete | `tirua-vol4-fogon-2026-10-24-final.zip` (respaldo en el Mac de Pablo; incluye la demo de Instagram y el bloqueo de domingo/lunes) |
 | Calidad automática | Todo en verde: recursos 45/45, carta inmersiva 117/117, historias 49/49, sincronización 6/6, fotos 188/188, vuelta2 40/40, reservas 64/64; sondeo de páginas y foco 72/72. |
 | Lo que nadie ha probado | Celulares reales y Safari (Pablo lo prueba ahora en su iPhone). |
 | Decisiones de diseño | Blanco con acento rojo, Young Serif + Alegreya Sans, logo invertido por CSS (no se pide logo en negro). |

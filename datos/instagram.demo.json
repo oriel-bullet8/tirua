@@ -5,9 +5,9 @@
   "nota": "Datos de EJEMPLO para ver el diseño (se activan con ?demo=instagram). No son publicaciones reales del bar.",
   "items": [
     { "id": "demo-1", "demo": true, "tipo": "imagen", "titulo": "Ejemplo: el trago de la semana", "texto": "Aquí va el texto de la publicación de Instagram: una línea corta con lo que pasa en el bar.", "imagen": "assets/productos/ramajito.webp", "fecha": "2026-10-23T18:00:00-03:00", "url": "https://www.instagram.com/bartirua/" },
-    { "id": "demo-2", "demo": true, "tipo": "texto", "titulo": "Ejemplo: concurso de bandas", "texto": "Los anuncios sin foto se muestran así, sobre el rojo de Tirúa. Texto de ejemplo.", "fecha": "2026-10-22T12:00:00-03:00", "url": "https://www.instagram.com/bartirua/" },
+    { "id": "demo-2", "demo": true, "tipo": "texto", "evento": "Día y hora (ejemplo)", "reservar": true, "titulo": "Ejemplo: concurso de bandas", "texto": "Los anuncios sin foto se muestran así, sobre el rojo de Tirúa. Texto de ejemplo.", "fecha": "2026-10-22T12:00:00-03:00", "url": "https://www.instagram.com/bartirua/" },
     { "id": "demo-3", "demo": true, "tipo": "imagen", "titulo": "Ejemplo: noche en la terraza", "texto": "Cada publicación abre aquí, en formato historia, y lleva al Instagram real.", "imagen": "assets/productos/playa-tirua.webp", "fecha": "2026-10-20T20:00:00-03:00", "url": "https://www.instagram.com/bartirua/" },
-    { "id": "demo-4", "demo": true, "tipo": "texto", "titulo": "Ejemplo: open mic", "texto": "Artistas, fiestas, sorpresas y noticias del local. Texto de ejemplo.", "fecha": "2026-10-18T12:00:00-03:00", "url": "https://www.instagram.com/bartirua/" },
+    { "id": "demo-4", "demo": true, "tipo": "texto", "evento": "Día y hora (ejemplo)", "titulo": "Ejemplo: open mic", "texto": "Artistas, fiestas, sorpresas y noticias del local. Texto de ejemplo.", "fecha": "2026-10-18T12:00:00-03:00", "url": "https://www.instagram.com/bartirua/" },
     { "id": "demo-5", "demo": true, "tipo": "imagen", "titulo": "Ejemplo: sabor intenso", "texto": "Las fotos vienen de la propia cuenta del bar (API oficial de Instagram).", "imagen": "assets/productos/sol-de-fuego.webp", "fecha": "2026-10-15T19:00:00-03:00", "url": "https://www.instagram.com/bartirua/" }
   ]
 }

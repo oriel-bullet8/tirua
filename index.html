@@ -12,7 +12,7 @@
   <link rel="preload" href="assets/fonts/AlegreyaSans-Regular.ttf" as="font" type="font/ttf" crossorigin>
   <script>document.documentElement.classList.add('js');</script>
   <script>(function(){try{var q=new URLSearchParams(location.search).get('tema');if(q==='oscuro'||q==='claro'){localStorage.setItem('tirua-tema',q);}var t=localStorage.getItem('tirua-tema');if(t==='oscuro'){document.documentElement.setAttribute('data-tema','oscuro');var m=document.querySelector('meta[name=theme-color]');if(m){m.content='#000000';}}}catch(e){}})();</script>
-  <link rel="stylesheet" href="css/styles.css?v=20261024b">
+  <link rel="stylesheet" href="css/styles.css?v=20261027c">
   <link rel="stylesheet" href="css/baraja.css?v=20261024b">
 </head>
 <body>
@@ -81,7 +81,7 @@
           <a class="btn btn--linea" href="reservar.html"><span>Reservar</span></a>
         </div>
         <!-- Novedades del Instagram del bar (js/historias.js, datos/instagram.json). Sin publicaciones reales muestra ejemplos marcados (datos/instagram.demo.json). -->
-        <nav class="historias" data-historias aria-label="Novedades del bar en Instagram" hidden>
+        <nav class="historias historias--espera" data-historias aria-label="Novedades del bar en Instagram">
           <p class="historias__titulo">Novedades <span class="historias__cuenta"></span></p>
           <ul class="historias__lista"></ul>
         </nav>
@@ -360,6 +360,6 @@
   <script src="js/baraja.js?v=20261024b" defer></script>
   <script src="js/carta.js?v=20261024b" defer></script>
   <script src="js/hero.js?v=20261024b" defer></script>
-  <script src="js/historias.js?v=20261026a" defer></script>
+  <script src="js/historias.js?v=20261027c" defer></script>
 </body>
 </html>
