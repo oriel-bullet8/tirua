@@ -36,6 +36,20 @@
 .rsv .vista::before, .rsv .vista::after { display: none; }
 .rsv .rsv__muestra { background: #ffffff80; border-color: #78936c66; border-radius: 8px; }
 .rsv .rsv__aviso { border-radius: 8px; }
+.whatsapp-reserva {
+  display: inline-flex; align-items: center; justify-content: center; gap: 12px;
+  width: 100%; min-height: 62px; padding: 16px 20px;
+  border: 0; border-radius: 999px; background: #25d366; color: #063e24;
+  font: 700 1.125rem/1.2 var(--sans); text-align: center; text-decoration: none;
+  box-shadow: 0 8px 20px -14px #128c7e99;
+  transition: background-color .2s, transform .2s, opacity .2s;
+}
+.whatsapp-reserva__icono { width: 28px; height: 28px; flex: none; color: #fff; }
+.whatsapp-reserva:focus-visible { outline: 2px solid #128c7e; outline-offset: 4px; }
+.whatsapp-reserva[aria-disabled="true"] { opacity: .6; cursor: not-allowed; box-shadow: none; }
+.whatsapp-reserva:not([aria-disabled="true"]):active { transform: scale(.985); }
+@media (hover: hover) { .whatsapp-reserva:not([aria-disabled="true"]):hover { background: #20c660; } }
+@media (prefers-reduced-motion: reduce) { .whatsapp-reserva { transition: none; } }
 :root[data-tema="oscuro"] .rsv { --tinta: #e0ebd8; --tinta-2: #bdcdb6; --tinta-3: #a3b89a; --tinta-rgb: 224 235 216; --linea: #97be9733; --linea-fuerte: #97be9766; background: #111b14; }
 :root[data-tema="oscuro"] .rsv::before { opacity: .04; }
 :root[data-tema="oscuro"] .rsv .campo__in { background: #17241b; }

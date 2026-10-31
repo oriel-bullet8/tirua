@@ -40,3 +40,9 @@ El bloque de inicio se reduce a dos enlaces grandes y centrados: «Celebra tu cu
 Las historias sin ver tienen un aro verde con halo suave y un pulso lento de 5,8 segundos, escalonado entre las burbujas. Al abrirlas, el estado existente de historia vista reduce el brillo y detiene el pulso. Con reducción de movimiento se muestra un halo estático. Se amplió el espacio del carrusel para que el resplandor no se recorte.
 
 Verificado en navegador móvil: historia sin ver con pulso activo, apertura y cierre del visor, y estado visto con animación detenida y opacidad del halo reducida a 0,08. Sin desbordamiento horizontal.
+
+## Una sola salida de WhatsApp
+
+La vista de la solicitud muestra un único botón verde de WhatsApp, con su icono y el mensaje prellenado. Se retiraron el botón de copiar y su lógica. El enlace se habilita al completar personas, fecha, hora y nombre. Se conserva la nota que explica que, sin número configurado del bar, la persona elige el chat en WhatsApp.
+
+Verificado en móvil: una sola acción; enlace deshabilitado mientras faltan datos y habilitado al completar el nombre, con personas, fecha, hora y ocasión incluidos en la URL de WhatsApp. No se envió ninguna solicitud. Sin desbordamiento horizontal.

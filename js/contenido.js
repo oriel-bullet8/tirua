@@ -138,7 +138,7 @@ window.TIRUA_CONTENIDO = {
     tituloVista: 'Tu solicitud',
     huecos: { nombre: 'tu nombre', personas: 'personas', fecha: 'fecha', hora: 'hora' },   // lo que aún falta se ve así en el mensaje: [fecha]
     faltaVista: 'Para enviarla falta: {lista}.',
-    listoParaEnviar: 'Tu solicitud está lista. Envíala por WhatsApp o cópiala.',
+    listoParaEnviar: 'Tu solicitud está lista. Envíala por WhatsApp.',
     avisoSolicitud: 'Esto es una solicitud, no una reserva confirmada. El bar confirmará la disponibilidad a mano, por WhatsApp.',
     enviarWhatsApp: 'Enviar por WhatsApp',
     whatsappNota: 'Abre WhatsApp en el chat de Tirúa con tu solicitud ya escrita: solo te queda enviarla.',

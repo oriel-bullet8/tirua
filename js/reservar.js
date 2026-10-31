@@ -1,6 +1,5 @@
 // Solicitud de reserva (reservar.html): una cascada de cuatro preguntas (Personas → Fecha → Hora → Tus datos) y, al lado,
-// el mensaje que se va armando con lo elegido, con dos salidas: «Enviar por WhatsApp» (enlace wa.me al número del bar,
-// con el texto ya escrito) y «Copiar mensaje».
+// el mensaje que se va armando con lo elegido y una sola acción: «Enviar por WhatsApp», con el texto ya escrito.
 // No hay disponibilidad, cupos ni confirmaciones, y los datos no se guardan ni se envían desde la página: el bar confirma a mano.
 // No hace peticiones de red ni escribe en localStorage, sessionStorage o cookies.
 // Textos, horas, mensaje y número de WhatsApp: js/contenido.js (reserva.* y local.whatsapp).
@@ -35,8 +34,6 @@
   var CABECERA_SEMANA = ['lunes', 'martes', 'miércoles', 'jueves', 'viernes', 'sábado', 'domingo'];
   var ICONO_FLECHA = 'M4 12h16M14 6l6 6-6 6';
   var ICONO_ATRAS = 'M20 12H4M10 6l-6 6 6 6';
-  var ICONO_COPIAR = 'M9 9h11v11H9zM4 15V4h11';
-  var ICONO_EXTERNO = 'M7 17L17 7M9 7h8v8';
   var ICONO_LISTO = 'M5 12.5l4.5 4.5L19 7.5';
 
   // ---------- Utilidades ----------
@@ -91,7 +88,7 @@
     mes: ym(hoyISO()), focoDia: null,
     mensaje: '', mensajeEn: 'general', horaReseteada: false,
     continuarEn: null,          // pregunta que espera «Continuar» (elección con teclado)
-    foco: null, copia: ''
+    foco: null
   };
   if (new URLSearchParams(window.location.search).get('ocasion') === 'cumpleanos' && (T.ocasiones || []).indexOf('Cumpleaños') !== -1) {
     s.ocasion = 'Cumpleaños';
@@ -426,7 +423,7 @@
     ta.addEventListener('input', function () { s.comentario = ta.value; actualizarVista(); });
   }
 
-  // ---------- Mensaje (vista previa en vivo, WhatsApp y copiar) ----------
+  // ---------- Mensaje (vista previa en vivo y WhatsApp) ----------
   var M0 = '\u0001', M1 = '\u0002';   // marcan los huecos del mensaje
   function hueco(valor, etiqueta) { return valor || (M0 + etiqueta + M1); }
   function textoMensaje(conHuecos) {
@@ -465,24 +462,16 @@
     vista.grande = el('p', 'vista__nota', T.grandeAviso);
     vistaEl.appendChild(vista.grande);
     var acc = el('div', 'vista__acciones');
-    vista.wa = cta(T.enviarWhatsApp, { enlace: true, icono: ICONO_EXTERNO, clave: 'whatsapp', etiqueta: T.whatsappEtiqueta });
-    vista.wa.classList.add('cta--whatsapp');
+    vista.wa = el('a', 'whatsapp-reserva', null, { 'data-clave': 'whatsapp', 'aria-label': T.whatsappEtiqueta });
+    vista.wa.innerHTML = '<svg class="whatsapp-reserva__icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M20.5 11.7a8.7 8.7 0 0 1-12.8 7.7L3 21l1.5-4.6A8.7 8.7 0 1 1 20.5 11.7Z"/><path fill="currentColor" d="M8.1 6.9c-.2 0-.5.1-.6.3-.5.5-.8 1.2-.8 1.9 0 2.5 3.9 6.6 6.9 7.4.7.2 1.7.2 2.4-.1.5-.3 1.2-1 1.3-1.6l.1-.8c0-.2-.1-.3-.3-.4l-2.2-1c-.2-.1-.4-.1-.5.1l-1 1.2c-.2.2-.4.2-.6.1-1.6-.6-2.9-1.8-3.7-3.3-.1-.2-.1-.4.1-.5l.8-1c.1-.2.2-.4.1-.6L9.2 7.2c-.1-.2-.3-.3-.5-.3h-.6Z"/></svg>';
+    vista.wa.appendChild(el('span', null, T.enviarWhatsApp));
     vista.wa.setAttribute('role', 'link');
     vista.wa.setAttribute('aria-describedby', 'vista-falta nota-whatsapp');
     vista.wa.addEventListener('click', function (ev) { if (vista.wa.getAttribute('aria-disabled') === 'true') ev.preventDefault(); });
     acc.appendChild(vista.wa);
-    vista.copiar = cta(T.copiar, { secundario: true, icono: ICONO_COPIAR, clave: 'copiar' });
-    vista.copiar.setAttribute('aria-describedby', 'vista-falta');
-    vista.copiar.addEventListener('click', function () {
-      if (vista.copiar.getAttribute('aria-disabled') === 'true') return;
-      copiar(textoMensaje(false), vista.msg, vista.copia);
-    });
-    acc.appendChild(vista.copiar);
     vistaEl.appendChild(acc);
     vista.nota = el('p', 'vista__nota', '', { id: 'nota-whatsapp' });
     vistaEl.appendChild(vista.nota);
-    vista.copia = el('p', 'rsv__copia', '', { 'aria-live': 'polite' });
-    vistaEl.appendChild(vista.copia);
     vistaEl.appendChild(el('p', 'vista__aviso', T.avisoSolicitud));
   }
 
@@ -493,10 +482,8 @@
 
     // Mensaje: lo que falta se ve como [hueco]
     var partes = textoMensaje(true).split(new RegExp(M0 + '([^' + M1 + ']*)' + M1));
-    var previo = vista.msg.textContent;
     vista.msg.textContent = '';
     partes.forEach(function (p, i) { if (i % 2) vista.msg.appendChild(el('span', 'hueco', '[' + p + ']')); else if (p) vista.msg.appendChild(document.createTextNode(p)); });
-    if (vista.msg.textContent !== previo && s.copia) { s.copia = ''; vista.copia.textContent = ''; }
 
     var falta = faltantes(), completo = falta.length === 0;
     vista.falta.textContent = completo ? '' : reemplazar(T.faltaVista, { lista: falta.join(', ') });
@@ -508,22 +495,6 @@
     var wa = vista.wa;
     if (completo) { wa.setAttribute('href', urlWhatsApp(textoMensaje(false))); wa.setAttribute('target', '_blank'); wa.setAttribute('rel', 'noopener noreferrer'); wa.removeAttribute('aria-disabled'); wa.removeAttribute('tabindex'); }
     else { wa.removeAttribute('href'); wa.removeAttribute('target'); wa.removeAttribute('rel'); wa.setAttribute('aria-disabled', 'true'); wa.setAttribute('tabindex', '0'); }
-    if (completo) vista.copiar.removeAttribute('aria-disabled'); else vista.copiar.setAttribute('aria-disabled', 'true');
-  }
-
-  function copiar(texto, nodo, estado) {
-    function ok() { s.copia = T.copiado; estado.textContent = T.copiado; anunciar(T.copiado); }
-    function fallo() {
-      // Respaldo: se selecciona el texto para copiarlo a mano.
-      var r = document.createRange(); r.selectNodeContents(nodo);
-      var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
-      var copiado = false;
-      try { copiado = document.execCommand && document.execCommand('copy'); } catch (e) { copiado = false; }
-      if (copiado) ok(); else { s.copia = T.copiarFallo; estado.textContent = T.copiarFallo; anunciar(T.copiarFallo); }
-    }
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(texto).then(ok, fallo);
-    } else fallo();
   }
 
   // ---------- Cascada ----------
