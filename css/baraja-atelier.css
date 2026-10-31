@@ -1,0 +1,128 @@
+/* Tirúa · Negro esencial. Diseño aprobado, 31-oct-2026.
+   Fotografías originales, paisajes independientes y naipe construido con texto/SVG. */
+.br-carta {
+  --fondo: #0b0b0c; --fondo-2: #101011; --fondo-3: #171615;
+  --fondo-rgb: 11 11 12; --tinta: #f0e3ca; --tinta-2: #d1c3ab;
+  --tinta-3: #a89a84; --tinta-rgb: 240 227 202;
+  --linea: #c3a36b40; --linea-fuerte: #c3a36b70;
+  --br-negro: #0b0b0c; --br-carta-negro: #0c0d0e;
+  --br-franja: transparent; --br-blanco: #f0e3ca; --br-mute: #ad9d83;
+  --br-linea: #c3a36b40; --br-linea-fuerte: #c3a36b70;
+  --br-oro: #c5a166; --br-vino: #8e293c;
+  color-scheme: dark;
+}
+.seccion.br-carta, .br-carta.br-inm {
+  background: radial-gradient(ellipse at 50% 38%, #23201b 0, #131211 40%, #090a0b 82%);
+}
+.br-carta__barra, .br-carta__anillos { display: none; }
+.br-carta__brillo { opacity: .22; background: radial-gradient(ellipse, #b38a4433, transparent 65%); }
+.br-carta .br-face {
+  border: 1px solid #a9874c8c; border-radius: 3.5cqw;
+  background: #0b0c0e; color: #f0e3ca;
+  box-shadow: 0 18px 30px -12px #000c, inset 0 0 0 .5px #ebd1a72e;
+}
+.br-carta .br-card.br-is-active .br-face {
+  border-color: #c8a56a; box-shadow: 0 24px 40px -15px #000e, inset 0 0 0 .5px #d3b78344;
+}
+.br-card::before, .br-face--front::before, .br-face--front::after { display: none; }
+.br-marco { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 6; pointer-events: none; }
+.br-dim { z-index: 8; background: #070809; border-radius: inherit; }
+.br-oleo {
+  position: absolute; inset: 5.8cqw; z-index: 0; border-radius: 1cqw;
+  background-image: url('../assets/baraja/paisajes-oleo.webp');
+  background-size: 400% 200%; background-position: var(--br-art-x) var(--br-art-y);
+}
+.br-oleo::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(90deg, #090a0bb3, transparent 22%, transparent 81%, #090a0b99),
+    linear-gradient(0deg, #0b0c0e 0%, #0b0c0ed9 12%, transparent 35%, #07080922 80%, #07080977);
+}
+.br-carta .br-foto {
+  position: absolute; inset: 0; width: auto; height: auto; overflow: visible;
+  border: 0; background: none; z-index: 2; pointer-events: none;
+}
+.br-carta .br-foto__img {
+  position: absolute; left: var(--br-photo-center); top: var(--br-photo-top);
+  width: var(--br-photo-width); max-width: none; height: auto;
+  object-fit: initial; transform: translateX(-50%);
+  clip-path: none;
+  -webkit-mask-image: var(--br-photo-mask); mask-image: var(--br-photo-mask);
+  -webkit-mask-size: 100% 100%; mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
+  filter: drop-shadow(0 2cqw 2cqw #0007);
+}
+.br-carta .br-idx {
+  min-width: 8cqw; width: 8cqw; z-index: 7; line-height: 1;
+  color: #ead8b8; pointer-events: none;
+}
+.br-carta .br-idx--tl { left: 9.2cqw; top: 13.5cqw; }
+.br-carta .br-idx--br { right: 9.2cqw; bottom: 13.5cqw; }
+.br-carta .br-idx__v {
+  font: 400 9cqw/.96 Georgia, 'Times New Roman', serif;
+  font-variant-numeric: lining-nums; letter-spacing: -.035em;
+  text-shadow: 0 1px 3px #000a;
+}
+.br-carta .br-idx__palo {
+  width: 5.5cqw; height: 5.5cqw; margin-top: 1cqw;
+  fill: #8e293c; stroke: #d0b275; stroke-width: 3;
+  paint-order: stroke fill; overflow: visible;
+  filter: drop-shadow(0 1px 2px #000a);
+}
+.br-carta .br-pips, .br-carta .br-voltear { display: none; }
+.br-carta .br-face--front .br-franja {
+  z-index: 4; left: 20cqw; right: 20cqw; bottom: 9.5cqw;
+  height: 17cqw; display: flex; align-items: center; justify-content: center;
+  padding: 0; border: 0; background: none;
+}
+.br-carta .br-face--front .br-precio { display: none; }
+.br-carta .br-nombre {
+  color: #f0e3ca; font-family: var(--display); font-weight: 400;
+  font-size: 6.1cqw; line-height: 1.14; text-align: center;
+  text-transform: none; letter-spacing: -.025em; overflow-wrap: normal;
+  text-shadow: 0 2px 5px #000; padding: .1em 0;
+}
+.br-carta .br-dorso__trama {
+  inset: 5.8cqw; opacity: .2; border-radius: 1cqw; mask: none; -webkit-mask: none;
+  background: radial-gradient(ellipse at 50% 50%, #0c0d0e 20%, #0c0d0e00 60%),
+    repeating-radial-gradient(ellipse at 0 50%, #e1c38420 0 .15cqw, transparent .3cqw 2.7cqw),
+    repeating-radial-gradient(ellipse at 100% 50%, #e1c38418 0 .15cqw, transparent .3cqw 2.7cqw);
+}
+.br-carta .br-dorso__marco { display: none; }
+.br-carta .br-dorso__logo, .br-carta .br-face--back-info .br-dorso__logo {
+  top: 50%; width: 56cqw; height: auto; filter: none; z-index: 2;
+}
+.br-carta:not(.br-is-open) .br-face--back .br-franja { display: none; }
+.br-carta.br-is-open .br-face--back-info .br-dorso__logo { display: none; }
+.br-carta.br-is-open .br-dorso__info {
+  z-index: 3; left: 14cqw; right: 14cqw; top: 19cqw; bottom: 43cqw; gap: 3.5cqw;
+}
+.br-carta .br-dorso__desc { color: #e1d4bf; font-size: 5.5cqw; line-height: 1.38; }
+.br-carta .br-dorso__cat { color: #c8ad7b; border-color: #c8ad7b55; font-weight: 400; }
+.br-carta .br-dorso__palo { fill: #8e293c; stroke: #c8ad7b; stroke-width: 2; }
+.br-carta .br-face--back .br-franja {
+  z-index: 3; left: 14cqw; right: 14cqw; bottom: 12cqw; height: 23cqw;
+  border-top: 1px solid #bd9b5d44; background: none;
+  display: flex; flex-direction: column; justify-content: center; gap: 3cqw; padding: 3cqw 0 0;
+}
+.br-carta .br-face--back .br-nombre { flex: none; font-size: 6.3cqw; }
+.br-carta .br-face--back .br-precio {
+  font: 500 7cqw/1 var(--sans); color: #d8bb82; opacity: 1;
+}
+.br-carta .br-nav, .br-carta.br-inm .br-nav {
+  background: #161513; border: 1px solid #c3a36b77; color: #e4cfa9;
+}
+.br-carta .br-btn { border-color: #bea16b77; color: #e9dcc2; background: #171614; }
+.br-carta .br-btn:hover { background: #27231c; border-color: #ddbd82; }
+.br-carta .br-btn--blanco { color: #15120c; background: #d3b783; border-color: #d3b783; }
+.br-carta .br-btn--blanco:hover { background: #e7d3ae; }
+.br-carta .br-inm-btn { color: #eadabd; background: #141312; border: 1px solid #c3a36b55; }
+.br-carta .br-chip { border-color: #b79a6555; }
+.br-carta .br-punto { color: #b57a72; }
+.br-carta .br-hint { color: #b6a990; }
+.br-carta .br-panel__desc { display: none; }
+.br-carta .br-rotulo__sello { background: #c4a570; color: #15120d; }
+.br-carta .br-hoja { background: #111212; color: #eadfc9; }
+.br-carta .br-card--joker .br-idx__palo { fill: #c7aa73; }
+@media (prefers-reduced-motion: reduce) {
+  .br-carta .br-foto__img { filter: none; }
+}

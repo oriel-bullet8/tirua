@@ -104,6 +104,7 @@
       valor: VALORES[Math.min(idx, VALORES.length - 1)], esAs: idx === 0, destacado: !!p.destacado,
       nombre: p.nombre, justo: p.justo || '', descripcion: p.descripcion, precio: p.precio, imagen: p.imagen || null,
       etiquetas: p.etiquetas || [],
+      arte: (window.TIRUA_BARAJA_ARTE || {})[p.id] || {},
       /* Texto de búsqueda: nombre + descripción + etiquetas (sin tildes ni mayúsculas) */
       pajar: norm([p.nombre, p.descripcion].concat(p.etiquetas || []).join(' '))
     };
@@ -168,17 +169,9 @@
     return '<svg class="br-palo ' + (cls || '') + '" focusable="false" aria-hidden="true"><use href="#palo-' + palo + '"/></svg>';
   }
 
-  function pipsHtml(p) {
-    var n = p.valor === 'A' ? 1 : (isNaN(parseInt(p.valor, 10)) ? 1 : parseInt(p.valor, 10));
-    /* Los palos se van sumando a los costados de la foto, en dos columnas verticales (izquierda primero): 1 → 1+0, 2 → 1+1, 3 → 2+1 … 8 → 4+4 */
-    var izq = Math.ceil(n / 2), der = n - izq, i;
-    function col(c, lado) { var h = '<span class="br-pips__col br-pips__col--' + lado + '">'; for (i = 0; i < c; i++) { h += paloSvg(p.palo, 'br-pip'); } return h + '</span>'; }
-    return col(izq, 'izq') + col(der, 'der');
-  }
-
   function fotoHtml(p) {
     if (p.imagen && p.imagen.src) {
-      /* object-fit: cover (CSS) recorta sin estirar; `posicion` elige qué parte queda a la vista. Solo la carta del As (la primera) se pide al cargar; las demás, perezosas. */
+      /* La foto conserva su proporción; una máscara SVG separada oculta el fondo. La del As carga primero. */
       return '<img class="br-foto__img" src="' + esc(p.imagen.src) + '" alt="' + esc(p.imagen.alt || p.nombre) + '" width="' + (p.imagen.ancho || 800) + '" height="' + (p.imagen.alto || 600) + '"' +
         (p.imagen.posicion ? ' style="object-position:' + esc(p.imagen.posicion) + '"' : '') + ' loading="' + (p.esAs ? 'eager' : 'lazy') + '" decoding="async" draggable="false">';
     }
@@ -189,7 +182,27 @@
     return '<div class="br-idx ' + cls + '"><span class="br-idx__v">' + p.valor + '</span>' + paloSvg(p.palo, 'br-idx__palo') + '</div>';
   }
 
-  /* Reverso: logo de Tirúa. En los productos conserva la misma franja de nombre y precio (el reverso no los oculta); el joker no tiene precio. */
+  /* Un único perímetro cerrado; los índices viven dentro de este marco. */
+  function marcoHtml(id) {
+    var uid = 'br-marco-' + id;
+    return '<svg class="br-marco" viewBox="0 0 500 700" preserveAspectRatio="none" aria-hidden="true" focusable="false">' +
+      '<defs><linearGradient id="' + uid + '-oro" x1="0" y1="0" x2="0.35" y2="1"><stop stop-color="#8b622e"/><stop offset=".24" stop-color="#e1c68d"/><stop offset=".53" stop-color="#ac7d3c"/><stop offset=".78" stop-color="#d9bb78"/><stop offset="1" stop-color="#8c602d"/></linearGradient>' +
+      '<g id="' + uid + '-hoja" fill="none" stroke-linecap="round" stroke-linejoin="round">' +
+      '<path d="M25 68C27 47 38 36 65 25M28 57C20 48 25 34 37 36C48 39 39 50 34 45C29 39 39 31 45 34M35 38C31 28 41 21 47 28C51 33 45 40 41 38M42 35C47 23 61 21 63 27C65 33 50 37 44 37M39 43C49 39 57 44 55 49C52 55 43 48 39 45M34 49C42 48 46 57 40 59C35 60 33 54 34 49M29 59C26 64 31 69 34 65C36 62 32 58 29 59"/>' +
+      '<path d="M28 66C35 54 46 44 63 28M30 51C35 45 41 40 50 35M31 60L35 55M49 30L57 28" stroke-width=".8"/>' +
+      '<circle cx="25" cy="25" r="2" fill="currentColor" stroke="none"/></g></defs>' +
+      '<g stroke="url(#' + uid + '-oro)" color="#c6a66c" stroke-width="1.35" fill="none">' +
+      '<rect x="21" y="21" width="458" height="658" rx="11"/>' +
+      '<rect x="27" y="27" width="446" height="646" rx="7" stroke-width=".65"/>' +
+      '<rect x="24" y="24" width="452" height="652" rx="9" stroke-width=".7" stroke-dasharray=".6 3.3"/>' +
+      '<use href="#' + uid + '-hoja"/><use href="#' + uid + '-hoja" transform="translate(500 0) scale(-1 1)"/>' +
+      '<use href="#' + uid + '-hoja" transform="translate(0 700) scale(1 -1)"/><use href="#' + uid + '-hoja" transform="translate(500 700) scale(-1 -1)"/>' +
+      '<path d="M229 24C237 24 240 18 250 18C260 18 263 24 271 24M239 24Q250 12 261 24M245 24L250 20L255 24" stroke-width=".9"/>' +
+      '<path d="M229 676C237 676 240 682 250 682C260 682 263 676 271 676M239 676Q250 688 261 676" stroke-width=".9"/>' +
+      '</g></svg>';
+  }
+
+  /* Franja compartida: solo el nombre en el frente; nombre y precio al girar (CSS). */
   function franjaHtml(p) {
     return '<div class="br-franja"><p class="br-nombre">' + esc(p.nombre) + '</p><p class="br-precio">' + clp(p.precio) + '</p></div>';
   }
@@ -201,11 +214,11 @@
       '<p class="br-dorso__desc">' + esc(p.descripcion) + '</p></div>';
   }
   function dorsoHtml(p) {
-    return '<div class="br-face br-face--back' + (p && !p.joker ? ' br-face--back-info' : '') + '" aria-hidden="true"><div class="br-dorso__trama"></div><div class="br-dorso__marco"></div><img class="br-dorso__logo" src="' + LOGO + '" width="' + LOGO_DIM[0] + '" height="' + LOGO_DIM[1] + '" alt="" decoding="async" draggable="false">' + (p && !p.joker ? dorsoInfoHtml(p) + franjaHtml(p) : '') + '<i class="br-dim"></i></div>';
+    return '<div class="br-face br-face--back' + (p && !p.joker ? ' br-face--back-info' : '') + '" aria-hidden="true"><div class="br-dorso__trama"></div>' + marcoHtml(p.id + '-back') + '<img class="br-dorso__logo" src="' + LOGO + '" width="' + LOGO_DIM[0] + '" height="' + LOGO_DIM[1] + '" alt="" decoding="async" draggable="false">' + (p && !p.joker ? dorsoInfoHtml(p) + franjaHtml(p) : '') + '<i class="br-dim"></i></div>';
   }
 
   function jokerFrenteHtml() {
-    return '<div class="br-face br-face--front br-face--joker">' +
+    return '<div class="br-face br-face--front br-face--joker">' + marcoHtml('joker-front') +
       indiceHtml(jokerModelo, 'br-idx--tl') +
       '<div class="br-joker__arte"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><g fill="none" stroke="currentColor" stroke-width="1" vector-effect="non-scaling-stroke"><circle cx="50" cy="50" r="46"/><circle cx="50" cy="50" r="40"/><circle cx="50" cy="50" r="27"/></g><use href="#palo-joker" class="br-joker__estrella" x="22" y="22" width="56" height="56"/></svg></div>' +
       '<p class="br-joker__titulo">JOKER</p>' +
@@ -214,12 +227,12 @@
 
   function productoFrenteHtml(p) {
     return '<div class="br-face br-face--front">' +
+      '<div class="br-oleo" aria-hidden="true"></div>' +
       indiceHtml(p, 'br-idx--tl') +
       '<div class="br-foto">' + fotoHtml(p) + '</div>' +
-      '<div class="br-pips">' + pipsHtml(p) + '</div>' +
-      '<span class="br-voltear" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M20 12a8 8 0 0 1-13.7 5.6M4 12a8 8 0 0 1 13.7-5.6M18 3v4h-4M6 21v-4h4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
       indiceHtml(p, 'br-idx--br') +
       franjaHtml(p) +
+      marcoHtml(p.id + '-front') +
       '<i class="br-dim"></i></div>';
   }
 
@@ -231,6 +244,14 @@
     div.setAttribute('aria-roledescription', 'carta');
     div.setAttribute('aria-hidden', 'true');
     div.style.setProperty('--br-c', p.acento);
+    if (!p.joker && p.arte) {
+      div.style.setProperty('--br-photo-mask', p.arte.mascara ? 'url("/' + p.arte.mascara + '")' : 'none');
+      div.style.setProperty('--br-photo-width', p.arte.ancho || '100cqw');
+      div.style.setProperty('--br-photo-top', p.arte.arriba || '0cqw');
+      div.style.setProperty('--br-photo-center', p.arte.centro || '50%');
+      div.style.setProperty('--br-art-x', ((p.arte.escena || 0) % 4) * 100 / 3 + '%');
+      div.style.setProperty('--br-art-y', Math.floor((p.arte.escena || 0) / 4) * 100 + '%');
+    }
     div.dataset.id = p.id;
     div.hidden = true;
     div.innerHTML = '<div class="br-flip" aria-hidden="true">' + (p.joker ? jokerFrenteHtml() : productoFrenteHtml(p)) + dorsoHtml(p) + '</div>';
@@ -1005,3 +1026,4 @@
     if (Math.abs(rueda.acum) >= 36) { go(rueda.acum > 0 ? 1 : -1); rueda.acum = 0; rueda.espera = true; }
   }, { passive: false });
 })();
+
