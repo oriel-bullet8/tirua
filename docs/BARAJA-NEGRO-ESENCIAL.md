@@ -46,3 +46,7 @@ Verificado en navegador móvil: historia sin ver con pulso activo, apertura y ci
 La vista de la solicitud muestra un único botón verde de WhatsApp, con su icono y el mensaje prellenado. Se retiraron el botón de copiar y su lógica. El enlace se habilita al completar personas, fecha, hora y nombre. Se conserva la nota que explica que, sin número configurado del bar, la persona elige el chat en WhatsApp.
 
 Verificado en móvil: una sola acción; enlace deshabilitado mientras faltan datos y habilitado al completar el nombre, con personas, fecha, hora y ocasión incluidos en la URL de WhatsApp. No se envió ninguna solicitud. Sin desbordamiento horizontal.
+
+## Vista previa al compartir
+
+Se añadieron metadatos Open Graph estáticos a inicio y reservas, con URLs públicas absolutas y una imagen JPEG de 1200 × 630. La portada usa el wordmark original sobre verde bosque. Su fuente editable es `diseno/compartir.html`; se exporta su lienzo de 1200 × 630 y no se altera el logo. La imagen se entrega desde `assets/brand/tirua-compartir-v1.jpg`. Se agregaron también canonical, título, descripción, dimensiones, tipo MIME y texto alternativo. La vista previa dentro de WhatsApp depende de su cliente y de la actualización de su caché.
