@@ -15,7 +15,7 @@
   <link rel="stylesheet" href="css/styles.css?v=20261031c">
   <link rel="stylesheet" href="css/baraja.css?v=20261024b">
   <link rel="stylesheet" href="css/baraja-atelier.css?v=20261031a">
-  <link rel="stylesheet" href="css/reservas-campo.css?v=20261031c">
+  <link rel="stylesheet" href="css/reservas-campo.css?v=20261031d">
 </head>
 <body>
   <a class="saltar" href="#contenido">Saltar al contenido</a>
@@ -270,22 +270,11 @@
     </section>
 
     <!-- ============ RESERVAS ============ -->
-    <section class="seccion reservas" id="reservas" aria-labelledby="reservas-titulo">
+    <section class="seccion reservas" id="reservas" aria-label="Reservas y cumpleaños">
       <div class="envoltura">
-        <div class="seccion__cab">
-          <h2 class="titular" id="reservas-titulo" data-texto="reservas.titulo"></h2>
-          <p class="seccion__bajada" data-texto="reservas.bajada"></p>
-        </div>
-        <div class="reservas__caja reveal">
-          <ol class="reservas__pasos" aria-label="Pasos para solicitar una mesa">
-            <li><span class="reservas__numero" aria-hidden="true">01</span><span data-texto="reserva.etapas.personas"></span></li>
-            <li><span class="reservas__numero" aria-hidden="true">02</span><span data-texto="reserva.etapas.fecha"></span></li>
-            <li><span class="reservas__numero" aria-hidden="true">03</span><span data-texto="reserva.etapas.hora"></span></li>
-          </ol>
-          <div class="reservas__pie">
-            <p class="reservas__detalle" data-texto="reservas.nota"></p>
-            <a class="cta" href="reservar.html" data-reservas-cta><span class="cta__texto" data-texto="reservas.cta"></span><svg class="cta__flecha" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 12h16M14 6l6 6-6 6"/></svg></a>
-          </div>
+        <div class="reservas__acciones">
+          <a class="reservas__accion" href="reservar.html?ocasion=cumpleanos">Celebra tu cumpleaños</a>
+          <a class="reservas__accion" href="reservar.html">Reserva una mesa</a>
         </div>
       </div>
     </section>

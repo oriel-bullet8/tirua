@@ -30,3 +30,7 @@ Comprobado en navegador: ocho recortes sobre fondo de contraste; ficha completa 
 Los acentos de navegación, historias, botones y ficha del local pasan a verde bosque con salvia. La sección de reservas muestra tres pasos compactos en una sola fila y un botón verde de tamaño moderado, sin el fondo de anillos ni la tipografía sobredimensionada. El texto explica la solicitud y la confirmación por el bar de forma breve.
 
 El asistente de reserva comparte la paleta, usa un fondo claro y controles con bordes suaves. Se conservan sus datos, horarios de muestra y la confirmación manual. Verificado en móvil: acceso desde el botón de la portada, elección de personas, fecha y apertura de horas; sin envío de solicitud. Documento sin desbordamiento horizontal.
+
+## Simplificación solicitada: solo dos botones
+
+El bloque de inicio se reduce a dos enlaces grandes y centrados: «Celebra tu cumpleaños» y «Reserva una mesa». Se eliminan su título, bajada, pasos y texto explicativo. El primero abre el asistente con Cumpleaños preseleccionado; el segundo conserva una solicitud normal.

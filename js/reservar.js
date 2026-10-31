@@ -93,6 +93,11 @@
     continuarEn: null,          // pregunta que espera «Continuar» (elección con teclado)
     foco: null, copia: ''
   };
+  if (new URLSearchParams(window.location.search).get('ocasion') === 'cumpleanos' && (T.ocasiones || []).indexOf('Cumpleaños') !== -1) {
+    s.ocasion = 'Cumpleaños';
+    raiz.querySelector('[data-rsv-titulo]').textContent = 'Celebra tu cumpleaños';
+    document.title = 'Celebra tu cumpleaños · Tirúa';
+  }
   var temporizador = null, avancePendiente = null;
   var nodos = {};               // por etapa: { li, btn, cuerpo, contenido, rotulo, valor }
   var vista = {};               // piezas persistentes del mensaje
@@ -391,7 +396,7 @@
     co.appendChild(el('legend', 'campo__et', T.etiquetaOcasion));
     var chips = el('div', 'ocasiones');
     (T.ocasiones || []).forEach(function (o) {
-      var b = el('button', 'ocasion', o, { type: 'button', 'aria-pressed': 'false', 'data-clave': 'o-' + o });
+      var b = el('button', 'ocasion', o, { type: 'button', 'aria-pressed': String(s.ocasion === o), 'data-clave': 'o-' + o });
       b.addEventListener('click', function () {
         s.ocasion = s.ocasion === o ? null : o;
         Array.prototype.forEach.call(chips.children, function (c) { c.setAttribute('aria-pressed', String(c.textContent === s.ocasion)); });
@@ -605,3 +610,4 @@
   construirVista();
   refrescar();
 })();
+
