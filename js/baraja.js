@@ -245,7 +245,7 @@
     div.setAttribute('aria-hidden', 'true');
     div.style.setProperty('--br-c', p.acento);
     if (!p.joker && p.arte) {
-      div.style.setProperty('--br-photo-mask', p.arte.mascara ? 'url("/' + p.arte.mascara + '")' : 'none');
+      div.style.setProperty('--br-photo-mask', p.arte.mascara ? 'url("/' + p.arte.mascara + '?v=20261031b")' : 'none');
       div.style.setProperty('--br-photo-width', p.arte.ancho || '100cqw');
       div.style.setProperty('--br-photo-top', p.arte.arriba || '0cqw');
       div.style.setProperty('--br-photo-center', p.arte.centro || '50%');

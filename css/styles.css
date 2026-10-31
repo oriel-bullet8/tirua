@@ -1006,6 +1006,63 @@ html.hv-abierto { overflow: hidden; }
 .hero__contenido { min-width: 0; max-width: 100%; }
 .historias { min-width: 0; width: 100%; max-width: 760px; }
 .hero:not(.sin-historias) { --logo: min(76vw, 38svh, 480px); }
+
+/* Ajustes del 31-oct: cinta bajo las historias y ficha del local centrada. */
+.cinta--inicio {
+  width: calc(100% + 2 * var(--margen)); align-self: end;
+  margin: clamp(28px, 4vw, 44px) calc(-1 * var(--margen)) 0;
+  padding-block: 18px; border-color: #b9996040;
+  background: linear-gradient(90deg, #b999600c, #b999601a, #b999600c);
+  color: var(--tinta-2);
+}
+.cinta--inicio .cinta__item { font-size: clamp(1.25rem, 2.6vw, 2rem); letter-spacing: 0; }
+.cinta--inicio .cinta__item::after { width: 7px; height: 7px; border: 0; background: #ae8c50; }
+.cinta--inicio .cinta__item:nth-child(even) { color: var(--tinta-2); -webkit-text-stroke: 0; }
+.mapa .sede {
+  --sede-oro: #91713e;
+  gap: 28px; padding: clamp(32px, 4vw, 48px) clamp(24px, 3vw, 36px);
+  grid-template-rows: auto auto auto; align-content: center; text-align: center;
+  background: radial-gradient(ellipse at 50% 0, #c8a66c1f, transparent 62%), var(--fondo);
+  border: 1px solid #b7955b66; border-radius: 12px;
+  box-shadow: 0 16px 36px -26px #60441966;
+}
+.mapa .sede::before {
+  inset: 7px; width: auto; height: auto; border: 1px solid #b7955b33;
+  border-radius: 7px; pointer-events: none;
+}
+.mapa .sede::after { display: none; }
+.mapa .sede__nombre {
+  font-size: clamp(1.875rem, 3vw, 2.5rem); line-height: 1.14;
+  max-width: 13ch; justify-self: center; text-wrap: balance;
+}
+.mapa .sede__datos { gap: 26px; }
+.mapa .sede__datos > div { gap: 9px; padding: 0; border: 0; justify-items: center; }
+.mapa .sede__datos > div::after, .mapa .sede__datos dt::before { display: none; }
+.mapa .sede__datos dt {
+  flex-direction: column; justify-content: center; gap: 8px; color: var(--sede-oro);
+  font-size: .9375rem; font-weight: 500;
+}
+.sede__icono { width: 25px; height: 25px; fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+.mapa .sede__datos dd { text-align: center; font-size: clamp(1.125rem, 1.7vw, 1.375rem); line-height: 1.35; max-width: 30ch; }
+.mapa .sede__nota { max-width: 32ch; margin: 8px auto 0; font-size: .9375rem; line-height: 1.4; }
+.mapa .sede .accion { display: grid; justify-items: center; gap: 10px; align-content: start; }
+.mapa .sede .accion__nota { max-width: 28ch; margin: 0; text-align: center; line-height: 1.35; }
+.mapa .sede .btn {
+  gap: 18px; min-height: 60px; padding: 8px 8px 8px 26px; border-radius: 999px;
+  background: #201b15; color: #fff8e9; border: 1px solid #b7955b88;
+  font-size: 1.125rem; box-shadow: 0 10px 22px -13px #60441999;
+  transition: background .25s, transform .25s, box-shadow .25s;
+}
+.mapa .sede .btn::before { display: none; }
+.sede__flecha { width: 42px; height: 42px; padding: 12px; border-radius: 50%; background: #cfb17b; color: #201b15; fill: none; stroke: currentColor; stroke-width: 1.6; transition: transform .25s; }
+.mapa .sede .btn:focus-visible { outline: 2px solid var(--sede-oro); outline-offset: 4px; }
+@media (hover: hover) {
+  .mapa .sede .btn:hover { background: #3a2c1c; color: #fff8e9; transform: translateY(-2px); box-shadow: 0 14px 24px -13px #60441999; }
+  .mapa .sede .btn:hover .sede__flecha { transform: rotate(8deg); }
+}
+:root[data-tema="oscuro"] .mapa .sede { --sede-oro: #cfb17b; }
+@media (min-width: 900px) { .mapa .mapa__marco { height: 100%; min-height: 560px; } }
+@media (prefers-reduced-motion: reduce) { .mapa .sede .btn, .sede__flecha { transition: none; } }
 /* Las categorías, antes de «repartirse», esperan desplazadas: la sección recorta ese desplazamiento para no crear scroll horizontal */
 .categorias { overflow-x: clip; }
 
@@ -1087,4 +1144,5 @@ html.hv-abierto { overflow: hidden; }
 .vista .rsv__copia:empty { display: none; }
 .vista__aviso { margin: 18px 0 0; padding-top: 14px; border-top: 1px solid var(--linea); font-size: 0.8125rem; line-height: 1.5; color: var(--tinta-2); }
 @keyframes vistaEntra { from { opacity: 0; transform: translateX(26px) scale(0.98); } }
+
 

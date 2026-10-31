@@ -16,3 +16,11 @@ Dirección visual aprobada e implementada el 31 de octubre de 2026.
 Revisión visual en navegador a tamaño de escritorio y a 390 × 844; recorrido de las ocho bebidas, apertura, giro con ficha y precio y cierre del mazo. Se comprobó que las ocho fotos cargan y sus archivos mantienen los SHA de Git de la versión base; referencias locales, XML de las ocho máscaras y sintaxis JavaScript válidos. El vídeo de portada sigue ausente, como en la versión base.
 
 Las pruebas históricas que esperan el precio visible en el frente ya no describen el diseño aprobado. El verificador HTTP no pudo alcanzar el servidor de vista previa administrado desde la terminal; no se declara aprobado.
+
+## Ajustes posteriores del 31 de octubre
+
+Se redibujaron los ocho contornos SVG en las dimensiones reales de cada foto, con curvas específicas para bordes, adornos, tallos y bases. La foto original de Green Drinks termina antes de mostrar toda la base: se suaviza ese extremo sin inventar la parte faltante. Se ajustó el encuadre de Espresso Vainilla y se versionaron las máscaras para actualizar la caché.
+
+La ficha de dirección, horario y ambiente está centrada, con iconos discretos, marco cálido y botón centrado. Se retiró la tira decorativa de días. La cinta de texto se movió desde el mapa a la portada, inmediatamente después de las historias, conservando su contenido y pausa fuera de pantalla.
+
+Comprobado en navegador: ocho recortes sobre fondo de contraste; ficha completa y carta de Espresso Vainilla a 390 × 844; navegación y giro; cinta única bajo historias; ancho de documento sin desbordamiento horizontal. Sintaxis JavaScript y XML de las máscaras válidos.

@@ -171,26 +171,31 @@
   if (sedes && C.mapa) {
     C.mapa.sedes.forEach(function (s) {
       var li = el('li', 'sede');
-      li.appendChild(el('h3', 'sede__nombre', s.nombre));
+      li.appendChild(el('h3', 'sede__nombre', s.nombre.replace(/-/g, '\u2011')));
       var dl = el('dl', 'sede__datos');
-      [['Dirección', s.direccion], ['Horario', s.horario, s.horarioNota, s.dias], ['Ambiente', s.ambiente]].forEach(function (p, k) {
+      [['Dirección', s.direccion], ['Horario', s.horario, s.horarioNota], ['Ambiente', s.ambiente]].forEach(function (p, k) {
         if (!p[1]) return;
         var d = el('div');
         d.style.setProperty('--i', k);
-        d.appendChild(el('dt', null, p[0]));
+        var dt = el('dt');
+        var iconos = [
+          '<path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1 1 14 0Z"/><circle cx="12" cy="10" r="2.5"/>',
+          '<circle cx="12" cy="12" r="9"/><path d="M12 6v6l4 2"/>',
+          '<path d="M12 21v-7M12 3 5 12h4l-4 5h14l-4-5h4L12 3Z"/>'
+        ];
+        dt.innerHTML = '<svg class="sede__icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false">' + iconos[k] + '</svg>';
+        dt.appendChild(el('span', null, p[0]));
+        d.appendChild(dt);
         var dd = el('dd', null, p[1]);
-        if (p[3]) {
-          // Tira de la semana (decorativa): el texto del horario ya dice lo mismo
-          var sem = el('span', 'semana'); sem.setAttribute('aria-hidden', 'true');
-          ['L', 'M', 'M', 'J', 'V', 'S', 'D'].forEach(function (l, j) { var dia = (j + 1) % 7; sem.appendChild(el('i', p[3].indexOf(dia) !== -1 ? 'on' : '', l)); });
-          dd.appendChild(sem);
-        }
         if (p[2]) dd.appendChild(el('span', 'sede__nota', p[2]));
         d.appendChild(dd);
         dl.appendChild(d);
       });
       li.appendChild(dl);
-      li.appendChild(accion(s.cta, s.url, 'btn--linea', s.notaCta));
+      var comoLlegar = accion(s.cta, s.url, 'btn--linea', s.notaCta);
+      var botonMapa = comoLlegar.querySelector('.btn');
+      botonMapa.insertAdjacentHTML('beforeend', '<svg class="sede__flecha" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 18 18 6M6 6h12v12"/></svg>');
+      li.appendChild(comoLlegar);
       sedes.appendChild(li);
     });
   }
@@ -266,3 +271,4 @@
     }
   }
 })();
+

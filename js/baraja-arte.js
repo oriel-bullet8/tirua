@@ -26,7 +26,7 @@
     },
     'beb-espresso-vainilla': {
       mascara: 'assets/baraja/recortes/beb-espresso-vainilla.svg',
-      escena: 5, ancho: '105cqw', arriba: '-20cqw', centro: '47%'
+      escena: 5, ancho: '100cqw', arriba: '-20cqw', centro: '44%'
     },
     'beb-ramazzotti-spritz': {
       mascara: 'assets/baraja/recortes/beb-ramazzotti-spritz.svg',

@@ -12,7 +12,7 @@
   <link rel="preload" href="assets/fonts/AlegreyaSans-Regular.ttf" as="font" type="font/ttf" crossorigin>
   <script>document.documentElement.classList.add('js');</script>
   <script>(function(){try{var q=new URLSearchParams(location.search).get('tema');if(q==='oscuro'||q==='claro'){localStorage.setItem('tirua-tema',q);}var t=localStorage.getItem('tirua-tema');if(t==='oscuro'){document.documentElement.setAttribute('data-tema','oscuro');var m=document.querySelector('meta[name=theme-color]');if(m){m.content='#000000';}}}catch(e){}})();</script>
-  <link rel="stylesheet" href="css/styles.css?v=20261027c">
+  <link rel="stylesheet" href="css/styles.css?v=20261031b">
   <link rel="stylesheet" href="css/baraja.css?v=20261024b">
   <link rel="stylesheet" href="css/baraja-atelier.css?v=20261031a">
 </head>
@@ -87,6 +87,9 @@
           <ul class="historias__lista"></ul>
         </nav>
       </div>
+
+      <!-- Datos del local, inmediatamente después de las historias. -->
+      <div class="cinta cinta--inicio" data-cinta aria-hidden="true"><div class="cinta__pista" data-cinta-pista></div></div>
 
       <a class="bajar" href="#categorias" aria-label="Bajar a las categorías"><span class="bajar__linea" aria-hidden="true"></span></a>
 
@@ -311,8 +314,6 @@
           <ul class="sedes" data-sedes></ul>
         </div>
       </div>
-      <!-- Cinta con datos reales del local (se llena desde js/contenido.js → mapa.cinta) -->
-      <div class="cinta" data-cinta aria-hidden="true"><div class="cinta__pista" data-cinta-pista></div></div>
     </section>
 
     <!-- ============ DELIVERY ============ -->
@@ -355,11 +356,11 @@
 
   <script src="js/contenido.js?v=20261024b"></script>
   <script src="js/baraja-datos.js?v=20261024b"></script>
-  <script src="js/render.js?v=20261024b"></script>
+  <script src="js/render.js?v=20261031b"></script>
   <script src="js/main.js?v=20261024b" defer></script>
   <script src="js/menu.js?v=20261024b" defer></script>
-  <script src="js/baraja-arte.js?v=20261031a"></script>
-  <script src="js/baraja.js?v=20261031a" defer></script>
+  <script src="js/baraja-arte.js?v=20261031b"></script>
+  <script src="js/baraja.js?v=20261031b" defer></script>
   <script src="js/carta.js?v=20261024b" defer></script>
   <script src="js/hero.js?v=20261024b" defer></script>
   <script src="js/historias.js?v=20261027c" defer></script>
