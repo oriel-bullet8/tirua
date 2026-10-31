@@ -1,0 +1,63 @@
+/* Tirúa · Reservas y acentos de campo. Verde bosque, salvia y papel claro. */
+.reservas {
+  padding-block: clamp(48px, 6vw, 80px);
+  background: linear-gradient(135deg, #f2f5ed, #fafbf7 65%, #eef3e9);
+  border-block: 1px solid #2b4b361f;
+}
+.reservas .envoltura { max-width: 900px; }
+.reservas .seccion__cab { margin-bottom: 28px; text-align: center; }
+.reservas .titular { color: #2b4b36; font-size: clamp(2.125rem, 5vw, 3.5rem); line-height: 1.12; }
+.reservas .seccion__bajada { color: #52604e; font-size: 1.125rem; margin-top: 12px; }
+.reservas__caja { display: grid; grid-template-columns: minmax(0, 1fr); gap: 24px; max-width: 620px; margin-inline: auto; padding: 0; border: 0; }
+.reservas__pasos { list-style: none; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; padding: 0; margin: 0; }
+.reservas__pasos li { display: grid; place-items: center; gap: 8px; padding: 18px 8px; color: #2b4b36; border: 1px solid #2b4b3629; border-radius: 12px; background: #ffffff99; font: 400 clamp(1.125rem, 3.8vw, 1.375rem)/1.2 var(--display); }
+.reservas__numero { color: #62795b; font: 500 .8125rem/1 var(--sans); letter-spacing: .1em; }
+.reservas__pie { grid-template-columns: minmax(0, 1fr); justify-items: center; gap: 20px; text-align: center; padding: 0; border: 0; }
+.reservas__detalle { max-width: 36ch; margin: 0; font-size: 1.0625rem; line-height: 1.5; color: #52604e; }
+.reservas__pie .cta {
+  display: inline-flex; justify-content: space-between; gap: 24px; width: min(100%, 280px); min-height: 56px;
+  padding: 7px 8px 7px 26px; border: 1px solid #2b4b36; border-radius: 999px;
+  background: #2b4b36; color: #fff; font: 700 1.125rem/1 var(--sans);
+  box-shadow: 0 10px 22px -16px #2b4b3670;
+}
+.reservas__pie .cta::before { display: none; }
+.reservas__pie .cta__flecha { width: 38px; height: 38px; padding: 11px; background: #d6e2cd; color: #2b4b36; }
+.reservas__pie .cta:focus-visible { color: #fff; outline: 2px solid #2b4b36; outline-offset: 4px; }
+@media (hover: hover) {
+  .reservas__pie .cta:hover { background: #345b3e; color: #fff; box-shadow: 0 12px 24px -16px #2b4b3670; }
+  .reservas__pie .cta:hover .cta__flecha { color: #2b4b36; background: #e5ecde; transform: translateX(2px); }
+}
+/* El asistente comparte la paleta y mantiene su funcionamiento. */
+.rsv {
+  --tinta: #223f2d; --tinta-2: #405648; --tinta-3: #5c6c60; --tinta-rgb: 34 63 45;
+  --linea: #2b4b3629; --linea-fuerte: #2b4b3659;
+  background: #f6f8f2;
+}
+.rsv::before { background: radial-gradient(ellipse at 0 0, #dbe6d3, transparent 65%); opacity: .6; filter: none; }
+:root:not([data-tema="oscuro"]) .rsv::before { opacity: .6; filter: none; }
+.rsv::after { display: none; }
+.rsv .titular--medio { font-size: clamp(2.25rem, 6vw, 3.5rem); line-height: 1.12; }
+.rsv__cab { gap: 14px; margin-bottom: 28px; }
+.rsv .etapa, .rsv .vista { border-radius: 12px; border-color: var(--linea-fuerte); }
+.rsv .etapa--abierta { border-color: #78936c; box-shadow: 0 14px 28px -23px #2b4b3670; }
+.rsv .etapa--abierta::before { top: 0; left: 0; right: 0; height: 2px; border-radius: 12px 12px 0 0; }
+.rsv .etapa--lista:not(.etapa--abierta) .etapa__n { background: #e2eadb; color: #2b4b36; border-color: #c0cfb5; }
+.rsv .tesela, .rsv .hora, .rsv .campo__in, .rsv .ocasion, .rsv .cal__nav { border-radius: 8px; }
+.rsv .campo__in { background: #ffffffaa; }
+.rsv .vista::before, .rsv .vista::after { display: none; }
+.rsv .rsv__muestra { background: #ffffff80; border-color: #78936c66; border-radius: 8px; }
+.rsv .rsv__aviso { border-radius: 8px; }
+:root[data-tema="oscuro"] .reservas { background: #111b14; border-color: #97be9733; }
+:root[data-tema="oscuro"] .reservas .titular, :root[data-tema="oscuro"] .reservas__pasos li { color: #d3e5ca; }
+:root[data-tema="oscuro"] .reservas .seccion__bajada, :root[data-tema="oscuro"] .reservas__detalle { color: #b4c4ac; }
+:root[data-tema="oscuro"] .reservas__pasos li { background: #17241b; border-color: #97be9733; }
+:root[data-tema="oscuro"] .reservas__numero { color: #a7bf9b; }
+:root[data-tema="oscuro"] .rsv { --tinta: #e0ebd8; --tinta-2: #bdcdb6; --tinta-3: #a3b89a; --tinta-rgb: 224 235 216; --linea: #97be9733; --linea-fuerte: #97be9766; background: #111b14; }
+:root[data-tema="oscuro"] .rsv::before { opacity: .04; }
+:root[data-tema="oscuro"] .rsv .campo__in { background: #17241b; }
+:root[data-tema="oscuro"] .rsv .rsv__muestra { background: #17241b; }
+:root[data-tema="oscuro"] .rsv .etapa--abierta .etapa__n, :root[data-tema="oscuro"] .hv__reservar { color: #14281a; }
+:root[data-tema="oscuro"] .historia__cara--texto svg { fill: #14281a; }
+:root[data-tema="oscuro"] .btn--principal:hover, :root[data-tema="oscuro"] .btn--principal:focus-visible { color: #14281a; }
+@media (max-width: 420px) { .reservas__pasos { gap: 8px; } }
+@media (prefers-reduced-motion: reduce) { .reservas__pie .cta, .reservas__pie .cta__flecha { transition: none; transform: none; } }

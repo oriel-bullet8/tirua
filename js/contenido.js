@@ -95,7 +95,7 @@ window.TIRUA_CONTENIDO = {
     titulo: 'Reservas',
     bajada: 'Pide tu mesa en un minuto.',
     pasos: 'Personas, fecha y hora',
-    nota: 'Es una solicitud: la envías por WhatsApp y el bar confirma la disponibilidad a mano. Esta página no envía nada.',
+    nota: 'Solicita tu mesa por WhatsApp. El bar te confirma la disponibilidad.',
     cta: 'Reservar mesa'
   },
 
@@ -204,3 +204,4 @@ window.TIRUA_CONTENIDO = {
   }
 };
 })();
+

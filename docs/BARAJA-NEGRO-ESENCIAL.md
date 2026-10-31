@@ -24,3 +24,9 @@ Se redibujaron los ocho contornos SVG en las dimensiones reales de cada foto, co
 La ficha de dirección, horario y ambiente está centrada, con iconos discretos, marco cálido y botón centrado. Se retiró la tira decorativa de días. La cinta de texto se movió desde el mapa a la portada, inmediatamente después de las historias, conservando su contenido y pausa fuera de pantalla.
 
 Comprobado en navegador: ocho recortes sobre fondo de contraste; ficha completa y carta de Espresso Vainilla a 390 × 844; navegación y giro; cinta única bajo historias; ancho de documento sin desbordamiento horizontal. Sintaxis JavaScript y XML de las máscaras válidos.
+
+## Verde de Pirque y reservas integradas
+
+Los acentos de navegación, historias, botones y ficha del local pasan a verde bosque con salvia. La sección de reservas muestra tres pasos compactos en una sola fila y un botón verde de tamaño moderado, sin el fondo de anillos ni la tipografía sobredimensionada. El texto explica la solicitud y la confirmación por el bar de forma breve.
+
+El asistente de reserva comparte la paleta, usa un fondo claro y controles con bordes suaves. Se conservan sus datos, horarios de muestra y la confirmación manual. Verificado en móvil: acceso desde el botón de la portada, elección de personas, fecha y apertura de horas; sin envío de solicitud. Documento sin desbordamiento horizontal.
