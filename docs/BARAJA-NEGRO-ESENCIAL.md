@@ -34,3 +34,9 @@ El asistente de reserva comparte la paleta, usa un fondo claro y controles con b
 ## Simplificación solicitada: solo dos botones
 
 El bloque de inicio se reduce a dos enlaces grandes y centrados: «Celebra tu cumpleaños» y «Reserva una mesa». Se eliminan su título, bajada, pasos y texto explicativo. El primero abre el asistente con Cumpleaños preseleccionado; el segundo conserva una solicitud normal.
+
+## Historias con halo de neón
+
+Las historias sin ver tienen un aro verde con halo suave y un pulso lento de 5,8 segundos, escalonado entre las burbujas. Al abrirlas, el estado existente de historia vista reduce el brillo y detiene el pulso. Con reducción de movimiento se muestra un halo estático. Se amplió el espacio del carrusel para que el resplandor no se recorte.
+
+Verificado en navegador móvil: historia sin ver con pulso activo, apertura y cierre del visor, y estado visto con animación detenida y opacidad del halo reducida a 0,08. Sin desbordamiento horizontal.

@@ -935,21 +935,40 @@ button, input, select { font: inherit; color: inherit; }
 @media (min-width: 700px) { .historias--espera { min-height: 161px; } }
 .historias__titulo { margin: 0 0 4px; text-align: center; font-weight: 700; font-size: 0.9375rem; letter-spacing: 0.02em; color: var(--tinta-2); }
 .historias__cuenta { font-weight: 500; color: var(--tinta-3); margin-left: 0.35em; }
-.historias__lista { display: flex; gap: clamp(12px, 2.4vw, 22px); overflow-x: auto; padding: 8px 6px 10px; scroll-snap-type: x proximity; scrollbar-width: none; overscroll-behavior-x: contain; }
+.historias__lista { display: flex; gap: clamp(12px, 2.4vw, 22px); overflow-x: auto; padding: 16px 14px 18px; scroll-snap-type: x proximity; scrollbar-width: none; overscroll-behavior-x: contain; }
 .historias__lista::-webkit-scrollbar { display: none; }
 .historias__item { flex: none; scroll-snap-align: center; animation: entra .8s var(--ease) calc(1.35s + var(--i, 0) * 70ms) backwards; }
 .historias__item:first-child { margin-left: auto; } .historias__item:last-child { margin-right: auto; }   /* centradas si caben; si no, se desplazan sin cortar la primera */
 .historia { display: grid; justify-items: center; gap: 7px; width: 84px; padding: 0; background: none; border: 0; color: var(--tinta); cursor: pointer; -webkit-tap-highlight-color: transparent; }
-.historia__aro { display: grid; place-items: center; width: 76px; height: 76px; padding: 3px; border-radius: 50%; background: conic-gradient(from 210deg, var(--acento), #78936c 40%, var(--acento) 70%, #284332); transition: transform .45s var(--ease); }
+.historia__aro { position: relative; isolation: isolate; display: grid; place-items: center; width: 76px; height: 76px; padding: 3px; border-radius: 50%; background: conic-gradient(from 210deg, #2b6340, #9beab0 38%, #43865a 65%, #2b6340); transition: transform .3s var(--ease); }
+.historia__aro::before {
+  content: ''; position: absolute; inset: -3px; z-index: -1; border-radius: inherit; pointer-events: none;
+  border: 1px solid #80db9a88;
+  box-shadow: 0 0 7px 1px #68db8b70, 0 0 15px 3px #4ebe782e;
+  opacity: .45; animation: historia-neon 5.8s ease-in-out infinite;
+  animation-delay: calc(var(--i, 0) * .3s);
+  transition: opacity .3s;
+}
+@keyframes historia-neon { 0%, 55%, 100% { opacity: .4; } 22% { opacity: .95; } }
 .historia__cara { display: block; width: 100%; height: 100%; padding: 2.5px; border-radius: 50%; background: var(--fondo); overflow: hidden; }
 .historia__cara img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
 .historia__cara--texto { display: grid; place-items: center; background: var(--acento); padding: 0; border: 2.5px solid var(--fondo); }
 .historia__cara--texto svg { width: 46%; fill: #fff; }
 .historia__nombre { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; max-width: 100%; font-size: max(14px, 0.875rem); line-height: 1.15; text-align: center; font-weight: 500; }
 .historia--vista .historia__aro { background: var(--linea-fuerte); }
-@media (hover: hover) { .historia:hover .historia__aro { transform: scale(1.08) rotate(-4deg); } }
+.historia--vista .historia__aro::before { animation: none; opacity: .08; }
+@media (hover: hover) {
+  .historia:hover .historia__aro { transform: scale(1.04); }
+  .historia:not(.historia--vista):hover .historia__aro::before { animation: none; opacity: 1; }
+}
+.historia:not(.historia--vista):focus-visible .historia__aro::before,
+.historia:not(.historia--vista):active .historia__aro::before { animation: none; opacity: 1; }
 .historia:active .historia__aro { transform: scale(.94); }
 .historia:focus-visible { outline: 2px solid var(--tinta); outline-offset: 4px; border-radius: 12px; }
+@media (prefers-reduced-motion: reduce) {
+  .historia__aro::before { animation: none; }
+  .historia__aro, .historia__aro::before { transition: none; }
+}
 /* Con historias, el logo del hero cede un poco de alto y la flecha de «bajar» se oculta (ya hay un siguiente paso a la vista) */
 /* Las historias son la norma: el hero nace con su tamaño final (sin saltos al cargar los datos). JS marca .sin-historias solo si no hay nada que mostrar */
 .hero:not(.sin-historias) { --logo: min(78vw, 42svh, 520px); }
