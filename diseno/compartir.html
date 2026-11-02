@@ -1,19 +1,11 @@
 <!doctype html>
 <html lang="es-CL">
 <meta charset="utf-8">
-<title>Portada para compartir · Tirúa</title>
+<title>Logo original para compartir · Tirúa</title>
 <style>
-@font-face{font-family:Young;src:url('../assets/fonts/YoungSerif-Regular.ttf')}
-@font-face{font-family:Alegreya;src:url('../assets/fonts/AlegreyaSans-Regular.ttf')}
-*{box-sizing:border-box}html,body{margin:0;width:1200px;height:630px;overflow:hidden}
-body{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 28%,#3c6043 0,#284a35 55%,#1e3b2b 100%);color:#f1f4e9}
-body::before{content:'';position:absolute;inset:28px;border:1px solid #d9e5c846;border-radius:24px}
-body::after{content:'';position:absolute;inset:35px;border:1px solid #d9e5c815;border-radius:18px}
-.logo{width:690px;height:auto;display:block;margin-top:8px}
-.frase{font:400 34px/1.3 Young,Georgia,serif;margin:42px 0 0}
-.lugar{font:400 22px/1 Alegreya,sans-serif;letter-spacing:5px;margin:25px 0 0;color:#c9dbc2}
+html,body{margin:0;background:#000;min-height:100vh}
+body{display:grid;place-items:center}
+img{display:block;width:min(100%,1080px);height:auto}
 </style>
-<img class="logo" src="../assets/brand/logo-blanco-wordmark.png" alt="Tirúa">
-<p class="frase">Tu lugar de encuentro</p>
-<p class="lugar">BAR RESTORÁN · PIRQUE</p>
+<img src="../assets/brand/logo-original.png" alt="Logo original de Tirúa, negro con letras blancas" width="1080" height="1080">
 </html>

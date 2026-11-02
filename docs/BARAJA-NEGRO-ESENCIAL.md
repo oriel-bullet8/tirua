@@ -50,3 +50,7 @@ Verificado en móvil: una sola acción; enlace deshabilitado mientras faltan dat
 ## Vista previa al compartir
 
 Se añadieron metadatos Open Graph estáticos a inicio y reservas, con URLs públicas absolutas y una imagen JPEG de 1200 × 630. La portada usa el wordmark original sobre verde bosque. Su fuente editable es `diseno/compartir.html`; se exporta su lienzo de 1200 × 630 y no se altera el logo. La imagen se entrega desde `assets/brand/tirua-compartir-v1.jpg`. Se agregaron también canonical, título, descripción, dimensiones, tipo MIME y texto alternativo. La vista previa dentro de WhatsApp depende de su cliente y de la actualización de su caché.
+
+## Corrección del logo para compartir · 2 de noviembre
+
+Por indicación del usuario, la vista previa enlaza directamente el archivo original `assets/brand/logo-original.png`, negro con letras blancas y marco circular. No se recolorea ni se añaden frases. Las dimensiones de metadatos son las reales (1080 × 1080) y el tipo es PNG. La versión verde anterior queda reemplazada en los metadatos de inicio y reservas.
