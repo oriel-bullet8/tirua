@@ -27,7 +27,7 @@ window.DATOS_BARAJA = {
       'El As (primera carta) es un destacado provisional: el local debe indicar cuál es el real.',
       'Los palos y sus colores son provisionales: la asignación aún no está decidida.',
       'Las demás categorías aún no tienen productos.',
-      'Los filtros alimentarios y el joker son ideas pendientes; nada de eso está activo.'
+      'El joker ya sale escondido en el mazo, pero su beneficio real lo define el local; los filtros alimentarios siguen siendo una idea pendiente.'
     ]
   },
 
@@ -72,17 +72,33 @@ window.DATOS_BARAJA = {
   secciones: [],
 
   /*
-   * JOKER — IDEA PENDIENTE, SOLO VISUAL.
-   * activo: false → no hay aparición automática ni aleatoria. El sitio solo lo muestra
-   * con el botón «Vista previa del joker (demostración)».
-   * La aparición aleatoria, sus reglas y cualquier beneficio se definirán con el local.
-   * Esta integración NO implementa premios, probabilidades, descuentos ni lógica real.
+   * MAZOS que se ofrecen al «Abrir la carta» (paso «Escoger mazo»).
+   * Cada categoría es un mazo, salvo las que se parten aquí: solo Bebestibles (196 cartas) se divide en tres.
+   * `secciones` son los ids de js/baraja-productos.js → secciones.
+   */
+  mazos: [
+    { id: 'cocteleria', categoria: 'bebestibles', nombre: 'Coctelería', descripcion: 'Tragos de autor, internacionales, sours, spritz y mocktails.',
+      secciones: ['cocteleria-de-autor', 'cocteleria-internacional', 'rincon-de-los-sour', 'spritz', 'mocktail'] },
+    { id: 'destilados', categoria: 'bebestibles', nombre: 'Destilados y vinos', descripcion: 'Vodka, gin, pisco, whisky, ron, tequila, espumantes y vino.',
+      secciones: ['vodka', 'gin', 'pisco', 'whisky', 'ron', 'tequila', 'shot', 'jarras-y-licores', 'espumantes', 'vino'] },
+    { id: 'cervezas', categoria: 'bebestibles', nombre: 'Cervezas y bebidas', descripcion: 'Cerveza, schop, bebidas y cafetería.',
+      secciones: ['cerveza', 'schop', 'bebida', 'cafeteria'] }
+  ],
+
+  /*
+   * JOKER — escondido en el mazo, con baja probabilidad (`probabilidad`) y como máximo `maxPorVisita` por visita.
+   * Al llegar a la carta boca abajo, se da vuelta y muestra `texto`. El BENEFICIO REAL lo define el Bar
+   * (descuento en la próxima visita, en reservas, en comidas individuales…): hasta entonces `texto` dice que es una demostración.
+   * `activo: false` lo apaga por completo. `?joker=1` en la URL fuerza que salga (para probar).
+   * El botón «Vista previa del joker» sigue siendo una opción de demostración.
    */
   joker: {
-    activo: false,
+    activo: true,
+    probabilidad: 0.12,     // chance de que un mazo recién repartido lleve el joker escondido
+    maxPorVisita: 1,        // veces que puede salir en una misma visita (pestaña)
     acento: '#b79cff',
     acentoClaro: '#6b46c9',
-    texto: 'Joker: beneficio por definir con el local. Idea pendiente: no es un descuento ni un premio real.',
+    texto: '¡Te salió el Joker! El Bar define aquí tu beneficio (por ejemplo, un descuento en tu próxima visita). Por ahora es una demostración: no es un descuento real.',
     botonVincular: 'Vincular a una solicitud de reserva (pendiente)'
   }
 };

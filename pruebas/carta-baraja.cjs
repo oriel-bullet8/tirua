@@ -8,8 +8,11 @@ const secciones = CARTA.bloques.flatMap((b) => b.secciones);          // {id, no
 const productos = secciones.flatMap((s) => s.productos);
 const PALOS = { compartir: ['para-picar', 'entradas-frias', 'papitas-para-compartir'], individuales: ['sushi', 'ensaladas', 'sandwich', 'pizzas'], postres: ['postres'] };
 PALOS.bebestibles = secciones.map((s) => s.id).filter((id) => !Object.values(PALOS).flat().includes(id));
+const MAZOS = { cocteleria: ['cocteleria-de-autor', 'cocteleria-internacional', 'rincon-de-los-sour', 'spritz', 'mocktail'],
+  destilados: ['vodka', 'gin', 'pisco', 'whisky', 'ron', 'tequila', 'shot', 'jarras-y-licores', 'espumantes', 'vino'],
+  cervezas: ['cerveza', 'schop', 'bebida', 'cafeteria'], individuales: PALOS.individuales, postres: PALOS.postres, compartir: PALOS.compartir };
 const nSec = (id) => secciones.find((s) => s.id === id).productos.length;
-const nPalo = (palo) => PALOS[palo].reduce((a, id) => a + nSec(id), 0);
+const nPalo = (palo) => (PALOS[palo] || MAZOS[palo]).reduce((a, id) => a + nSec(id), 0);
 const MAX_MONTADAS = 30;   // con la ventana de cartas (±5 + 12 del abanico + joker) nunca debería acercarse a esto
 
 let ok = 0, mal = 0;
@@ -46,7 +49,7 @@ const elegir = async (page, palo) => { await page.click(`.br-mazo[data-id="${pal
       await page.click('#abrir'); await page.waitForSelector('#mazos:not([hidden])', { timeout: 3000 }); await page.waitForTimeout(900);
       chequea(t + '«Abrir la carta» muestra «Escoger mazo» en menos de 1,5 s, sin abrir ninguna baraja', Date.now() - t1 < 1500 && (await page.evaluate(() => !document.querySelector('#carta').classList.contains('br-is-open'))), Date.now() - t1);
       const mz = await page.evaluate(() => [...document.querySelectorAll('.br-mazo')].map((b) => ({ id: b.dataset.id, txt: b.textContent })));
-      chequea(t + 'hay 4 mazos con su cantidad de cartas', mz.length === 4 && mz.every((m) => new RegExp(String(nPalo(m.id)) + ' cartas').test(m.txt)), mz);
+      chequea(t + 'hay 6 mazos (Bebestibles partido en 3; el resto, uno por categoría) con su cantidad de cartas', mz.length === 6 && mz.map((m) => m.id).join() === Object.keys(MAZOS).join() && mz.every((m) => new RegExp(String(nPalo(m.id)) + ' cartas').test(m.txt)), mz);
       chequea(t + 'el foco queda en el primer mazo', await page.evaluate(() => document.activeElement && document.activeElement.classList.contains('br-mazo')));
       chequea(t + 'mientras se escoge no hay cartas abiertas ni controles de la baraja a la vista', await page.evaluate(() => getComputedStyle(document.querySelector('#bloque')).visibility === 'hidden'));
       chequea(t + 'Esc cierra el paso «Escoger mazo» y vuelve al portal', await (async () => { await page.keyboard.press('Escape'); await page.waitForTimeout(700); return page.evaluate(() => !document.querySelector('#carta').classList.contains('br-inm') && document.querySelector('#mazos').hidden); })());
@@ -81,11 +84,13 @@ const elegir = async (page, palo) => { await page.click(`.br-mazo[data-id="${pal
       await page.click('#inm-opciones'); await page.waitForTimeout(500);
       await page.click('#cambiar-mazo'); await page.waitForSelector('#mazos:not([hidden])', { timeout: 4000 }); await page.waitForTimeout(700);
       chequea(t + '«Cambiar de mazo» vuelve al paso «Escoger mazo»', await page.evaluate(() => !document.querySelector('#mazos').hidden && document.querySelector('#carta').classList.contains('br-inm')));
-      await elegir(page, 'bebestibles');
-      chequea(t + `el mazo «bebestibles» tiene ${nPalo('bebestibles')} cartas`, (await contador(page)) === `1 de ${nPalo('bebestibles')}`, await contador(page));
-      chequea(t + `con 196 cartas hay ≤ ${MAX_MONTADAS} en el DOM`, (await montadas(page)) <= MAX_MONTADAS, await montadas(page));
+      await elegir(page, 'destilados');
+      chequea(t + `el mazo «Destilados y vinos» tiene ${nPalo('destilados')} cartas`, (await contador(page)) === `1 de ${nPalo('destilados')}`, await contador(page));
+      const ch = await page.evaluate(() => [...document.querySelectorAll('#chips-sec .br-chip')].map((b) => b.dataset.sec));
+      chequea(t + 'sus chips de sección son solo las de ese mazo (no las 19 de Bebestibles)', ch.length === MAZOS.destilados.length + 1 && MAZOS.destilados.every((id) => ch.includes(id)), ch);
+      chequea(t + `con ${nPalo('destilados')} cartas hay ≤ ${MAX_MONTADAS} en el DOM`, (await montadas(page)) <= MAX_MONTADAS, await montadas(page));
       await page.keyboard.press('End'); await page.waitForTimeout(900);
-      chequea(t + `«Fin» llega a la carta ${nPalo('bebestibles')} y sigue habiendo ≤ ${MAX_MONTADAS} cartas en el DOM`, (await contador(page)) === `${nPalo('bebestibles')} de ${nPalo('bebestibles')}` && (await montadas(page)) <= MAX_MONTADAS, { c: await contador(page), m: await montadas(page) });
+      chequea(t + `«Fin» llega a la carta ${nPalo('destilados')} y sigue habiendo ≤ ${MAX_MONTADAS} cartas en el DOM`, (await contador(page)) === `${nPalo('destilados')} de ${nPalo('destilados')}` && (await montadas(page)) <= MAX_MONTADAS, { c: await contador(page), m: await montadas(page) });
       const activaOk = await page.evaluate(() => { const a = document.querySelector('.br-card.br-is-active'); return !!a && !!a.querySelector('.br-nombre').textContent; });
       chequea(t + 'la carta activa del final está montada y con nombre', activaOk);
       await page.keyboard.press('Home'); await page.waitForTimeout(900);
@@ -159,11 +164,47 @@ const elegir = async (page, palo) => { await page.click(`.br-mazo[data-id="${pal
       await page.evaluate(() => document.getElementById('carta').scrollIntoView({ behavior: 'instant' })); await page.waitForTimeout(700);
       await page.click('#abrir'); await page.waitForSelector('#mazos:not([hidden])'); await page.waitForTimeout(900);
       await page.evaluate(() => { window.__f = []; let u = performance.now(); (function f(t) { window.__f.push(t - u); u = t; if (window.__f.length < 240) requestAnimationFrame(f); })(u); });
-      await page.click('.br-mazo[data-id="bebestibles"]'); await page.waitForTimeout(2600);
+      await page.click('.br-mazo[data-id="destilados"]'); await page.waitForTimeout(2600);
       const fr = await page.evaluate(() => { const f = window.__f.slice(1).sort((a, b) => a - b); return { n: f.length, p95: Math.round(f[Math.floor(f.length * 0.95)]), max: Math.round(f[f.length - 1]), lt: window.__lt }; });
-      chequea('[rendimiento] apertura del mazo de 196 cartas: fotogramas p95 ≤ 34 ms y máximo ≤ 100 ms', fr.p95 <= 34 && fr.max <= 100, fr);
+      chequea('[rendimiento] apertura del mazo más grande (84 cartas): fotogramas p95 ≤ 34 ms y máximo ≤ 100 ms', fr.p95 <= 34 && fr.max <= 100, fr);
       chequea('[rendimiento] sin tareas largas (≥ 50 ms) durante la apertura', fr.lt.length === 0, fr.lt);
       await ctx.close();
+    }
+    // Joker escondido en el mazo: aparece por sorteo, boca abajo, se descubre al detenerse en él y no cuenta como carta de la carta
+    {
+      const buscarJoker = async (page, max) => { for (let i = 0; i < max; i++) { if ((await contador(page)) === 'Joker') { return i; } await page.keyboard.press('ArrowRight'); await page.waitForTimeout(40); } return -1; };
+      for (const [etq, azar, esperado] of [['sale (azar 0,01)', 0.01, true], ['no sale (azar 0,99)', 0.99, false]]) {
+        const { ctx, page } = await contexto(browser, { viewport: { width: 1440, height: 900 } });
+        await page.addInitScript((r) => { Math.random = () => r; }, azar);
+        await page.goto(BASE, { waitUntil: 'networkidle' });
+        await page.evaluate(() => document.getElementById('carta').scrollIntoView({ behavior: 'instant' }));
+        await page.click('#abrir'); await page.waitForSelector('#mazos:not([hidden])'); await page.waitForTimeout(700);
+        await elegir(page, 'postres');
+        const k = await buscarJoker(page, 9);
+        chequea(`[joker] mazo de postres con ${etq}: ${esperado ? 'el Joker está escondido dentro del mazo' : 'el mazo no lleva joker'}`, esperado ? (k >= 3) : (k === -1), k);
+        if (esperado) {
+          await page.waitForTimeout(250);
+          chequea('[joker] al llegar aún está boca abajo y no adelanta el premio', await page.evaluate(() => document.querySelector('#p-joker').hidden && !!document.querySelector('.br-card--joker.br-is-active')));
+          await page.waitForTimeout(900);
+          const r = await page.evaluate(() => ({ txt: document.querySelector('#p-joker').textContent, vis: !document.querySelector('#p-joker').hidden && getComputedStyle(document.querySelector('.br-panel__producto')).opacity === '1', vistos: sessionStorage.getItem('br-jokers') }));
+          chequea('[joker] tras detenerse se da vuelta y muestra el texto del premio configurado en datos.js', r.vis && /Te salió el Joker/.test(r.txt) && r.vistos === '1', r);
+          await page.keyboard.press('ArrowRight'); await page.waitForTimeout(500);
+          const c2 = await contador(page), n = nPalo('postres');
+          chequea('[joker] el Joker no cuenta en «N de ' + n + '» (la carta siguiente no se salta ningún número)', new RegExp('^\\d+ de ' + n + '$').test(c2) && parseInt(c2, 10) === k + 1, { k, c2 });
+        }
+        await ctx.close();
+      }
+      // Tope por visita: con el tope alcanzado el sorteo no vuelve a poner joker aunque el azar lo permitiera
+      {
+        const { ctx, page } = await contexto(browser, { viewport: { width: 1440, height: 900 } });
+        await page.addInitScript(() => { Math.random = () => 0.01; try { sessionStorage.setItem('br-jokers', '1'); } catch (e) {} });
+        await page.goto(BASE, { waitUntil: 'networkidle' });
+        await page.evaluate(() => document.getElementById('carta').scrollIntoView({ behavior: 'instant' }));
+        await page.click('#abrir'); await page.waitForSelector('#mazos:not([hidden])'); await page.waitForTimeout(700);
+        await elegir(page, 'postres');
+        chequea('[joker] con el tope de 1 por visita alcanzado no vuelve a salir', (await buscarJoker(page, 9)) === -1);
+        await ctx.close();
+      }
     }
   } finally { await browser.close(); }
   console.log(`\nTOTAL ${ok + mal} comprobaciones · ${ok} OK · ${mal} con falla`);

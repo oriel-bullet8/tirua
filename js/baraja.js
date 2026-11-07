@@ -160,7 +160,10 @@
     phase: 'closed',           // closed | opening | open | closing
     p: 0,
     anim: null,
-    joker: false,
+    joker: false,            // vista previa forzada (botón de demostración)
+    secs: null,              // secciones del mazo elegido (null = toda la categoría)
+    jokerReparto: false,     // este reparto lleva el joker escondido
+    jokerFrac: 0, jokerVisto: false,
     prevId: null,
     userClosed: false,
     autoDone: false,
@@ -419,8 +422,8 @@
   function reservarDescripcion() {
     var textos = productos.map(function (p) { return p.descripcion; }).sort(function (a, b) { return b.length - a.length; }).slice(0, 12), max = 0, i, h;
     for (i = 0; i < textos.length; i++) { elPanelMedida.textContent = textos[i]; h = elPanelMedida.offsetHeight; if (h > max) { max = h; } }
-    if (S.joker && D.joker) {
-      elPanelMedida.textContent = D.joker.texto; h = elPanelMedida.offsetHeight + (elPanelMedida.offsetWidth < 400 ? 64 : 48) + 10;
+    if ((S.joker || S.jokerReparto) && D.joker) {
+      elPanelMedida.textContent = D.joker.texto; h = elPanelMedida.offsetHeight + 10;
       if (h > max) { max = h; }
     }
     elPanelMedida.textContent = '';
@@ -434,17 +437,23 @@
   function computeList() {
     var q = norm(S.q), res = productos.filter(function (p) {
       if (S.cat && p.cat.id !== S.cat) { return false; }
+      if (S.secs && S.secs.indexOf(p.seccion) === -1) { return false; }
       if (S.sec && p.seccion !== S.sec) { return false; }
       return !q || p.pajar.indexOf(q) !== -1;
     }).map(function (p) { return cardById[p.id]; });
     if (S.joker) { res.push(jokerCard); }
+    else if (S.jokerReparto && !q && res.length >= 4) {
+      /* Joker escondido: nunca entre las primeras cartas (ni en el abanico de apertura) */
+      var lo = res.length > 14 ? 12 : Math.max(3, Math.floor(res.length / 2));
+      res.splice(lo + Math.floor(S.jokerFrac * (res.length - lo + 1)), 0, jokerCard);
+    }
     return res;
   }
 
   function totalProductos() { return S.list.filter(function (c) { return !c.p.joker; }).length; }
 
   function cardLabel(c, i) {
-    if (c.p.joker) { return 'Carta Joker, vista previa de demostración: idea pendiente, sin precio'; }
+    if (c.p.joker) { return S.joker ? 'Carta Joker, vista previa de demostración: sin precio' : (S.jokerVisto ? 'Salió el Joker. ' + D.joker.texto : 'Una carta boca abajo, sorpresa'); }
     return 'Carta ' + (i + 1) + ' de ' + totalProductos() + ': ' + c.p.nombre + (c.p.precio ? ', ' + clp(c.p.precio) : '');
   }
 
@@ -491,9 +500,10 @@
 
     /* Contador y flechas */
     /* Contador: el texto «3 de 8» queda para lectores (y pruebas); a la vista, una fila de palos que se van llenando */
-    var texto = (p && p.joker) ? 'Joker' : (S.active + 1) + ' de ' + total, pts = '', k;
+    var antes = (jokerCard.idx >= 0 && jokerCard.idx < S.active) ? 1 : 0, act = S.active - antes;   // el joker no cuenta en «3 de 8»
+    var texto = (p && p.joker) ? 'Joker' : (act + 1) + ' de ' + total, pts = '', k;
     if (!(p && p.joker) && total > 1 && total <= 13) {
-      for (k = 0; k < total; k++) { pts += '<i class="br-punto' + (k === S.active ? ' br-punto--ahora' : (k < S.active ? ' br-punto--visto' : '')) + '"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><use href="#palo-' + (p ? p.palo : 'corazones') + '"/></svg></i>'; }
+      for (k = 0; k < total; k++) { pts += '<i class="br-punto' + (k === act ? ' br-punto--ahora' : (k < act ? ' br-punto--visto' : '')) + '"><svg viewBox="0 0 100 100" aria-hidden="true" focusable="false"><use href="#palo-' + (p ? p.palo : 'corazones') + '"/></svg></i>'; }
     }
     elContador.innerHTML = '<span class="br-contador__txt">' + texto + '</span>' + (pts ? '<span class="br-puntos" aria-hidden="true">' + pts + '</span>' : '');
     var atStart = S.active <= 0, atEnd = S.active >= n - 1;
@@ -506,9 +516,10 @@
     elPanelCerrada.hidden = !!mostrarProd || vacio;
     if (mostrarProd) {
       if (p.joker) {
+        var verJoker = S.joker || S.jokerVisto;       // boca abajo no se adelanta nada
         pDesc.hidden = true;
-        pJoker.hidden = false; pJoker.textContent = D.joker.texto;
-        pVincular.hidden = false; pVincular.textContent = D.joker.botonVincular;
+        pJoker.hidden = !verJoker; pJoker.textContent = D.joker.texto;
+        pVincular.hidden = true;                       // cómo se canjea el beneficio lo define el Bar: por ahora no se muestra un botón deshabilitado al cliente
       } else {
         pDesc.hidden = !p.descripcion; pDesc.textContent = p.descripcion;
         pJoker.hidden = true; pVincular.hidden = true;
@@ -546,7 +557,10 @@
   }
 
   function unflipAll(except) {
-    cards.concat([jokerCard]).forEach(function (c) { if (c !== except && c.flip.t !== 0) { c.flip.set(0); } });
+    cards.concat([jokerCard]).forEach(function (c) {
+      var meta = (c.p.joker && S.jokerReparto && !S.jokerVisto && !S.joker) ? 1 : 0;   // el joker sin descubrir se queda boca abajo
+      if (c !== except && c.flip.t !== meta) { c.flip.set(meta); }
+    });
     marcarVolteada();
   }
   /* Con la carta activa dada vuelta su reverso ya muestra la ficha: la descripción de abajo se atenúa (sigue en el DOM para lectores de pantalla) */
@@ -576,7 +590,40 @@
     refreshCards();
     refreshAll();
     anunciar();
+    esperarJoker();
     kick();
+  }
+  /* Descubrir el joker: al quedar sobre la carta boca abajo y detenerse un instante, se da vuelta */
+  var jokerEspera = 0;
+  function esperarJoker() {
+    clearTimeout(jokerEspera);
+    var c = S.list[S.active];
+    if (!c || !c.p.joker || S.joker || S.jokerVisto || S.phase !== 'open') { return; }
+    jokerEspera = setTimeout(revelarJoker, reduced ? 0 : 520);
+  }
+  function revelarJoker() {
+    var c = S.list[S.active];
+    if (!c || !c.p.joker || S.jokerVisto) { return; }
+    S.jokerVisto = true;
+    try { sessionStorage.setItem('br-jokers', String(jokersVistos() + 1)); } catch (e) { /* sin almacenamiento */ }
+    jokerCard.flip.set(0);
+    marcarVolteada();       // la carta ya no está dada vuelta: el texto del premio bajo la carta vuelve a verse
+    reservarDescripcion();
+    refreshAll();
+    elAnuncio.textContent = '¡Salió el Joker! ' + D.joker.texto;
+    document.dispatchEvent(new CustomEvent('tirua:joker', { detail: { visto: true } }));
+    kick();
+  }
+  function jokersVistos() { try { return parseInt(sessionStorage.getItem('br-jokers') || '0', 10) || 0; } catch (e) { return 0; } }
+  /* Cada vez que se reparte un mazo hay una pequeña probabilidad de que lleve el joker escondido (datos.js → joker) */
+  function sortearJoker() {
+    var J = D.joker;
+    S.jokerReparto = false; S.jokerVisto = false; clearTimeout(jokerEspera);
+    jokerCard.flip.x = jokerCard.flip.t = 1;
+    if (!J || !J.activo) { return; }
+    var forzar = /[?&]joker=1(&|$)/.test(location.search);
+    if (!forzar && (jokersVistos() >= (J.maxPorVisita || 1) || Math.random() >= (J.probabilidad || 0))) { return; }
+    S.jokerReparto = true; S.jokerFrac = Math.random();
   }
 
   function go(delta) { if (S.phase === 'open') { goTo(S.active + delta); } }
@@ -584,6 +631,7 @@
   function flipActive() {
     var c = S.list[S.active];
     if (!c || S.phase !== 'open') { return; }
+    if (c.p.joker && !S.joker && !S.jokerVisto) { revelarJoker(); return; }
     c.flip.set(c.flip.t ? 0 : 1);
     marcarVolteada();
     kick();
@@ -667,6 +715,7 @@
     reservarDescripcion();
     btnJoker.setAttribute('aria-pressed', 'false');
     btnJoker.querySelector('span').textContent = 'Vista previa del joker (demostración)';
+    jokerCard.flip.x = jokerCard.flip.t = (S.jokerReparto && !S.jokerVisto) ? 1 : 0;
   }
 
   function aplicarFiltros() {
@@ -695,7 +744,8 @@
     elBuscar.value = ''; S.q = ''; clearTimeout(buscarTimer); aplicarFiltros(); elBuscar.focus();
   });
   $('#restablecer').addEventListener('click', function () {
-    elBuscar.value = ''; S.q = ''; S.sec = null; S.cat = activas.length === 1 ? activas[0].id : null;
+    elBuscar.value = ''; S.q = ''; S.sec = null; S.secs = null; S.cat = activas.length === 1 ? activas[0].id : null;
+    sortearJoker();
     buildChipsSec();
     clearTimeout(buscarTimer); aplicarFiltros(); elBuscar.focus();
   });
@@ -721,7 +771,7 @@
   var secciones = (D.secciones || []);
   function buildChipsSec() {
     if (!elChipsSec) { return; }
-    var lista = S.cat ? secciones.filter(function (x) { return x.categoria === S.cat; }) : [];
+    var lista = S.cat ? secciones.filter(function (x) { return x.categoria === S.cat && (!S.secs || S.secs.indexOf(x.id) !== -1); }) : [];
     if (lista.length < 2) { elChipsSec.hidden = true; elChipsSec.innerHTML = ''; return; }
     var cat = catById[S.cat], html = '<button type="button" class="br-chip br-chip--sec" data-sec="" style="--br-chip:' + cat.acento + '"><span class="br-chip__cuerpo"><span class="br-chip__nombre">Todas</span></span></button>';
     lista.forEach(function (x) {
@@ -740,6 +790,7 @@
       var b = e.target.closest('.br-chip');
       if (!b) { return; }
       S.sec = b.dataset.sec || null;
+      sortearJoker();
       aplicarFiltros();
     });
   }
@@ -763,7 +814,8 @@
       return;
     }
     S.cat = b.dataset.id || null;
-    S.sec = null;
+    S.sec = null; S.secs = null;
+    sortearJoker();
     buildChipsSec();
     aplicarFiltros();
   });
@@ -784,7 +836,8 @@
     }
     ocultarAvisoPortal();
     S.cat = id;
-    S.sec = null;
+    S.sec = null; S.secs = null;
+    sortearJoker();
     buildChipsSec();
     aplicarFiltros();
     if (S.phase === 'closed') { openDeck({ focus: true }); }
@@ -831,16 +884,28 @@
      «Abrir la carta» no abre ninguna baraja: primero se elige el mazo (categoría) y solo entonces se cargan y reparten sus cartas. */
   var descMazo = {};
   ((CONT.categorias && CONT.categorias.items) || []).forEach(function (c) { descMazo[c.id] = c.descripcion || ''; });
+  /* Un mazo por categoría, salvo las que datos.js parte en varios (D.mazos: hoy solo Bebestibles, que tiene ~200 cartas) */
+  var mazoById = {}, listaMazos = [];
+  function armarMazos() {
+    activas.forEach(function (c) {
+      var propios = (D.mazos || []).filter(function (m) { return m.categoria === c.id; });
+      if (!propios.length) { propios = [{ id: c.id, categoria: c.id, nombre: c.nombre, descripcion: descMazo[c.id] || '', secciones: null }]; }
+      propios.forEach(function (m) {
+        var n = productos.filter(function (p) { return p.cat.id === c.id && (!m.secciones || m.secciones.indexOf(p.seccion) !== -1); }).length;
+        if (n) { m.n = n; mazoById[m.id] = m; listaMazos.push(m); }
+      });
+    });
+  }
   function buildMazos() {
+    armarMazos();
     var html = '';
-    activas.forEach(function (c, i) {
-      var n = conteo[c.id] || 0;
-      if (!n) { return; }
-      html += '<li class="br-mazos__item" style="--i:' + i + '"><button type="button" class="br-mazo" data-id="' + c.id + '" style="--br-m:' + (c.acentoVivo || c.acento) + '" aria-label="' + esc(c.nombre) + ', ' + n + (n === 1 ? ' carta' : ' cartas') + '">' +
+    listaMazos.forEach(function (m, i) {
+      var c = catById[m.categoria], n = m.n;
+      html += '<li class="br-mazos__item" style="--i:' + i + '"><button type="button" class="br-mazo" data-id="' + m.id + '" style="--br-m:' + (c.acentoVivo || c.acento) + '" aria-label="' + esc(m.nombre) + ', ' + n + (n === 1 ? ' carta' : ' cartas') + '">' +
         '<span class="br-mazo__pila" aria-hidden="true"><i></i><i></i><i></i></span>' +
         paloSvg(c.palo, 'br-mazo__palo') +
-        '<span class="br-mazo__nombre">' + esc(c.nombre) + '</span>' +
-        (descMazo[c.id] ? '<span class="br-mazo__desc">' + esc(descMazo[c.id]) + '</span>' : '') +
+        '<span class="br-mazo__nombre">' + esc(m.nombre) + '</span>' +
+        (m.descripcion ? '<span class="br-mazo__desc">' + esc(m.descripcion) + '</span>' : '') +
         '<span class="br-mazo__n">' + n + (n === 1 ? ' carta' : ' cartas') + '</span></button></li>';
     });
     elMazosLista.innerHTML = html;
@@ -866,9 +931,12 @@
     Array.prototype.forEach.call(elMazosLista.querySelectorAll('.br-mazo--elegido'), function (b) { b.classList.remove('br-mazo--elegido'); });
   }
   function elegirMazo(id, btn) {
+    var m = mazoById[id];
+    if (!m) { return; }
     var seguir = function () {
       cerrarSelector();
-      S.cat = id; S.sec = null; S.userClosed = false;
+      S.cat = m.categoria; S.secs = m.secciones || null; S.sec = null; S.userClosed = false;
+      sortearJoker();
       buildChipsSec();
       aplicarFiltros();
       if (S.phase === 'closed') { openDeck({ focus: true }); }
