@@ -24,6 +24,7 @@
   if (!D) { return; }
   /* Tema claro (predeterminado): los palos usan su acento para papel blanco */
   var CLARO = document.documentElement.getAttribute('data-tema') !== 'oscuro';
+  D.categorias.forEach(function (c) { c.acentoVivo = c.acento; });   // el acento para fondo negro (la carta a pantalla completa siempre es oscura)
   if (CLARO) {
     D.categorias.forEach(function (c) { if (c.acentoClaro) { c.acento = c.acentoClaro; } });
     if (D.joker && D.joker.acentoClaro) { D.joker.acento = D.joker.acentoClaro; }
@@ -37,8 +38,8 @@
 
   var VALORES = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
   var NOMBRE_PALO = { corazones: 'Corazones', diamantes: 'Diamantes', picas: 'Picas', treboles: 'Tréboles' };
-  var T_ABRIR = 1450;      // ms, apertura completa (≲1,6 s)
-  var T_CERRAR = 550;      // ms
+  var T_ABRIR = 950;       // ms, apertura completa (era 1450: se sentía lenta)
+  var T_CERRAR = 450;      // ms
   var T_SALTAR = 220;      // ms, al saltar la animación
 
   function clp(n) { return n ? '$' + String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.') : ''; }
@@ -57,7 +58,8 @@
   var elChips = $('#chips');
   var elBloque = $('#bloque'), elPanel = $('#panel'), elPanelMedida = $('#panel-medida');
   var btnPrev = $('#prev'), btnNext = $('#next'), elContador = $('#contador');
-  var btnAbrir = $('#abrir'), btnSaltar = $('#saltar'), btnCerrar = $('#cerrar'), btnBarajar = $('#barajar');
+  var btnAbrir = $('#abrir'), btnSaltar = $('#saltar'), btnCerrar = $('#cerrar'), btnBarajar = $('#barajar'), btnCambiar = $('#cambiar-mazo');
+  var elMazos = $('#mazos'), elMazosLista = $('#mazos-lista');
   var btnJoker = $('#joker-btn'), btnLista = $('#abrir-lista');
   var elAnuncio = $('#anuncio');
   var elPanelCerrada = $('#panel-cerrada'), elPanelProd = $('#panel-producto'), elAvisoCat = $('#aviso-cat');
@@ -151,6 +153,7 @@
   var S = {
     cat: activas.length === 1 ? activas[0].id : null,
     sec: null,                 // sección de Justo dentro del palo elegido (null = todas)
+    elegir: false,             // true mientras se muestra el paso «Escoger mazo»
     q: '',
     list: [],
     active: 0,
@@ -241,7 +244,13 @@
   }
 
   /* ---------- Cartas ---------- */
+  /* Cada carta es un objeto liviano; su DOM (marcos SVG, foto, reverso) solo existe mientras está cerca de la activa.
+     Con 251 cartas, construirlas todas al cargar eran ~20.000 nodos y tirones de 70-170 ms al abrir. */
   function buildCard(p) {
+    return { p: p, el: null, flipEl: null, flip: new Spring(0, 150, 20), idx: -1 };
+  }
+  function montar(c) {
+    var p = c.p;
     var div = document.createElement('div');
     div.className = 'br-card' + (p.joker ? ' br-card--joker' : '');
     div.setAttribute('role', 'group');
@@ -259,10 +268,17 @@
     if (!p.joker && p.arte && p.arte.plano) { div.setAttribute('data-plano', ''); }
     if (!p.joker && !p.imagen) { div.setAttribute('data-sin-foto', ''); }
     div.dataset.id = p.id;
-    div.hidden = true;
     div.innerHTML = '<div class="br-flip" aria-hidden="true">' + (p.joker ? jokerFrenteHtml() : productoFrenteHtml(p)) + dorsoHtml(p) + '</div>';
     elPile.appendChild(div);
-    return { p: p, el: div, flipEl: div.firstChild, flip: new Spring(0, 150, 20) };
+    c.el = div; c.flipEl = div.firstChild;
+    if (c.idx >= 0) {
+      div.setAttribute('aria-label', cardLabel(c, c.idx));
+      if (c.idx === S.active && S.phase !== 'closed') { div.classList.add('br-is-active'); div.removeAttribute('aria-hidden'); }
+    }
+  }
+  function desmontar(c) {
+    if (c.el && c.el.parentNode) { c.el.parentNode.removeChild(c.el); }
+    c.el = null; c.flipEl = null;
   }
 
   var cards = productos.map(buildCard);
@@ -309,16 +325,15 @@
   /* ---------- Render (solo escrituras: transform, opacity y variables CSS) ---------- */
   function render() {
     var n = S.list.length, p = S.p, i, c, d, pose, a, b, u, s, back, zi;
+    var abierto = p >= 1, ventana = M.maxVis + 3, fn = Math.min(n, 12), fi;
     for (i = 0; i < n; i++) {
       c = S.list[i];
       d = i - pos.x;
-      /* Con cientos de cartas, las que están lejos de la activa no se recalculan: quedan ocultas hasta que vuelvan a acercarse */
-      if (p >= 1 && Math.abs(d) > M.maxVis + 2) {
-        if (!c.lejos) { c.lejos = true; c.el.style.visibility = 'hidden'; c.el.style.opacity = '0'; }
-        continue;
-      }
-      c.lejos = false;
-      s = n > 1 ? i / (n - 1) : 0;
+      /* Solo existen en el DOM las cartas cercanas a la activa y, con el mazo cerrado o abriéndose, las 12 de arriba (el abanico) */
+      if (!(Math.abs(d) <= ventana || (!abierto && i < 12))) { if (c.el) { desmontar(c); } continue; }
+      if (!c.el) { montar(c); }
+      fi = Math.min(i, fn - 1);
+      s = fn > 1 ? fi / (fn - 1) : 0;
       if (p >= 1) {
         pose = explorePose(d);
         b = 1;
@@ -326,8 +341,8 @@
         a = easeOut(clamp((p / 0.5 - s * 0.5) / 0.5, 0, 1));
         u = clamp((p - 0.3) / 0.7, 0, 1);
         b = easeInOut(clamp((u - s * 0.35) / 0.65, 0, 1));
-        pose = mix(mix(deckPose(i), fanPose(i, n), a), explorePose(d), b);
-        zi = b > 0.5 ? explorePose(d).zi : (a > 0.15 ? 150 + i : 300 - i);
+        pose = mix(mix(deckPose(i), fanPose(fi, fn), a), explorePose(d), b);
+        zi = b > 0.5 ? explorePose(d).zi : (a > 0.15 ? 150 + fi : 300 - i);
         pose.zi = zi;
         pose.z += Math.sin(Math.PI * b) * 90;
         pose.s += Math.sin(Math.PI * b) * 0.05;
@@ -439,11 +454,8 @@
     if (keepId) { for (i = 0; i < list.length; i++) { if (list[i].p.id === keepId) { idx = i; } } }
     S.active = list.length ? idx : 0;
     pos.x = pos.t = S.active; pos.v = 0;
-    cards.concat([jokerCard]).forEach(function (c) {
-      var visible = list.indexOf(c) !== -1;
-      c.el.hidden = !visible;
-      if (!visible) { c.el.classList.remove('br-is-active'); c.el.setAttribute('aria-hidden', 'true'); }
-    });
+    cards.concat([jokerCard]).forEach(function (c) { c.idx = -1; if (c.el) { desmontar(c); } });
+    list.forEach(function (c, k) { c.idx = k; });
     refreshCards();
     refreshAll();
     kick();
@@ -451,6 +463,8 @@
 
   function refreshCards() {
     S.list.forEach(function (c, i) {
+      c.idx = i;
+      if (!c.el) { return; }
       c.el.setAttribute('aria-label', cardLabel(c, i));
       var act = i === S.active && S.phase !== 'closed';
       c.el.classList.toggle('br-is-active', act);
@@ -585,10 +599,11 @@
     btnSaltar.hidden = !(ph === 'opening' || ph === 'closing');
     btnCerrar.hidden = ph !== 'open';
     btnBarajar.hidden = ph !== 'open' || reduced;
+    btnCambiar.hidden = ph !== 'open';
     refreshCards();
     refreshAll();
     /* Entrar es inmediato; salir espera un instante por si el mazo se reabre enseguida (barajar de nuevo) y así no parpadea ni toca el historial */
-    if (ph !== 'closed') { inmersivo(true); } else { setTimeout(function () { if (S.phase === 'closed') { inmersivo(false); } }, 0); }
+    if (ph !== 'closed') { inmersivo(true); } else { setTimeout(function () { if (S.phase === 'closed' && !S.elegir) { inmersivo(false); } }, 0); }
   }
 
   function startAnim(to, dur, done) {
@@ -812,7 +827,64 @@
   /* ---------- Controles ---------- */
   btnPrev.addEventListener('click', function () { if (btnPrev.getAttribute('aria-disabled') !== 'true') { go(-1); } });
   btnNext.addEventListener('click', function () { if (btnNext.getAttribute('aria-disabled') !== 'true') { go(1); } });
-  btnAbrir.addEventListener('click', function () { openDeck({ focus: true }); });
+  /* ---------- Paso «Escoger mazo» ----------
+     «Abrir la carta» no abre ninguna baraja: primero se elige el mazo (categoría) y solo entonces se cargan y reparten sus cartas. */
+  var descMazo = {};
+  ((CONT.categorias && CONT.categorias.items) || []).forEach(function (c) { descMazo[c.id] = c.descripcion || ''; });
+  function buildMazos() {
+    var html = '';
+    activas.forEach(function (c, i) {
+      var n = conteo[c.id] || 0;
+      if (!n) { return; }
+      html += '<li class="br-mazos__item" style="--i:' + i + '"><button type="button" class="br-mazo" data-id="' + c.id + '" style="--br-m:' + (c.acentoVivo || c.acento) + '" aria-label="' + esc(c.nombre) + ', ' + n + (n === 1 ? ' carta' : ' cartas') + '">' +
+        '<span class="br-mazo__pila" aria-hidden="true"><i></i><i></i><i></i></span>' +
+        paloSvg(c.palo, 'br-mazo__palo') +
+        '<span class="br-mazo__nombre">' + esc(c.nombre) + '</span>' +
+        (descMazo[c.id] ? '<span class="br-mazo__desc">' + esc(descMazo[c.id]) + '</span>' : '') +
+        '<span class="br-mazo__n">' + n + (n === 1 ? ' carta' : ' cartas') + '</span></button></li>';
+    });
+    elMazosLista.innerHTML = html;
+  }
+  function abrirSelector() {
+    if (S.phase !== 'closed' || !elMazosLista.children.length) { openDeck({ focus: true }); return; }
+    S.elegir = true; S.userClosed = false;
+    inmersivo(true);
+    elCarta.classList.add('br-eligiendo');
+    elMazos.classList.remove('br-mazos--sale');
+    elMazos.hidden = false;
+    void elMazos.offsetWidth;                      // reinicia la animación de entrada
+    elMazos.classList.add('br-mazos--entra');
+    elAnuncio.textContent = 'Escoge un mazo de la carta.';
+    var primero = elMazosLista.querySelector('.br-mazo');
+    if (primero) { primero.focus({ preventScroll: true }); }
+  }
+  function cerrarSelector() {
+    S.elegir = false;
+    elCarta.classList.remove('br-eligiendo');
+    elMazos.hidden = true;
+    elMazos.classList.remove('br-mazos--entra', 'br-mazos--sale');
+    Array.prototype.forEach.call(elMazosLista.querySelectorAll('.br-mazo--elegido'), function (b) { b.classList.remove('br-mazo--elegido'); });
+  }
+  function elegirMazo(id, btn) {
+    var seguir = function () {
+      cerrarSelector();
+      S.cat = id; S.sec = null; S.userClosed = false;
+      buildChipsSec();
+      aplicarFiltros();
+      if (S.phase === 'closed') { openDeck({ focus: true }); }
+      elBaraja.focus({ preventScroll: true });   // el botón del mazo ya no existe: el foco pasa a la baraja para que el teclado funcione
+    };
+    if (reduced) { seguir(); return; }
+    btn.classList.add('br-mazo--elegido');
+    elMazos.classList.add('br-mazos--sale');
+    setTimeout(seguir, 240);
+  }
+  elMazosLista.addEventListener('click', function (e) {
+    var b = e.target.closest('.br-mazo');
+    if (b && !elMazos.classList.contains('br-mazos--sale')) { elegirMazo(b.dataset.id, b); }
+  });
+  btnAbrir.addEventListener('click', abrirSelector);
+  btnCambiar.addEventListener('click', function () { bandeja(false); closeDeck({ user: true, then: abrirSelector }); });
   btnSaltar.addEventListener('click', function () { skipAnim(); elBaraja.focus({ preventScroll: true }); });
   btnCerrar.addEventListener('click', function () { closeDeck({ user: true, focusAbrir: true }); });
   btnBarajar.addEventListener('click', shuffleAgain);
@@ -902,6 +974,7 @@
       inclinando = false;
       var act = S.list[S.active], p = ultimoPtr;
       if (!act || !p || !inm.on || S.phase !== 'open') { return; }
+      if (!act.el) { return; }
       var r = act.el.getBoundingClientRect(), fx = (p.clientX - r.left) / r.width, fy = (p.clientY - r.top) / r.height;
       var dentro = fx >= -0.15 && fx <= 1.15 && fy >= -0.15 && fy <= 1.15;
       act.el.style.setProperty('--br-ry', dentro ? ((fx - 0.5) * 6).toFixed(2) + 'deg' : '0deg');
@@ -991,6 +1064,7 @@
   /* ---------- Arranque ---------- */
   buildChips();
   buildChipsSec();
+  buildMazos();
   elCarta.classList.toggle('br-sin-movimiento', reduced);
   measure();
   setList(computeList(), null);
@@ -1042,12 +1116,13 @@
     }
   }
   btnInmCerrar.addEventListener('click', function () {
+    if (S.elegir) { cerrarSelector(); inmersivo(false); btnAbrir.focus({ preventScroll: true }); return; }
     if (S.phase === 'open') { closeDeck({ user: true, focusAbrir: true }); }
     else if (S.phase === 'opening') { skipAnim(); closeDeck({ user: true, focusAbrir: true }); }
   });
   window.addEventListener('popstate', function () {
     if (inm.soltando) { inm.soltando = false; return; }          // el retroceso lo provocamos nosotros al cerrar
-    if (inm.on) { inm.empujado = false; bandeja(false); if (S.phase !== 'open') { skipAnim(); } closeDeck({ user: true, focusAbrir: true }); }
+    if (inm.on) { inm.empujado = false; bandeja(false); if (S.elegir) { cerrarSelector(); inmersivo(false); return; } if (S.phase !== 'open') { skipAnim(); } closeDeck({ user: true, focusAbrir: true }); }
   });
   btnInmOpc.addEventListener('click', function () { bandeja(!elCarta.classList.contains('br-bandeja-abierta')); });
   document.addEventListener('keydown', function (e) {

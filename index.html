@@ -32,7 +32,7 @@
   <script>(function(){try{var q=new URLSearchParams(location.search).get('tema');if(q==='oscuro'||q==='claro'){localStorage.setItem('tirua-tema',q);}var t=localStorage.getItem('tirua-tema');if(t==='oscuro'){document.documentElement.setAttribute('data-tema','oscuro');var m=document.querySelector('meta[name=theme-color]');if(m){m.content='#000000';}}}catch(e){}})();</script>
   <link rel="stylesheet" href="css/styles.css?v=20261031e">
   <link rel="stylesheet" href="css/baraja.css?v=20261107a">
-  <link rel="stylesheet" href="css/baraja-atelier.css?v=20261107b">
+  <link rel="stylesheet" href="css/baraja-atelier.css?v=20261107c">
   <link rel="stylesheet" href="css/reservas-campo.css?v=20261031f">
   <script>(function(){try{var q=new URLSearchParams(location.search).get('madera');try{localStorage.removeItem('tirua-madera');}catch(e){}if(q==='1'){document.documentElement.classList.add('vista-madera');var l=document.createElement('link');l.rel='stylesheet';l.href='css/preview-madera.css?v=20261107e';document.head.appendChild(l);}}catch(e){}})();</script>
 </head>
@@ -148,6 +148,15 @@
         </button>
       </div>
     
+    <!-- Paso «Escoger mazo»: aparece al pulsar «Abrir la carta»; elegir un mazo carga solo sus cartas (js/baraja.js) -->
+    <div class="br-mazos" id="mazos" hidden role="group" aria-labelledby="mazos-titulo">
+      <div class="br-mazos__in">
+        <h3 class="br-mazos__titulo" id="mazos-titulo">Escoge un mazo</h3>
+        <p class="br-mazos__sub">Cada mazo reúne una parte de la carta.</p>
+        <ul class="br-mazos__lista" id="mazos-lista"></ul>
+      </div>
+    </div>
+
     <svg class="br-sprite" width="0" height="0" aria-hidden="true" focusable="false">
       <symbol id="palo-corazones" viewBox="0 0 100 100"><path d="M50 90C22 68 5 50 5 31 5 17 15 8 28 8c9 0 18 5 22 14 4-9 13-14 22-14 13 0 23 9 23 23 0 19-17 37-45 59Z"/></symbol>
       <symbol id="palo-diamantes" viewBox="0 0 100 100"><path d="M50 3 89 50 50 97 11 50Z"/></symbol>
@@ -248,6 +257,7 @@
         <div class="br-chips br-chips--sec" id="chips-sec" role="group" aria-label="Secciones de la categoría" hidden></div>
                 <p class="br-aviso-cat" id="aviso-cat" hidden></p>
           <div class="br-acciones" id="acciones">
+            <button type="button" class="br-btn br-btn--fantasma br-btn--corto" id="cambiar-mazo" hidden>Cambiar de mazo</button>
             <button type="button" class="br-btn br-btn--fantasma br-btn--corto" id="barajar" hidden>Barajar de nuevo</button>
             <button type="button" class="br-btn br-btn--fantasma br-btn--corto" id="cerrar" hidden>Cerrar baraja</button>
           </div>
@@ -371,7 +381,7 @@
   <script src="js/main.js?v=20261024b" defer></script>
   <script src="js/menu.js?v=20261024b" defer></script>
   <script src="js/baraja-arte.js?v=20261107a"></script>
-  <script src="js/baraja.js?v=20261107c" defer></script>
+  <script src="js/baraja.js?v=20261107g" defer></script>
   <script src="js/carta.js?v=20261024b" defer></script>
   <script src="js/hero.js?v=20261024b" defer></script>
   <script src="js/historias.js?v=20261027c" defer></script>

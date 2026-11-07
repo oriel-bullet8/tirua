@@ -1,4 +1,5 @@
-// Prueba de la baraja del inicio con la carta completa: 251 cartas, 4 palos, 27 secciones, fotos, reverso con precio y búsqueda.
+// Prueba de la baraja del inicio con la carta completa: portal → «Escoger mazo» → mazo, 251 cartas, 4 palos, 27 secciones,
+// fotos, reverso con precio, búsqueda, joker y rendimiento (solo se montan las cartas cercanas a la activa).
 // Uso: node pruebas/carta-baraja.cjs   (servidor: python3 servir.py; BASE=http://127.0.0.1:4195/ por defecto)
 // Referencia: datos/carta.json (la carta generada desde la captura de Justo; va en el repo).
 const { lanzar, contexto, BASE, fs, path } = require('./_lib.cjs');
@@ -9,11 +10,14 @@ const PALOS = { compartir: ['para-picar', 'entradas-frias', 'papitas-para-compar
 PALOS.bebestibles = secciones.map((s) => s.id).filter((id) => !Object.values(PALOS).flat().includes(id));
 const nSec = (id) => secciones.find((s) => s.id === id).productos.length;
 const nPalo = (palo) => PALOS[palo].reduce((a, id) => a + nSec(id), 0);
+const MAX_MONTADAS = 30;   // con la ventana de cartas (±5 + 12 del abanico + joker) nunca debería acercarse a esto
 
 let ok = 0, mal = 0;
 const chequea = (n, c, d) => { if (c) { ok++; console.log('OK    ' + n); } else { mal++; console.log('FALLA ' + n + (d !== undefined ? ' → ' + JSON.stringify(d) : '')); } };
 const contador = (page) => page.evaluate(() => (document.querySelector('.br-contador__txt') || {}).textContent);
+const montadas = (page) => page.evaluate(() => document.querySelectorAll('.br-card').length);
 const ruidoConocido = (u) => /hero(-vertical)?\.mp4/.test(u);   // el video del hero aún no existe: advertencia conocida
+const elegir = async (page, palo) => { await page.click(`.br-mazo[data-id="${palo}"]`); await page.waitForTimeout(1500); };
 
 (async () => {
   const browser = await lanzar();
@@ -21,30 +25,50 @@ const ruidoConocido = (u) => /hero(-vertical)?\.mp4/.test(u);   // el video del 
     for (const [nombre, w, h] of [['1440×900', 1440, 900], ['390×844', 390, 844]]) {
       const { ctx, page, log } = await contexto(browser, { viewport: { width: w, height: h }, hasTouch: w < 700 });
       const t = '[' + nombre + '] ';
+      const t0 = Date.now();
       await page.goto(BASE, { waitUntil: 'networkidle' });
       const d = await page.evaluate(() => {
-        const cartas = [...document.querySelectorAll('.br-card:not(.br-card--joker)')];
-        return { n: cartas.length, conFoto: cartas.filter((c) => c.querySelector('.br-foto__img')).length, sinFoto: cartas.filter((c) => c.hasAttribute('data-sin-foto')).length,
-                 feo: cartas.filter((c) => /undefined|NaN|null/.test(c.textContent)).map((c) => c.dataset.id), ancho: document.documentElement.scrollWidth, vw: innerWidth,
-                 nombres: cartas.map((c) => c.querySelector('.br-nombre').textContent) };
+        const P = window.DATOS_BARAJA.productos;
+        return { n: P.length, conFoto: P.filter((p) => p.imagen).length, sinFoto: P.filter((p) => !p.imagen).length, nombres: P.map((p) => p.nombre),
+                 feo: P.filter((p) => /undefined|NaN|null/.test(JSON.stringify(p))).map((p) => p.id), nodos: document.querySelectorAll('*').length,
+                 ancho: document.documentElement.scrollWidth, vw: innerWidth };
       });
-      chequea(t + `la baraja tiene las ${productos.length} cartas de la carta`, d.n === productos.length, d.n);
-      chequea(t + `${productos.filter((p) => p.foto).length} cartas con foto y ${productos.filter((p) => !p.foto).length} sin foto`, d.conFoto === productos.filter((p) => p.foto).length && d.sinFoto === productos.filter((p) => !p.foto).length, { conFoto: d.conFoto, sinFoto: d.sinFoto });
+      chequea(t + `los datos de la baraja tienen las ${productos.length} cartas`, d.n === productos.length, d.n);
+      chequea(t + `${productos.filter((p) => p.foto).length} con foto y ${productos.filter((p) => !p.foto).length} sin foto`, d.conFoto === productos.filter((p) => p.foto).length && d.sinFoto === productos.filter((p) => !p.foto).length, { conFoto: d.conFoto, sinFoto: d.sinFoto });
       chequea(t + 'los nombres coinciden uno a uno con la carta', JSON.stringify([...d.nombres].sort()) === JSON.stringify(productos.map((p) => p.nombre).sort()));
-      chequea(t + 'ninguna carta muestra «undefined», «NaN» ni «null»', d.feo.length === 0, d.feo.slice(0, 5));
+      chequea(t + 'ningún dato de carta contiene «undefined», «NaN» ni «null»', d.feo.length === 0, d.feo.slice(0, 5));
       chequea(t + 'sin desbordamiento horizontal', d.ancho <= d.vw, d);
+      chequea(t + `al cargar solo hay ≤ ${MAX_MONTADAS} cartas en el DOM y menos de 4000 nodos (antes 252 cartas y ~19.800 nodos)`, (await montadas(page)) <= MAX_MONTADAS && d.nodos < 4000, { montadas: await montadas(page), nodos: d.nodos });
 
-      // Abrir la carta y recorrerla
-      const t0 = Date.now();
-      await page.click('#abrir'); await page.waitForSelector('.br-carta.br-inm', { timeout: 5000 }); await page.waitForTimeout(1900);
-      chequea(t + 'abre a pantalla completa en menos de 4 s', Date.now() - t0 < 4000, Date.now() - t0);
-      chequea(t + `el contador parte en «1 de ${productos.length}»`, (await contador(page)) === `1 de ${productos.length}`, await contador(page));
+      // Paso 1: «Abrir la carta» → paso 2: «Escoger mazo»
+      await page.evaluate(() => document.getElementById('carta').scrollIntoView({ behavior: 'instant' }));
+      const t1 = Date.now();
+      await page.click('#abrir'); await page.waitForSelector('#mazos:not([hidden])', { timeout: 3000 }); await page.waitForTimeout(900);
+      chequea(t + '«Abrir la carta» muestra «Escoger mazo» en menos de 1,5 s, sin abrir ninguna baraja', Date.now() - t1 < 1500 && (await page.evaluate(() => !document.querySelector('#carta').classList.contains('br-is-open'))), Date.now() - t1);
+      const mz = await page.evaluate(() => [...document.querySelectorAll('.br-mazo')].map((b) => ({ id: b.dataset.id, txt: b.textContent })));
+      chequea(t + 'hay 4 mazos con su cantidad de cartas', mz.length === 4 && mz.every((m) => new RegExp(String(nPalo(m.id)) + ' cartas').test(m.txt)), mz);
+      chequea(t + 'el foco queda en el primer mazo', await page.evaluate(() => document.activeElement && document.activeElement.classList.contains('br-mazo')));
+      chequea(t + 'mientras se escoge no hay cartas abiertas ni controles de la baraja a la vista', await page.evaluate(() => getComputedStyle(document.querySelector('#bloque')).visibility === 'hidden'));
+      chequea(t + 'Esc cierra el paso «Escoger mazo» y vuelve al portal', await (async () => { await page.keyboard.press('Escape'); await page.waitForTimeout(700); return page.evaluate(() => !document.querySelector('#carta').classList.contains('br-inm') && document.querySelector('#mazos').hidden); })());
+      await page.evaluate(() => document.getElementById('carta').scrollIntoView({ behavior: 'instant' }));
+      await page.click('#abrir'); await page.waitForSelector('#mazos:not([hidden])'); await page.waitForTimeout(700);
+      await page.click('#inm-cerrar'); await page.waitForTimeout(700);
+      chequea(t + 'la X cierra el paso «Escoger mazo»', await page.evaluate(() => !document.querySelector('#carta').classList.contains('br-inm')));
+
+      // Elegir «Para compartir» (20 cartas): solo se cargan sus cartas
+      await page.evaluate(() => document.getElementById('carta').scrollIntoView({ behavior: 'instant' }));
+      await page.click('#abrir'); await page.waitForSelector('#mazos:not([hidden])'); await page.waitForTimeout(800);
+      const t2 = Date.now();
+      await page.click('.br-mazo[data-id="compartir"]'); await page.waitForSelector('.br-carta.br-is-open', { timeout: 4000 });
+      chequea(t + 'elegir un mazo lo abre en menos de 2,2 s', Date.now() - t2 < 2200, Date.now() - t2);
+      chequea(t + `el mazo «compartir» tiene ${nPalo('compartir')} cartas (contador «1 de ${nPalo('compartir')}»)`, (await contador(page)) === `1 de ${nPalo('compartir')}`, await contador(page));
+      chequea(t + 'el selector queda cerrado al abrir el mazo', await page.evaluate(() => document.querySelector('#mazos').hidden));
       await page.keyboard.press('ArrowRight'); await page.waitForTimeout(500);
-      chequea(t + 'la flecha derecha avanza a la carta 2', (await contador(page)) === `2 de ${productos.length}`);
+      chequea(t + 'la flecha derecha avanza a la carta 2', (await contador(page)) === `2 de ${nPalo('compartir')}`);
       await page.keyboard.press('End'); await page.waitForTimeout(700);
-      chequea(t + `«Fin» llega a la última carta (${productos.length} de ${productos.length})`, (await contador(page)) === `${productos.length} de ${productos.length}`, await contador(page));
+      chequea(t + `«Fin» llega a la última carta del mazo (${nPalo('compartir')} de ${nPalo('compartir')})`, (await contador(page)) === `${nPalo('compartir')} de ${nPalo('compartir')}`, await contador(page));
       await page.keyboard.press('Home'); await page.waitForTimeout(700);
-      chequea(t + '«Inicio» vuelve a la primera', (await contador(page)) === `1 de ${productos.length}`);
+      chequea(t + '«Inicio» vuelve a la primera', (await contador(page)) === `1 de ${nPalo('compartir')}`);
 
       // Reverso: sección, descripción y precio de la primera carta (Entraña)
       await page.keyboard.press('Enter'); await page.waitForTimeout(900);
@@ -53,16 +77,28 @@ const ruidoConocido = (u) => /hero(-vertical)?\.mp4/.test(u);   // el video del 
       chequea(t + `el reverso de «${prim.nombre}» muestra precio, sección y descripción de Justo`, rev.precio === '$' + String(prim.precio).replace(/\B(?=(\d{3})+(?!\d))/g, '.') && !!rev.cat && rev.desc === prim.descripcion, rev);
       await page.keyboard.press('Enter'); await page.waitForTimeout(500);
 
+      // Cambiar de mazo desde la bandeja
+      await page.click('#inm-opciones'); await page.waitForTimeout(500);
+      await page.click('#cambiar-mazo'); await page.waitForSelector('#mazos:not([hidden])', { timeout: 4000 }); await page.waitForTimeout(700);
+      chequea(t + '«Cambiar de mazo» vuelve al paso «Escoger mazo»', await page.evaluate(() => !document.querySelector('#mazos').hidden && document.querySelector('#carta').classList.contains('br-inm')));
+      await elegir(page, 'bebestibles');
+      chequea(t + `el mazo «bebestibles» tiene ${nPalo('bebestibles')} cartas`, (await contador(page)) === `1 de ${nPalo('bebestibles')}`, await contador(page));
+      chequea(t + `con 196 cartas hay ≤ ${MAX_MONTADAS} en el DOM`, (await montadas(page)) <= MAX_MONTADAS, await montadas(page));
+      await page.keyboard.press('End'); await page.waitForTimeout(900);
+      chequea(t + `«Fin» llega a la carta ${nPalo('bebestibles')} y sigue habiendo ≤ ${MAX_MONTADAS} cartas en el DOM`, (await contador(page)) === `${nPalo('bebestibles')} de ${nPalo('bebestibles')}` && (await montadas(page)) <= MAX_MONTADAS, { c: await contador(page), m: await montadas(page) });
+      const activaOk = await page.evaluate(() => { const a = document.querySelector('.br-card.br-is-active'); return !!a && !!a.querySelector('.br-nombre').textContent; });
+      chequea(t + 'la carta activa del final está montada y con nombre', activaOk);
+      await page.keyboard.press('Home'); await page.waitForTimeout(900);
+
       // Palos y secciones desde la bandeja
       await page.click('#inm-opciones'); await page.waitForTimeout(600);
-      const totalTodo = await (async () => { await page.click('.br-chip--todo'); await page.waitForTimeout(700); return contador(page); })();
-      chequea(t + 'el chip «Todo» muestra las 251 cartas', totalTodo === `1 de ${productos.length}`, totalTodo);
+      await page.click('.br-chip--todo'); await page.waitForTimeout(700);
+      chequea(t + 'el chip «Todo» muestra las 251 cartas (conserva la carta actual al cambiar de filtro)', (await contador(page)).endsWith(` de ${productos.length}`), await contador(page));
       for (const [palo, esperado] of Object.entries({ compartir: nPalo('compartir'), individuales: nPalo('individuales'), postres: nPalo('postres'), bebestibles: nPalo('bebestibles') })) {
         await page.click(`.br-chip[data-id="${palo}"]`); await page.waitForTimeout(700);
         const c = await contador(page);
         chequea(t + `el palo «${palo}» tiene ${esperado} cartas`, c === `1 de ${esperado}`, c);
       }
-      // Secciones de Bebestibles: cada chip filtra exactamente su cantidad, y sus números suman el palo
       await page.click('.br-chip[data-id="bebestibles"]'); await page.waitForTimeout(500);
       const sumas = await page.evaluate(() => [...document.querySelectorAll('#chips-sec .br-chip[data-sec]:not([data-sec=""])')].map((b) => ({ id: b.dataset.sec, n: parseInt(b.querySelector('.br-chip__estado').textContent, 10) })));
       chequea(t + `Bebestibles ofrece ${PALOS.bebestibles.length} secciones y sus cantidades suman ${nPalo('bebestibles')}`, sumas.length === PALOS.bebestibles.length && sumas.reduce((a, x) => a + x.n, 0) === nPalo('bebestibles'), sumas.length);
@@ -85,7 +121,6 @@ const ruidoConocido = (u) => /hero(-vertical)?\.mp4/.test(u);   // el video del 
           chequea(t + `la sección «${id}» muestra ${nSec(id)} cartas`, (await contador(page)) === `1 de ${nSec(id)}`, await contador(page));
         }
       }
-      // Cambiar de palo reinicia la sección; los palos de una sola sección no ofrecen segunda fila
       await page.click('.br-chip[data-id="postres"]'); await page.waitForTimeout(500);
       chequea(t + 'Postres (una sola sección) no muestra la segunda fila', await page.evaluate(() => document.querySelector('#chips-sec').hidden));
 
@@ -98,17 +133,36 @@ const ruidoConocido = (u) => /hero(-vertical)?\.mp4/.test(u);   // el video del 
       chequea(t + 'una búsqueda sin resultados muestra el aviso', await page.evaluate(() => !document.querySelector('#vacio').hidden));
       await page.fill('#buscar', ''); await page.waitForTimeout(700);
 
+      // Joker: vive en la carta (botón de opciones) y es la última carta del mazo
+      await page.click('.br-chip[data-id="postres"]'); await page.waitForTimeout(600);
+      await page.click('#joker-btn'); await page.waitForTimeout(900);
+      chequea(t + 'el Joker se agrega al mazo y queda activo', await page.evaluate(() => !!document.querySelector('.br-card--joker.br-is-active')) && (await contador(page)) === 'Joker', await contador(page));
+
       // Lista rápida con todo
-      await page.click('.br-chip--todo'); await page.waitForTimeout(500);
+      await page.click('.br-chip--todo'); await page.waitForTimeout(600);
       await page.click('#abrir-lista'); await page.waitForTimeout(500);
       const nl = await page.evaluate(() => document.querySelectorAll('.br-hoja__item').length);
       chequea(t + `la lista rápida muestra las ${productos.length} cartas`, nl === productos.length, nl);
 
       const fallidasReales = log.fallidas.filter((u) => !ruidoConocido(u));
-      // El navegador reporta cada recurso que falla como «Failed to load resource…» sin URL: se descartan solo si TODAS las fallidas son el video conocido.
       const consolaReal = log.consola.filter((m) => !(fallidasReales.length === 0 && /Failed to load resource/.test(m)));
       const errores = log.errores.concat(consolaReal, fallidasReales);
       chequea(t + 'sin errores de JavaScript ni peticiones fallidas (salvo el video del hero, aún ausente)', errores.length === 0, errores.slice(0, 5));
+      await ctx.close();
+    }
+
+    // Fluidez de la apertura (Chromium sin GPU: umbrales holgados; antes de la mejora: p95 = 67 ms, máximo = 167 ms)
+    {
+      const { ctx, page } = await contexto(browser, { viewport: { width: 1440, height: 900 } });
+      await page.addInitScript(() => { window.__lt = []; try { new PerformanceObserver((l) => l.getEntries().forEach((e) => window.__lt.push(Math.round(e.duration)))).observe({ type: 'longtask', buffered: true }); } catch (e) {} });
+      await page.goto(BASE, { waitUntil: 'load' });
+      await page.evaluate(() => document.getElementById('carta').scrollIntoView({ behavior: 'instant' })); await page.waitForTimeout(700);
+      await page.click('#abrir'); await page.waitForSelector('#mazos:not([hidden])'); await page.waitForTimeout(900);
+      await page.evaluate(() => { window.__f = []; let u = performance.now(); (function f(t) { window.__f.push(t - u); u = t; if (window.__f.length < 240) requestAnimationFrame(f); })(u); });
+      await page.click('.br-mazo[data-id="bebestibles"]'); await page.waitForTimeout(2600);
+      const fr = await page.evaluate(() => { const f = window.__f.slice(1).sort((a, b) => a - b); return { n: f.length, p95: Math.round(f[Math.floor(f.length * 0.95)]), max: Math.round(f[f.length - 1]), lt: window.__lt }; });
+      chequea('[rendimiento] apertura del mazo de 196 cartas: fotogramas p95 ≤ 34 ms y máximo ≤ 100 ms', fr.p95 <= 34 && fr.max <= 100, fr);
+      chequea('[rendimiento] sin tareas largas (≥ 50 ms) durante la apertura', fr.lt.length === 0, fr.lt);
       await ctx.close();
     }
   } finally { await browser.close(); }
