@@ -13,7 +13,10 @@
     "verificar": "npm run test:recursos && npm run test:inmersivo && npm run test:historias && npm run test:instagram-sync && npm run test:baraja:fotos && npm run test:vuelta2 && npm run test:reservas-datos",
     "sondeo": "node pruebas/sondeo.cjs",
     "test:historias": "node pruebas/historias.cjs",
-    "test:instagram-sync": "node --test pruebas/instagram-sync.test.mjs"
+    "test:instagram-sync": "node --test pruebas/instagram-sync.test.mjs",
+    "test:carta": "node pruebas/carta-pagina.cjs",
+    "carta:construir": "python3 scripts/carta-construir.py",
+    "carta:pdf": "node scripts/carta-pdf.cjs"
   },
   "devDependencies": {
     "playwright-core": "1.58.2"

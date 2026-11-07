@@ -44,7 +44,7 @@ window.TIRUA_CONTENIDO = {
   },
 
   // Barra fina superior
-  aviso: 'Sitio en construcción · carta parcial y fotos por confirmar',
+  aviso: 'Pirque · martes a sábado desde las 18:00',
 
   // Menú (cabecera y pie). El orden es el que se ve.
   navegacion: [
@@ -73,13 +73,15 @@ window.TIRUA_CONTENIDO = {
   },
 
   // ---------- CARTA (baraja) ----------
-  // Los productos (8 bebestibles reales de Justo), precios, fotos, palos y colores de la baraja viven en js/baraja-datos.js (palos y colores, provisionales).
+  // Los productos (la carta completa de Justo), precios y fotos se generan en js/baraja-productos.js (npm run carta:construir); palos y colores en js/baraja-datos.js.
   // Aquí solo van los textos de la sección. «local.pedidos» alimenta el enlace a la carta completa.
   carta: {
     titulo: 'Carta',
-    bajada: 'Un adelanto de cómo se verá: cada plato, una carta.',
+    bajada: 'Cada plato y cada trago, una carta.',
     enlaceCompleta: 'Ver carta completa en la plataforma del bar',
-    enlaceNota: 'abre una web externa'
+    enlaceNota: 'abre una web externa',
+    enlacePdf: 'Carta tradicional en PDF',
+    enlacePdfNota: 'se abre en una pestaña nueva'
   },
 
   // ---------- INSTAGRAM (solicitud de reserva) ----------

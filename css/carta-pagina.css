@@ -1,0 +1,108 @@
+/* Página de carta (carta.html). Usa los tokens de styles.css: papel blanco, tinta casi negra, verde de Pirque como acento. */
+
+.cp { padding-top: calc(var(--alto-aviso) + var(--alto-cabecera) + clamp(24px, 4vw, 48px)); padding-bottom: clamp(72px, 9vw, 128px); background: var(--fondo); }
+.cp__cab { display: grid; gap: 14px; margin-bottom: clamp(24px, 3vw, 40px); }
+.cp .titular--medio { max-width: none; font-size: clamp(3.25rem, 9vw, 6rem); }
+.cp__nota { margin: 0; font-size: 0.9375rem; color: var(--tinta-3); }
+
+/* ---------- Barra fija: bloques + buscador ---------- */
+.cp-barra { position: sticky; top: var(--cp-top, 72px); z-index: 20; background: rgb(var(--fondo-rgb) / 0.94); border-block: 1px solid var(--linea); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); }
+.cp-barra__in { padding-block: 10px; }
+
+.cp-nav { min-width: 0; }
+.cp-nav__lista { display: flex; gap: 8px; margin: 0; padding: 2px 0; list-style: none; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+.cp-nav__lista::-webkit-scrollbar { display: none; }
+.cp-nav__lista li { flex: none; }
+.cp-nav__chip {
+  display: inline-flex; align-items: center; min-height: 44px; padding: 0 16px; white-space: nowrap;
+  border: 1px solid var(--linea-fuerte); color: var(--tinta); text-decoration: none;
+  font: 600 0.8125rem/1 var(--sans); letter-spacing: 0.1em; text-transform: uppercase;
+  transition: background-color 0.3s var(--ease), color 0.3s var(--ease), border-color 0.3s var(--ease);
+}
+.cp-nav__chip:hover { border-color: var(--acento); }
+.cp-nav__chip[aria-current="true"] { background: var(--acento); border-color: var(--acento); color: var(--fondo); }
+.cp-nav__chip:focus-visible, .cp-busca__in:focus-visible { outline: 2px solid var(--acento); outline-offset: 2px; }
+
+.cp-busca { position: relative; display: block; width: 100%; max-width: 440px; margin-top: 8px; }
+.cp-busca__ico { position: absolute; left: 14px; top: 50%; width: 20px; height: 20px; transform: translateY(-50%); fill: none; stroke: var(--tinta-3); stroke-width: 1.7; stroke-linecap: square; pointer-events: none; }
+.cp-busca__in { width: 100%; min-height: 44px; padding: 0 14px 0 44px; background: rgb(var(--tinta-rgb) / 0.04); border: 1px solid var(--linea-fuerte); border-radius: 0; color: var(--tinta); font: 400 1.0625rem/1.2 var(--sans); }
+.cp-busca__in::placeholder { color: var(--tinta-3); opacity: 1; }
+.cp-busca__in:hover { border-color: var(--acento); }
+
+/* ---------- Bloques y secciones ---------- */
+.cp-bloque { padding-top: clamp(40px, 6vw, 80px); scroll-margin-top: calc(var(--cp-top, 72px) + 70px); }
+.cp-bloque[hidden], .cp-sec[hidden], .cp-item[hidden] { display: none; }
+.cp-bloque__titulo { margin: 0 0 clamp(8px, 1.5vw, 16px); padding-bottom: 14px; border-bottom: 2px solid var(--tinta); font-family: var(--display); font-weight: 700; font-size: clamp(2rem, 5.2vw, 3.5rem); line-height: 1; letter-spacing: 0.005em; text-transform: uppercase; text-wrap: balance; }
+
+.cp-sec { padding-top: clamp(24px, 3.4vw, 40px); }
+.cp-sec__titulo { display: flex; align-items: baseline; gap: 12px; margin: 0 0 18px; font: 600 0.9375rem/1.2 var(--sans); letter-spacing: 0.16em; text-transform: uppercase; color: var(--acento); }
+.cp-sec__n { font-weight: 500; letter-spacing: 0.04em; color: var(--tinta-3); }
+.cp-sec__n::before { content: "· "; }
+
+/* Productos con foto: tarjetas */
+.cp-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); gap: clamp(14px, 2vw, 24px); margin: 0; padding: 0; list-style: none; }
+@media (max-width: 520px) { .cp-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; } }
+.cp-item--foto { display: flex; flex-direction: column; background: var(--fondo); border: 1px solid var(--linea); transition: border-color 0.35s var(--ease), box-shadow 0.35s var(--ease), transform 0.35s var(--ease); }
+@media (hover: hover) { .cp-item--foto:hover { border-color: var(--linea-fuerte); box-shadow: var(--sombra); transform: translateY(-3px); } }
+.cp-item__foto { aspect-ratio: 1; overflow: hidden; background: var(--fondo-3); }
+.cp-item__foto img { width: 100%; height: 100%; object-fit: cover; object-position: center 40%; transition: transform 0.9s var(--ease); }
+@media (hover: hover) { .cp-item--foto:hover .cp-item__foto img { transform: scale(1.04); } }
+.cp-item--foto .cp-item__cuerpo { display: grid; gap: 6px; padding: 14px 16px 18px; }
+@media (max-width: 520px) { .cp-item--foto .cp-item__cuerpo { padding: 10px 12px 14px; } }
+
+.cp-item__cab { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.cp-item__nombre { margin: 0; font-family: var(--display); font-weight: 400; font-size: 1.1875rem; line-height: 1.2; text-wrap: balance; }
+.cp-item__precio { flex: none; font: 600 1.0625rem/1.2 var(--sans); font-variant-numeric: lining-nums tabular-nums; color: var(--acento); }
+.cp-item__desc { margin: 0; font-size: 0.9375rem; line-height: 1.5; color: var(--tinta-2); text-wrap: pretty; }
+.cp-item--foto .cp-item__cab { flex-direction: column; gap: 4px; }
+@media (min-width: 521px) { .cp-item--foto .cp-item__cab { flex-direction: row; } }
+
+/* Productos sin foto: líneas de carta clásica, en dos columnas en pantallas anchas */
+.cp-lista { display: grid; gap: 0 clamp(24px, 4vw, 56px); margin: clamp(8px, 1.4vw, 16px) 0 0; padding: 0; list-style: none; }
+.cp-grid + .cp-lista { margin-top: clamp(20px, 3vw, 32px); }
+@media (min-width: 860px) { .cp-lista { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.cp-item--texto { padding-block: 14px; border-bottom: 1px solid var(--linea); }
+.cp-item--texto .cp-item__nombre { font-size: 1.125rem; }
+.cp-item--texto .cp-item__cuerpo { display: grid; gap: 4px; }
+
+.cp__vacio { margin: 56px 0 0; font-family: var(--display); font-size: 1.5rem; color: var(--tinta-2); }
+.cp__vacio[hidden] { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .cp-item--foto, .cp-item__foto img, .cp-nav__chip { transition: none; }
+  .cp-item--foto:hover { transform: none; }
+}
+
+/* ---------- Versión para imprimir / PDF: carta tradicional solo de texto (scripts/carta-pdf.cjs) ---------- */
+.cp-print-cab { display: none; }
+@media print {
+  @page { size: A4; margin: 16mm 15mm 18mm; }
+  html, body { background: #fff !important; color: #000; }
+  body { font-size: 10pt; line-height: 1.35; }
+  .saltar, .cabecera, .pie, .cp-barra, .cp-busca, .cp__vacio, .sin-js { display: none !important; }
+  .cp { padding: 0; background: #fff; }
+  .envoltura { max-width: none; padding-inline: 0; }
+  .cp-print-cab { display: block; margin-bottom: 14pt; text-align: center; }
+  .cp-print-cab img { height: 30pt; width: auto; margin: 0 auto 6pt; filter: invert(1); }
+  .cp-print-cab p { margin: 0; font-size: 9pt; color: #444; letter-spacing: .02em; }
+  .cp__cab { display: block; margin-bottom: 4pt; text-align: center; }
+  .cp .titular--medio { font-size: 30pt; line-height: 1; }
+  .cp__cab .seccion__bajada { display: none; }
+  .cp__nota { font-size: 8.5pt; color: #555; margin-top: 4pt; }
+  .cp-bloque { padding-top: 0; break-before: page; }
+  .cp-bloque:first-of-type { break-before: auto; padding-top: 12pt; }
+  .cp-bloque__titulo { font-size: 19pt; padding-bottom: 5pt; margin-bottom: 4pt; border-bottom: 1.2pt solid #000; }
+  .cp-sec { padding-top: 11pt; }
+  .cp-sec__titulo { margin-bottom: 5pt; font-size: 9pt; color: #1d3a29; break-after: avoid; }
+  .cp-sec__n { display: none; }
+  .cp-sec { column-count: 2; column-gap: 22pt; }
+  .cp-sec__titulo { column-span: all; }
+  .cp-grid, .cp-lista { display: contents; }
+  .cp-item, .cp-item--foto, .cp-item--texto { display: block; break-inside: avoid; border: 0; border-bottom: .5pt solid #ccc; padding: 4.5pt 0; background: none; box-shadow: none; transform: none; }
+  .cp-item__foto { display: none; }
+  .cp-item--foto .cp-item__cuerpo, .cp-item--texto .cp-item__cuerpo { display: block; padding: 0; }
+  .cp-item__cab, .cp-item--foto .cp-item__cab { display: flex; flex-direction: row; gap: 10pt; justify-content: space-between; align-items: baseline; }
+  .cp-item__nombre, .cp-item--texto .cp-item__nombre { font-size: 11pt; }
+  .cp-item__precio { font-size: 10pt; color: #000; }
+  .cp-item__desc { margin-top: 1.5pt; font-size: 8.8pt; line-height: 1.32; color: #333; }
+}

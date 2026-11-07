@@ -41,7 +41,7 @@
   var T_CERRAR = 550;      // ms
   var T_SALTAR = 220;      // ms, al saltar la animación
 
-  function clp(n) { return '$' + String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.'); }
+  function clp(n) { return n ? '$' + String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, '.') : ''; }
   function norm(s) { return String(s).normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim(); }
   function clamp(x, a, b) { return Math.max(a, Math.min(b, x)); }
   function lerp(a, b, t) { return a + (b - a) * t; }
@@ -94,15 +94,18 @@
   D.categorias.forEach(function (c) { c.nombre = nombresContenido[c.id] || c.nombre || c.id; catById[c.id] = c; });
   var activas = D.categorias.filter(function (c) { return c.activa; });
 
-  var conteo = {};
+  var conteo = {}, conteoSec = {};
   var productos = D.productos.filter(function (p) { return catById[p.categoria] && catById[p.categoria].activa; }).map(function (p) {
     var idx = conteo[p.categoria] || 0;
     conteo[p.categoria] = idx + 1;
+    /* El valor del naipe (A, 2 … K, y otra vez A…) cuenta dentro de cada sección: cada sección parte por el As */
+    var clave = p.seccion || p.categoria, idv = conteoSec[clave] || 0;
+    conteoSec[clave] = idv + 1;
     var cat = catById[p.categoria];
     return {
       id: p.id, cat: cat, palo: cat.palo, acento: cat.acento,
-      valor: VALORES[Math.min(idx, VALORES.length - 1)], esAs: idx === 0, destacado: !!p.destacado,
-      nombre: p.nombre, justo: p.justo || '', descripcion: p.descripcion, precio: p.precio, imagen: p.imagen || null,
+      valor: VALORES[idv % VALORES.length], esAs: idx === 0, destacado: !!p.destacado, seccion: p.seccion || '',
+      nombre: p.nombre, justo: p.justo || '', descripcion: p.descripcion || '', precio: p.precio || null, imagen: p.imagen || null,
       etiquetas: p.etiquetas || [],
       arte: (window.TIRUA_BARAJA_ARTE || {})[p.id] || {},
       /* Texto de búsqueda: nombre + descripción + etiquetas (sin tildes ni mayúsculas) */
@@ -147,6 +150,7 @@
   /* ---------- Estado ---------- */
   var S = {
     cat: activas.length === 1 ? activas[0].id : null,
+    sec: null,                 // sección de Justo dentro del palo elegido (null = todas)
     q: '',
     list: [],
     active: 0,
@@ -204,14 +208,14 @@
 
   /* Franja compartida: solo el nombre en el frente; nombre y precio al girar (CSS). */
   function franjaHtml(p) {
-    return '<div class="br-franja"><p class="br-nombre">' + esc(p.nombre) + '</p><p class="br-precio">' + clp(p.precio) + '</p></div>';
+    return '<div class="br-franja"><p class="br-nombre">' + esc(p.nombre) + '</p>' + (p.precio ? '<p class="br-precio">' + clp(p.precio) + '</p>' : '') + '</div>';
   }
   /* Reverso con la ficha del trago: categoría y descripción tal como aparecen en la carta de Justo (no se inventa nada).
      Con el mazo cerrado se ve el logo; con la baraja abierta, al voltear la carta, la ficha (ver css/baraja.css). */
   function dorsoInfoHtml(p) {
     return '<div class="br-dorso__info">' + paloSvg(p.palo, 'br-dorso__palo') +
       (p.justo ? '<p class="br-dorso__cat">' + esc(p.justo) + '</p>' : '') +
-      '<p class="br-dorso__desc">' + esc(p.descripcion) + '</p></div>';
+      (p.descripcion ? '<p class="br-dorso__desc">' + esc(p.descripcion) + '</p>' : '') + '</div>';
   }
   function dorsoHtml(p) {
     return '<div class="br-face br-face--back' + (p && !p.joker ? ' br-face--back-info' : '') + '" aria-hidden="true"><div class="br-dorso__trama"></div>' + marcoHtml(p.id + '-back') + '<img class="br-dorso__logo" src="' + LOGO + '" width="' + LOGO_DIM[0] + '" height="' + LOGO_DIM[1] + '" alt="" decoding="async" draggable="false">' + (p && !p.joker ? dorsoInfoHtml(p) + franjaHtml(p) : '') + '<i class="br-dim"></i></div>';
@@ -252,6 +256,8 @@
       div.style.setProperty('--br-art-x', ((p.arte.escena || 0) % 4) * 100 / 3 + '%');
       div.style.setProperty('--br-art-y', Math.floor((p.arte.escena || 0) / 4) * 100 + '%');
     }
+    if (!p.joker && p.arte && p.arte.plano) { div.setAttribute('data-plano', ''); }
+    if (!p.joker && !p.imagen) { div.setAttribute('data-sin-foto', ''); }
     div.dataset.id = p.id;
     div.hidden = true;
     div.innerHTML = '<div class="br-flip" aria-hidden="true">' + (p.joker ? jokerFrenteHtml() : productoFrenteHtml(p)) + dorsoHtml(p) + '</div>';
@@ -304,6 +310,12 @@
     for (i = 0; i < n; i++) {
       c = S.list[i];
       d = i - pos.x;
+      /* Con cientos de cartas, las que están lejos de la activa no se recalculan: quedan ocultas hasta que vuelvan a acercarse */
+      if (p >= 1 && Math.abs(d) > M.maxVis + 2) {
+        if (!c.lejos) { c.lejos = true; c.el.style.visibility = 'hidden'; c.el.style.opacity = '0'; }
+        continue;
+      }
+      c.lejos = false;
       s = n > 1 ? i / (n - 1) : 0;
       if (p >= 1) {
         pose = explorePose(d);
@@ -388,7 +400,7 @@
   /* Reserva el alto del texto más largo bajo la carta: los controles no se mueven al cambiar de carta
      (si el alto cambiara, el navegador podría mover la página y el botón se iría de debajo del dedo). */
   function reservarDescripcion() {
-    var textos = productos.map(function (p) { return p.descripcion; }), max = 0, i, h;
+    var textos = productos.map(function (p) { return p.descripcion; }).sort(function (a, b) { return b.length - a.length; }).slice(0, 12), max = 0, i, h;
     for (i = 0; i < textos.length; i++) { elPanelMedida.textContent = textos[i]; h = elPanelMedida.offsetHeight; if (h > max) { max = h; } }
     if (S.joker && D.joker) {
       elPanelMedida.textContent = D.joker.texto; h = elPanelMedida.offsetHeight + (elPanelMedida.offsetWidth < 400 ? 64 : 48) + 10;
@@ -405,6 +417,7 @@
   function computeList() {
     var q = norm(S.q), res = productos.filter(function (p) {
       if (S.cat && p.cat.id !== S.cat) { return false; }
+      if (S.sec && p.seccion !== S.sec) { return false; }
       return !q || p.pajar.indexOf(q) !== -1;
     }).map(function (p) { return cardById[p.id]; });
     if (S.joker) { res.push(jokerCard); }
@@ -415,7 +428,7 @@
 
   function cardLabel(c, i) {
     if (c.p.joker) { return 'Carta Joker, vista previa de demostración: idea pendiente, sin precio'; }
-    return 'Carta ' + (i + 1) + ' de ' + totalProductos() + ': ' + c.p.nombre + ', ' + clp(c.p.precio);
+    return 'Carta ' + (i + 1) + ' de ' + totalProductos() + ': ' + c.p.nombre + (c.p.precio ? ', ' + clp(c.p.precio) : '');
   }
 
   function setList(list, keepId) {
@@ -481,7 +494,7 @@
         pJoker.hidden = false; pJoker.textContent = D.joker.texto;
         pVincular.hidden = false; pVincular.textContent = D.joker.botonVincular;
       } else {
-        pDesc.hidden = false; pDesc.textContent = p.descripcion;
+        pDesc.hidden = !p.descripcion; pDesc.textContent = p.descripcion;
         pJoker.hidden = true; pVincular.hidden = true;
       }
     }
@@ -665,7 +678,8 @@
     elBuscar.value = ''; S.q = ''; clearTimeout(buscarTimer); aplicarFiltros(); elBuscar.focus();
   });
   $('#restablecer').addEventListener('click', function () {
-    elBuscar.value = ''; S.q = ''; S.cat = activas.length === 1 ? activas[0].id : null;
+    elBuscar.value = ''; S.q = ''; S.sec = null; S.cat = activas.length === 1 ? activas[0].id : null;
+    buildChipsSec();
     clearTimeout(buscarTimer); aplicarFiltros(); elBuscar.focus();
   });
 
@@ -685,7 +699,36 @@
     });
     elChips.innerHTML = html;
   }
+  /* Segunda fila: las secciones de Justo del palo elegido (solo si el palo tiene más de una) */
+  var elChipsSec = $('#chips-sec');
+  var secciones = (D.secciones || []);
+  function buildChipsSec() {
+    if (!elChipsSec) { return; }
+    var lista = S.cat ? secciones.filter(function (x) { return x.categoria === S.cat; }) : [];
+    if (lista.length < 2) { elChipsSec.hidden = true; elChipsSec.innerHTML = ''; return; }
+    var cat = catById[S.cat], html = '<button type="button" class="br-chip br-chip--sec" data-sec="" style="--br-chip:' + cat.acento + '"><span class="br-chip__cuerpo"><span class="br-chip__nombre">Todas</span></span></button>';
+    lista.forEach(function (x) {
+      var n = productos.filter(function (p) { return p.seccion === x.id; }).length;
+      html += '<button type="button" class="br-chip br-chip--sec" data-sec="' + x.id + '" style="--br-chip:' + cat.acento + '"><span class="br-chip__cuerpo"><span class="br-chip__nombre">' + esc(x.nombre) + '</span><span class="br-chip__estado">' + n + '</span></span></button>';
+    });
+    elChipsSec.innerHTML = html;
+    elChipsSec.hidden = false;
+  }
+  function refreshChipsSec() {
+    if (!elChipsSec || elChipsSec.hidden) { return; }
+    Array.prototype.forEach.call(elChipsSec.children, function (b) { b.setAttribute('aria-pressed', String((b.dataset.sec || null) === S.sec)); });
+  }
+  if (elChipsSec) {
+    elChipsSec.addEventListener('click', function (e) {
+      var b = e.target.closest('.br-chip');
+      if (!b) { return; }
+      S.sec = b.dataset.sec || null;
+      aplicarFiltros();
+    });
+  }
+
   function refreshChips() {
+    refreshChipsSec();
     Array.prototype.forEach.call(elChips.children, function (b) {
       if (b.classList.contains('br-is-pronto')) { return; }
       var id = b.dataset.id, on = (id || null) === S.cat;
@@ -703,6 +746,8 @@
       return;
     }
     S.cat = b.dataset.id || null;
+    S.sec = null;
+    buildChipsSec();
     aplicarFiltros();
   });
 
@@ -722,6 +767,8 @@
     }
     ocultarAvisoPortal();
     S.cat = id;
+    S.sec = null;
+    buildChipsSec();
     aplicarFiltros();
     if (S.phase === 'closed') { openDeck({ focus: true }); }
     if (S.phase !== 'closed' && !elCarta.contains(document.activeElement)) { elBaraja.focus({ preventScroll: true }); }   // aplicarFiltros puede haberla abierto sin foco
@@ -886,7 +933,7 @@
         return '<li><button type="button" class="br-hoja__item" data-id="' + p.id + '" style="--br-c:' + p.acento + '">' +
           '<span class="br-hoja__valor">' + paloSvg(p.palo, 'br-hoja__palo') + '<span>' + p.valor + '</span></span>' +
           '<span class="br-hoja__nombre">' + esc(p.nombre) + '</span>' +
-          '<span class="br-hoja__precio">' + clp(p.precio) + '</span></button></li>';
+          '<span class="br-hoja__precio">' + (p.precio ? clp(p.precio) : '') + '</span></button></li>';
       }).join('');
     }
     listaOpener = document.activeElement; listaElegida = false;
@@ -941,6 +988,7 @@
 
   /* ---------- Arranque ---------- */
   buildChips();
+  buildChipsSec();
   elCarta.classList.toggle('br-sin-movimiento', reduced);
   measure();
   setList(computeList(), null);

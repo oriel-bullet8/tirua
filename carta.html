@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="es-CL" prefix="og: https://ogp.me/ns#">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Carta · Tirúa</title>
+  <meta name="robots" content="noindex">
+  <meta name="description" content="La carta completa de Tirúa Bar Restorán en Pirque: para compartir, platos, postres, coctelería, destilados, vinos y cervezas, con fotos y precios.">
+  <!-- Vista previa al compartir: metadatos estáticos, disponibles sin JavaScript. -->
+  <link rel="canonical" href="https://tirua-website.vercel.app/carta.html">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="es_CL">
+  <meta property="og:site_name" content="Tirúa Bar Restorán">
+  <meta property="og:title" content="Carta · Tirúa, Pirque">
+  <meta property="og:description" content="Mira la carta completa de Tirúa: comida, coctelería, vinos y cervezas, con fotos y precios.">
+  <meta property="og:url" content="https://tirua-website.vercel.app/carta.html">
+  <meta property="og:image" content="https://tirua-website.vercel.app/assets/brand/logo-original.png?compartir=20261102">
+  <meta property="og:image:secure_url" content="https://tirua-website.vercel.app/assets/brand/logo-original.png?compartir=20261102">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1080">
+  <meta property="og:image:height" content="1080">
+  <meta property="og:image:alt" content="Logo original de Tirúa: letras blancas y marco circular sobre fondo negro">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Carta · Tirúa, Pirque">
+  <meta name="twitter:description" content="Mira la carta completa de Tirúa: comida, coctelería, vinos y cervezas, con fotos y precios.">
+  <meta name="twitter:image" content="https://tirua-website.vercel.app/assets/brand/logo-original.png?compartir=20261102">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" type="image/png" href="assets/brand/favicon.png">
+  <link rel="preload" href="assets/fonts/YoungSerif-Regular.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="preload" href="assets/fonts/AlegreyaSans-Regular.ttf" as="font" type="font/ttf" crossorigin>
+  <script>document.documentElement.classList.add('js');</script>
+  <script>(function(){try{var q=new URLSearchParams(location.search).get('tema');if(q==='oscuro'||q==='claro'){localStorage.setItem('tirua-tema',q);}var t=localStorage.getItem('tirua-tema');if(t==='oscuro'){document.documentElement.setAttribute('data-tema','oscuro');var m=document.querySelector('meta[name=theme-color]');if(m){m.content='#000000';}}}catch(e){}})();</script>
+  <link rel="stylesheet" href="css/styles.css?v=20261031e">
+  <link rel="stylesheet" href="css/carta-pagina.css?v=20261107d">
+</head>
+<body data-pagina="carta">
+  <a class="saltar" href="#contenido">Saltar al contenido</a>
+
+  <noscript><p class="sin-js">Este sitio necesita JavaScript para mostrar el menú y la carta.</p></noscript>
+
+  <header class="cabecera es-solida" data-cabecera>
+    <p class="aviso" data-texto="aviso"></p>
+    <div class="cabecera__fila">
+      <button class="menu__boton" type="button" data-menu-boton aria-expanded="false" aria-controls="menu-principal" aria-label="Menú">
+        <span class="menu__barras" aria-hidden="true"><span></span><span></span><span></span></span>
+      </button>
+      <a class="marca" href="index.html" aria-label="Tirúa, ir al inicio">
+        <img data-logo="cabecera" alt="">
+      </a>
+      <nav class="menu" id="menu-principal" aria-label="Principal" data-menu>
+        <ul class="menu__lista" data-nav></ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="contenido" tabindex="-1">
+    <section class="cp" aria-labelledby="cp-titulo">
+      <div class="envoltura">
+        <!-- Solo en el PDF: logo y datos del local (se llenan desde js/contenido.js) -->
+        <div class="cp-print-cab" aria-hidden="true">
+          <img data-logo="cabecera" alt="">
+          <p data-cp-local></p>
+        </div>
+        <header class="cp__cab">
+          <h1 class="titular titular--medio" id="cp-titulo">Carta</h1>
+          <p class="seccion__bajada">Para compartir, platos, postres y todo lo que se brinda en Tirúa.</p>
+          <p class="cp__nota" data-cp-nota></p>
+          <label class="cp-busca">
+            <span class="solo-lectores">Buscar en la carta</span>
+            <svg class="cp-busca__ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.5 15.5 5 5"/></svg>
+            <input class="cp-busca__in" type="search" data-cp-buscar placeholder="Buscar en la carta" autocomplete="off" enterkeyhint="search">
+          </label>
+        </header>
+      </div>
+
+      <!-- Barra fija: un acceso por bloque y buscador -->
+      <div class="cp-barra" data-cp-barra>
+        <div class="envoltura cp-barra__in">
+          <nav class="cp-nav" aria-label="Bloques de la carta">
+            <ul class="cp-nav__lista" data-cp-nav></ul>
+          </nav>
+        </div>
+      </div>
+
+      <div class="envoltura">
+        <div data-cp-contenido></div>
+        <p class="cp__vacio" data-cp-vacio hidden>No encontramos nada con esa búsqueda.</p>
+        <p class="solo-lectores" role="status" aria-live="polite" data-cp-estado></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="pie">
+    <div class="envoltura">
+      <div class="pie__fila">
+        <a class="marca pie__marca" href="index.html" aria-label="Tirúa, ir al inicio"><img data-logo="cabecera" alt=""></a>
+        <nav aria-label="Secciones del sitio">
+          <ul class="pie__nav" data-nav-pie></ul>
+        </nav>
+      </div>
+      <div class="pie__fila pie__fila--base">
+        <p class="pie__redes" data-pie-instagram></p>
+        <p class="pie__aviso" data-texto="pie.aviso"></p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/contenido.js?v=20261107a"></script>
+  <script src="js/render.js?v=20261107a"></script>
+  <script src="js/main.js?v=20261024b" defer></script>
+  <script src="js/menu.js?v=20261024b" defer></script>
+  <script src="js/carta-datos.js?v=20261107a" defer></script>
+  <script src="js/carta-pagina.js?v=20261107a" defer></script>
+</body>
+</html>

@@ -50,19 +50,21 @@
 
   // ---------- Navegación (cabecera y pie) ----------
   // En reservar.html las anclas apuntan al inicio (index.html#…) y «Reservas» es la página actual.
-  var enReservar = document.body.getAttribute('data-pagina') === 'reservar';
+  // En reservar.html y carta.html las anclas apuntan al inicio (index.html#…) y la página actual queda marcada.
+  var pagina = document.body.getAttribute('data-pagina');
+  var enReservar = pagina === 'reservar' || pagina === 'carta';
   function enlaces(lista, clase) {
     if (!lista) return;
     (C.navegacion || []).forEach(function (n) {
       var li = el('li');
       var a = el('a', clase, n.texto);
-      if (enReservar && n.href === '#reservas') { a.href = 'reservar.html'; a.setAttribute('aria-current', 'page'); }
-      else a.href = (enReservar ? 'index.html' : '') + n.href;
+      if (pagina === 'reservar' && n.href === '#reservas') { a.href = 'reservar.html'; a.setAttribute('aria-current', 'page'); }
+      else a.href = (enReservar && n.href.charAt(0) === '#' ? 'index.html' : '') + n.href;
       li.appendChild(a);
       lista.appendChild(li);
     });
   }
-  // El logo lleva al inicio también desde reservar.html.
+  // El logo lleva al inicio también desde reservar.html y carta.html.
   if (enReservar) Array.prototype.forEach.call(document.querySelectorAll('a.marca'), function (a) { a.href = 'index.html'; });
   enlaces(document.querySelector('[data-nav]'), 'menu__enlace');
   enlaces(document.querySelector('[data-nav-pie]'), 'pie__enlace');

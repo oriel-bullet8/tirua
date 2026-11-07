@@ -42,9 +42,9 @@ window.DATOS_BARAJA = {
    */
   categorias: [
     { id: 'bebestibles',  palo: 'corazones', acento: '#ff5c6c', acentoClaro: '#b3202a', activa: true  },
-    { id: 'individuales',  palo: 'picas',     acento: '#5ab0ff', acentoClaro: '#2a4a6b', activa: false },
-    { id: 'postres',       palo: 'diamantes', acento: '#f2b544', acentoClaro: '#9a620c', activa: false },
-    { id: 'compartir',     palo: 'treboles',  acento: '#4ed08c', acentoClaro: '#2f6b45', activa: false }
+    { id: 'individuales',  palo: 'picas',     acento: '#5ab0ff', acentoClaro: '#2a4a6b', activa: true  },
+    { id: 'postres',       palo: 'diamantes', acento: '#f2b544', acentoClaro: '#9a620c', activa: true  },
+    { id: 'compartir',     palo: 'treboles',  acento: '#4ed08c', acentoClaro: '#2f6b45', activa: true  }
   ],
 
   /*
@@ -67,32 +67,9 @@ window.DATOS_BARAJA = {
    *   TODO: cuando existan datos verificados (p. ej. 'vegetariano', 'sin gluten'), se agregan aquí y se activa la UI de filtros (ver README).
    *   Hoy las etiquetas solo participan en la búsqueda de texto; NO hay filtros alimentarios funcionales.
    */
-  productos: [
-    { id: 'beb-ramajito', categoria: 'bebestibles', nombre: 'Ramajito', justo: 'Coctelería de autor', precio: 8000, etiquetas: [], destacado: true,
-      imagen: { src: 'assets/productos/ramajito.webp', alt: 'Ramajito, bebestible de la carta', ancho: 722, alto: 1000, posicion: '50% 50%' },
-      descripcion: 'La combinación perfecta entre un mojito y un Ramazzoti spritz dan resultado un coctel dulce y fresco.' },
-    { id: 'beb-playa-tirua', categoria: 'bebestibles', nombre: 'Playa Tirúa', justo: 'Coctelería de autor', precio: 8500, etiquetas: [],
-      imagen: { src: 'assets/productos/playa-tirua.webp', alt: 'Playa Tirúa, bebestible de la carta', ancho: 750, alto: 1000, posicion: '50% 50%' },
-      descripcion: 'Refrescante coctel con una base de ron blanco, pulpa de piña, blue curaçao, limón y Ginger beer, los cuales le aportan el toque acido.' },
-    { id: 'beb-sol-de-fuego', categoria: 'bebestibles', nombre: 'Sol de Fuego', justo: 'Coctelería de autor', precio: 7900, etiquetas: [],
-      imagen: { src: 'assets/productos/sol-de-fuego.webp', alt: 'Sol de Fuego, bebestible de la carta', ancho: 812, alto: 1000, posicion: '50% 50%' },
-      descripcion: 'Combina la idea del Tequila con el ají amarillo, evocando un sabor intenso y apasionado' },
-    { id: 'beb-botanical-collins', categoria: 'bebestibles', nombre: 'Botanical Collins', justo: 'Coctelería de autor', precio: 8200, etiquetas: [],
-      imagen: { src: 'assets/productos/botanical-collins.webp', alt: 'Botanical Collins, bebestible de la carta', ancho: 750, alto: 1000, posicion: '50% 50%' },
-      descripcion: 'Delicioso coctel fresco y tropical, con gin Gordon\'s, pepino, pulpa de maracuyá y para terminar una Tomas Henry botanical tonic.' },
-    { id: 'beb-jackie-jr', categoria: 'bebestibles', nombre: 'Jackie Jr.', justo: 'Coctelería de autor', precio: 7500, etiquetas: [],
-      imagen: { src: 'assets/productos/jackie-jr.webp', alt: 'Jackie Jr., bebestible de la carta', ancho: 750, alto: 1000, posicion: '50% 50%' },
-      descripcion: 'Jack Daniels, Maracuyá, naranja, limón y sirope de azúcar' },
-    { id: 'beb-espresso-vainilla', categoria: 'bebestibles', nombre: 'Espresso Vainilla', justo: 'Coctelería de autor', precio: 6900, etiquetas: [],
-      imagen: { src: 'assets/productos/espresso-vainilla.webp', alt: 'Espresso Vainilla, bebestible de la carta', ancho: 751, alto: 1000, posicion: '50% 50%' },
-      descripcion: 'Vodka Stoli, Kahlua, jarabe de goma, cafe espresso y helado de vainilla' },
-    { id: 'beb-ramazzotti-spritz', categoria: 'bebestibles', nombre: 'Ramazzotti Spritz', justo: 'Spritz', precio: 6900, etiquetas: [],
-      imagen: { src: 'assets/productos/ramazzotti-spritz.webp', alt: 'Ramazzotti Spritz, bebestible de la carta', ancho: 750, alto: 1000, posicion: '50% 50%' },
-      descripcion: 'Ramazzotti, espumante y soda.' },
-    { id: 'beb-green-drinks', categoria: 'bebestibles', nombre: 'Green Drinks', justo: 'Mocktail', precio: 5900, etiquetas: [],
-      imagen: { src: 'assets/productos/green-drinks.webp', alt: 'Green Drinks, bebestible de la carta', ancho: 1000, alto: 1000, posicion: '50% 50%' },
-      descripcion: 'Manzana verde, pulpa de piña, pepino, albahaca, limón, jengibre y soda' }
-  ],
+  /* Los productos y las secciones los genera scripts/carta-construir.py en js/baraja-productos.js (se carga justo después de este archivo). */
+  productos: [],
+  secciones: [],
 
   /*
    * JOKER — IDEA PENDIENTE, SOLO VISUAL.

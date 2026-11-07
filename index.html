@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Tirúa · Bar Restorán</title>
-  <meta name="description" content="Tirúa Bar-Restorán en Pirque. Sitio en construcción: adelanto de la carta en formato baraja, con 8 bebestibles de la carta de Justo del bar; reservas por WhatsApp y delivery.">
+  <meta name="description" content="Tirúa Bar-Restorán en Pirque. Carta completa en formato baraja, con fotos y precios; reservas por WhatsApp y delivery.">
   <!-- Vista previa al compartir: metadatos estáticos, disponibles sin JavaScript. -->
   <link rel="canonical" href="https://tirua-website.vercel.app/">
   <meta property="og:type" content="website">
@@ -31,8 +31,8 @@
   <script>document.documentElement.classList.add('js');</script>
   <script>(function(){try{var q=new URLSearchParams(location.search).get('tema');if(q==='oscuro'||q==='claro'){localStorage.setItem('tirua-tema',q);}var t=localStorage.getItem('tirua-tema');if(t==='oscuro'){document.documentElement.setAttribute('data-tema','oscuro');var m=document.querySelector('meta[name=theme-color]');if(m){m.content='#000000';}}}catch(e){}})();</script>
   <link rel="stylesheet" href="css/styles.css?v=20261031e">
-  <link rel="stylesheet" href="css/baraja.css?v=20261024b">
-  <link rel="stylesheet" href="css/baraja-atelier.css?v=20261031a">
+  <link rel="stylesheet" href="css/baraja.css?v=20261107a">
+  <link rel="stylesheet" href="css/baraja-atelier.css?v=20261107b">
   <link rel="stylesheet" href="css/reservas-campo.css?v=20261031f">
 </head>
 <body>
@@ -127,6 +127,7 @@
         </div>
         <!-- Los bloques se generan desde js/contenido.js → categorias.items -->
         <ul class="cats" data-categorias></ul>
+        <p class="cats__todo" style="margin-top:clamp(28px,4vw,44px);text-align:center"><a class="btn btn--principal" href="carta.html"><span>Ver la carta completa</span></a></p>
       </div>
     </section>
 
@@ -166,7 +167,7 @@
             <p class="seccion__bajada" data-texto="carta.bajada"></p>
           </div>
           <!-- ÚNICO rótulo de demostración: sello visible + detalle desplegable (textos en js/baraja-datos.js) -->
-          <div class="br-rotulo" id="rotulo">
+          <div class="br-rotulo" id="rotulo" hidden>
             <button type="button" class="br-rotulo__btn" id="rotulo-btn" aria-expanded="false" aria-controls="rotulo-detalle">
               <span class="br-rotulo__sello">Demostración</span><span class="br-rotulo__mas">Qué significa</span>
             </button>
@@ -243,13 +244,13 @@
         <p class="solo-lectores" id="estado-busqueda" role="status" aria-live="polite"></p>
     
         <div class="br-chips" id="chips" role="group" aria-label="Categorías de la carta"></div>
-        <p class="solo-lectores" id="chips-nota">Las categorías marcadas como próximamente se activan cuando el local entregue su carta.</p>
-        <p class="br-aviso-cat" id="aviso-cat" hidden></p>
+        <div class="br-chips br-chips--sec" id="chips-sec" role="group" aria-label="Secciones de la categoría" hidden></div>
+                <p class="br-aviso-cat" id="aviso-cat" hidden></p>
           <div class="br-acciones" id="acciones">
             <button type="button" class="br-btn br-btn--fantasma br-btn--corto" id="barajar" hidden>Barajar de nuevo</button>
             <button type="button" class="br-btn br-btn--fantasma br-btn--corto" id="cerrar" hidden>Cerrar baraja</button>
           </div>
-        <div class="br-demo" role="group" aria-labelledby="demo-titulo">
+        <div class="br-demo" role="group" aria-labelledby="demo-titulo" hidden>
           <p class="br-demo__titulo" id="demo-titulo">Opciones de demostración</p>
           <button type="button" class="br-btn br-btn--joker br-btn--corto" id="joker-btn" aria-pressed="false">
             <svg class="br-palo" width="18" height="18" aria-hidden="true" focusable="false"><use href="#palo-joker"/></svg>
@@ -263,6 +264,10 @@
         <p class="br-enlace-carta">
           <a class="enlace-ext" href="#" target="_blank" rel="noopener noreferrer" aria-describedby="carta-enlace-nota" data-carta-enlace><span data-texto="carta.enlaceCompleta"></span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
           <span class="carta__enlace-nota" id="carta-enlace-nota" data-texto="carta.enlaceNota"></span>
+        </p>
+        <p class="br-enlace-carta br-enlace-carta--pdf">
+          <a class="enlace-ext" href="assets/carta/carta-tirua.pdf" target="_blank" rel="noopener" aria-describedby="carta-pdf-nota"><span data-texto="carta.enlacePdf"></span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 17L17 7M9 7h8v8"/></svg></a>
+          <span class="carta__enlace-nota" id="carta-pdf-nota" data-texto="carta.enlacePdfNota"></span>
         </p>
       </div>
     
@@ -358,13 +363,14 @@
     </div>
   </footer>
 
-  <script src="js/contenido.js?v=20261031f"></script>
-  <script src="js/baraja-datos.js?v=20261024b"></script>
-  <script src="js/render.js?v=20261031b"></script>
+  <script src="js/contenido.js?v=20261107a"></script>
+  <script src="js/baraja-datos.js?v=20261107a"></script>
+  <script src="js/render.js?v=20261107a"></script>
   <script src="js/main.js?v=20261024b" defer></script>
   <script src="js/menu.js?v=20261024b" defer></script>
   <script src="js/baraja-arte.js?v=20261031b"></script>
-  <script src="js/baraja.js?v=20261031b" defer></script>
+  <script src="js/baraja-productos.js?v=20261107a"></script>
+  <script src="js/baraja.js?v=20261107b" defer></script>
   <script src="js/carta.js?v=20261024b" defer></script>
   <script src="js/hero.js?v=20261024b" defer></script>
   <script src="js/historias.js?v=20261027c" defer></script>

@@ -126,3 +126,24 @@
 @media (prefers-reduced-motion: reduce) {
   .br-carta .br-foto__img { filter: none; }
 }
+
+/* ---------- Carta completa (251 productos) ----------
+   Las 8 cartas con recorte propio siguen como las diseñó Oriel. El resto lleva su foto entera, dentro del marco y entre los
+   índices de las esquinas, sobre un paisaje pintado; sin foto, el paisaje y un palo grande. */
+.br-carta .br-card[data-plano] .br-foto__img {
+  left: 50%; top: 11cqw; width: 64cqw; height: 86cqw; object-fit: cover;
+  -webkit-mask: none; mask: none;
+  clip-path: inset(0 round 1.4cqw);
+  filter: none;
+  outline: 1px solid #d3b78366; outline-offset: -1px;
+}
+.br-carta .br-card[data-plano] .br-foto { filter: drop-shadow(0 2cqw 2.4cqw #000a); }
+.br-carta .br-card[data-sin-foto] .br-foto__anillos { color: #d3b78340; inset: 18cqw 20cqw auto; width: 60cqw; height: 60cqw; }
+.br-carta .br-card[data-sin-foto] .br-oleo::after { background: linear-gradient(0deg, #0b0c0e 0%, #0b0c0ecc 20%, #07080944 70%, #07080988); }
+
+/* Segunda fila de chips: secciones de Justo dentro del palo elegido */
+.br-chips--sec { padding-top: 0; margin-top: -.1rem; }
+.br-chips--sec[hidden] { display: none; }
+.br-chips--sec .br-chip { min-height: 38px; padding: .2rem .75rem; border-style: solid; }
+.br-chips--sec .br-chip__nombre { font-size: .75rem; font-weight: 500; }
+.br-chips--sec .br-chip__estado { font-size: .6875rem; }
