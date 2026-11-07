@@ -82,3 +82,10 @@ REPORTING: estado final, evidencia de la DoD, hecho y pendiente.
 - **BLOQUEADO (BLOCKED, externo):** DoD 7 (dominio). Falta nombre del dominio y acceso al DNS / proyecto Vercel (Oriel). CP3 y CP4 pendientes de Pablo. DoD 6 (`verificar` verde) PENDING: hay que adaptar o retirar las pruebas obsoletas (inmersivo 3, vuelta2 8, baraja:fotos 64, reservas-datos).
 - **Dominio:** sin nombre/acceso; Pablo consulta a Oriel. Proyecto Vercel es de Oriel.
 - **Iteración:** 1 · **Fallos consecutivos:** 0
+
+### Ciclo 2 (2026-11-07, tarde) — cambio de rumbo pedido por Pablo
+- **Decisión de Pablo (reemplaza parte de CP1):** la carta completa debe vivir DENTRO de la baraja de Oriel; la página `carta.html` pasa a ser la alternativa «tradicional», ofrecida como PDF en línea (`assets/carta/carta-tirua.pdf`, 12 págs, 113 KB, solo texto; `npm run carta:pdf`).
+- **Hecho:** baraja con las 251 cartas en 4 palos (Para compartir 20 · Comidas individuales 29 · Postres 6 · Bebestibles 196) y una segunda fila de chips con las secciones de Justo; las 8 cartas con recorte de Oriel intactas; fotos enteras dentro del marco para las demás; sin foto = paisaje pintado. Generador: `npm run carta:construir` (escribe `js/baraja-productos.js`, `js/carta-datos.js`, `datos/carta.json`, `assets/carta/`). Delivery sigue mostrando solo las 8 bebidas estrella. Sello «Demostración» y opciones de joker ocultos (`hidden`). Aviso superior y pie actualizados (ya no dicen «en construcción / carta parcial»).
+- **Guardado:** commit local `a1b2eda` (rama `carta-y-lanzamiento`, sin push) + `respaldos/tirua-carta-baraja-2026-11-07-antes-madera.zip` (+ .sha256).
+- **Vista previa madera (no final):** `index.html?madera=1` (apaga con `?madera=0`), `css/preview-madera.css`. Textura aproximada por código: falta el archivo de la foto de madera real.
+- **Checks frescos:** `test:carta` 67/67, `carta-baraja` 49/49 (`node pruebas/carta-baraja.cjs`). Pruebas viejas de la baraja (`test:inmersivo`, `test:vuelta2`, `test:baraja:fotos`) asumen 8 cartas y precio en el frente: FAIL por diseño; adaptar o retirar (DoD 6 sigue PENDING).

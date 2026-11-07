@@ -34,6 +34,7 @@
   <link rel="stylesheet" href="css/baraja.css?v=20261107a">
   <link rel="stylesheet" href="css/baraja-atelier.css?v=20261107b">
   <link rel="stylesheet" href="css/reservas-campo.css?v=20261031f">
+  <script>(function(){try{var q=new URLSearchParams(location.search).get('madera');try{localStorage.removeItem('tirua-madera');}catch(e){}if(q==='1'){document.documentElement.classList.add('vista-madera');var l=document.createElement('link');l.rel='stylesheet';l.href='css/preview-madera.css?v=20261107e';document.head.appendChild(l);}}catch(e){}})();</script>
 </head>
 <body>
   <a class="saltar" href="#contenido">Saltar al contenido</a>
@@ -250,7 +251,7 @@
             <button type="button" class="br-btn br-btn--fantasma br-btn--corto" id="barajar" hidden>Barajar de nuevo</button>
             <button type="button" class="br-btn br-btn--fantasma br-btn--corto" id="cerrar" hidden>Cerrar baraja</button>
           </div>
-        <div class="br-demo" role="group" aria-labelledby="demo-titulo" hidden>
+        <div class="br-demo" role="group" aria-labelledby="demo-titulo">
           <p class="br-demo__titulo" id="demo-titulo">Opciones de demostración</p>
           <button type="button" class="br-btn br-btn--joker br-btn--corto" id="joker-btn" aria-pressed="false">
             <svg class="br-palo" width="18" height="18" aria-hidden="true" focusable="false"><use href="#palo-joker"/></svg>
@@ -365,12 +366,12 @@
 
   <script src="js/contenido.js?v=20261107a"></script>
   <script src="js/baraja-datos.js?v=20261107a"></script>
-  <script src="js/render.js?v=20261107a"></script>
+  <script src="js/baraja-productos.js?v=20261107a"></script>
+  <script src="js/render.js?v=20261107b"></script>
   <script src="js/main.js?v=20261024b" defer></script>
   <script src="js/menu.js?v=20261024b" defer></script>
-  <script src="js/baraja-arte.js?v=20261031b"></script>
-  <script src="js/baraja-productos.js?v=20261107a"></script>
-  <script src="js/baraja.js?v=20261107b" defer></script>
+  <script src="js/baraja-arte.js?v=20261107a"></script>
+  <script src="js/baraja.js?v=20261107c" defer></script>
   <script src="js/carta.js?v=20261024b" defer></script>
   <script src="js/hero.js?v=20261024b" defer></script>
   <script src="js/historias.js?v=20261027c" defer></script>

@@ -211,7 +211,8 @@
 
   // ---------- Delivery: vista previa de la carta de pedidos (productos de js/baraja-datos.js; cada fila abre la plataforma) ----------
   var pedido = document.querySelector('[data-pedido]');
-  var prods = (window.DATOS_BARAJA && window.DATOS_BARAJA.productos) || [];
+  // Delivery muestra solo las 8 bebidas estrella (las de recorte propio, id beb-…), no toda la carta: la carta completa vive en la baraja.
+  var prods = ((window.DATOS_BARAJA && window.DATOS_BARAJA.productos) || []).filter(function (p) { return /^beb-/.test(p.id); });
   if (pedido && prods.length && C.delivery && C.delivery.url) {
     var ul = pedido.querySelector('[data-pedido-lista]');
     var clp = function (n) { return '$' + String(n).replace(/\B(?=(\d{3})+(?!\d))/g, '.'); };

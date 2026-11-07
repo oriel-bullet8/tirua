@@ -1,0 +1,31 @@
+/* VISTA PREVIA (no es el diseño final): fondo de madera café en las secciones que hoy son blancas.
+   Se activa solo mientras la dirección lleve ?madera=1 (index.html?madera=1); no se guarda. El diseño normal no cambia.
+   La textura es una aproximación generada por código: con la foto de madera real se reemplaza --madera-img. */
+html.vista-madera {
+  --madera-img: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%221400%22 height=%221400%22%3E%3Cfilter id=%22w%22 x=%220%22 y=%220%22 width=%22100%25%22 height=%22100%25%22 color-interpolation-filters=%22sRGB%22%3E%3CfeTurbulence type=%22turbulence%22 baseFrequency=%220.0045 0.016%22 numOctaves=%224%22 seed=%2223%22 result=%22a%22/%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.0016 0.0022%22 numOctaves=%222%22 seed=%225%22 result=%22b%22/%3E%3CfeColorMatrix in=%22a%22 type=%22matrix%22 values=%220.33 0.33 0.33 0 0  0.33 0.33 0.33 0 0  0.33 0.33 0.33 0 0  0 0 0 0 1%22 result=%22ga%22/%3E%3CfeColorMatrix in=%22b%22 type=%22matrix%22 values=%220.33 0.33 0.33 0 0  0.33 0.33 0.33 0 0  0.33 0.33 0.33 0 0  0 0 0 0 1%22 result=%22gb%22/%3E%3CfeComposite in=%22ga%22 in2=%22gb%22 operator=%22arithmetic%22 k1=%220%22 k2=%220.78%22 k3=%220.42%22 k4=%22-0.16%22 result=%22m%22/%3E%3CfeComponentTransfer in=%22m%22%3E%3CfeFuncR type=%22table%22 tableValues=%220.08 0.16 0.30 0.52 0.78 0.55%22/%3E%3CfeFuncG type=%22table%22 tableValues=%220.04 0.09 0.17 0.31 0.50 0.34%22/%3E%3CfeFuncB type=%22table%22 tableValues=%220.02 0.04 0.08 0.14 0.24 0.15%22/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width=%221400%22 height=%221400%22 filter=%22url%28%23w%29%22/%3E%3C/svg%3E");
+  --m-fondo: 28 17 10; --m-tinta: 246 234 214;
+}
+html.vista-madera body { background: #1c110a var(--madera-img) center / cover fixed; }
+
+/* Las secciones blancas pasan a madera con un velo oscuro (se ve la veta y el texto se lee) */
+html.vista-madera .categorias,
+html.vista-madera .reservas,
+html.vista-madera .mapa,
+html.vista-madera .delivery,
+html.vista-madera .pie {
+  --fondo: #1c110a; --fondo-2: #24170e; --fondo-3: rgb(28 17 10 / .55);
+  --fondo-rgb: 28 17 10; --tinta-rgb: 246 234 214;
+  --tinta: #f6ead6; --tinta-2: #e6d5b8; --tinta-3: #cdb995;
+  --acento: #d8c590; --acento-rgb: 216 197 144;
+  --linea: rgb(246 234 214 / .2); --linea-fuerte: rgb(246 234 214 / .45);
+  --sombra: 0 18px 38px -22px #000;
+  background: linear-gradient(rgb(26 15 9 / .34), rgb(26 15 9 / .34));
+  color: var(--tinta);
+  border-color: var(--linea);
+}
+html.vista-madera .delivery__caja { background: rgb(22 13 8 / .72); border-color: var(--linea-fuerte); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); }
+html.vista-madera .mapa .mapa__marco { border-color: var(--linea-fuerte); }
+html.vista-madera .reservas__accion { background: #2b4b36; border-color: #97be9766; box-shadow: 0 14px 30px -18px #000; }
+html.vista-madera .reservas__accion:hover { background: #365f43; }
+html.vista-madera .categorias .cat__enlace, html.vista-madera .cat__enlace { box-shadow: 0 16px 34px -18px #000; }
+html.vista-madera .pie img[data-logo] { filter: none; }

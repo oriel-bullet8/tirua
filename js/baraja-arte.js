@@ -3,7 +3,7 @@
    El atlas contiene únicamente paisajes pintados, nunca productos generados. */
 (function () {
   'use strict';
-  window.TIRUA_BARAJA_ARTE = {
+  window.TIRUA_BARAJA_ARTE = Object.assign(window.TIRUA_BARAJA_ARTE || {}, {
     'beb-ramajito': {
       mascara: 'assets/baraja/recortes/beb-ramajito.svg',
       escena: 0, ancho: '108cqw', arriba: '-23cqw', centro: '50%'
@@ -36,5 +36,5 @@
       mascara: 'assets/baraja/recortes/beb-green-drinks.svg',
       escena: 7, ancho: '110cqw', arriba: '0cqw', centro: '47%'
     }
-  };
+  });
 })();

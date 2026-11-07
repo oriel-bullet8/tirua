@@ -202,7 +202,7 @@ window.TIRUA_CONTENIDO = {
   // El enlace de Instagram sale de instagram.usuario.
   pie: {
     instagram: { texto: null, url: null, nota: 'no disponible' },   // texto null → «@usuario» desde instagram.usuario
-    aviso: 'Sitio en construcción · carta parcial y fotos por confirmar'
+    aviso: 'Tirúa Bar-Restorán · Pirque'
   }
 };
 })();

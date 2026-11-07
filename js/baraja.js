@@ -274,7 +274,9 @@
   function jitter(i) { return Math.sin(i * 12.9898) * 1.6; }
 
   function deckPose(i) {
-    return { x: -i * 0.5, y: -i * 1.5 + 6, z: 0, rz: jitter(i), ry: 0, s: 0.9, dim: 0, zi: 300 - i };
+    /* El mazo cerrado muestra como máximo 8 cartas de grosor: las demás quedan bajo la octava (con 251 cartas, una torre sería un error) */
+    var k = Math.min(i, 7);
+    return { x: -k * 0.5, y: -k * 1.5 + 6, z: 0, rz: jitter(k), ry: 0, s: 0.9, dim: 0, zi: 300 - i };
   }
 
   function fanPose(i, n) {
