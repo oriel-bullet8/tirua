@@ -935,6 +935,9 @@ button, input, select { font: inherit; color: inherit; }
 @media (min-width: 700px) { .historias--espera { min-height: 161px; } }
 .historias__titulo { margin: 0 0 4px; text-align: center; font-weight: 700; font-size: 0.9375rem; letter-spacing: 0.02em; color: var(--tinta-2); }
 .historias__cuenta { font-weight: 500; color: var(--tinta-3); margin-left: 0.35em; }
+.historias__perfil { color: inherit; text-decoration: none; display: inline-block; padding: 8px 4px; margin: -8px -4px; -webkit-tap-highlight-color: transparent; }   /* área de toque mayor sin mover el texto */
+.historias__perfil:hover, .historias__perfil:focus-visible { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.25em; color: var(--tinta); }
+.historias__perfil:focus-visible { outline: 2px solid var(--tinta); outline-offset: 2px; border-radius: 2px; }
 .historias__lista { display: flex; gap: clamp(12px, 2.4vw, 22px); overflow-x: auto; padding: 16px 14px 18px; scroll-snap-type: x proximity; scrollbar-width: none; overscroll-behavior-x: contain; }
 .historias__lista::-webkit-scrollbar { display: none; }
 .historias__item { flex: none; scroll-snap-align: center; animation: entra .8s var(--ease) calc(1.35s + var(--i, 0) * 70ms) backwards; }

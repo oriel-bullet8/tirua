@@ -23,6 +23,12 @@ async function recorrido(b, g, vp) {
   ok(g, 'con datos aparece el bloque «Novedades» en el hero con una burbuja por publicación válida (4: la vacía se descarta; la de enlace e imagen peligrosos se conserva sin ellos)', r.visible && r.n === 4 && r.hero, JSON.stringify([r.visible, r.n]));
   ok(g, 'las imágenes externas del JSON se ignoran (solo rutas locales assets/…)', r.imgs.every((s) => /^assets\//.test(s)), r.imgs.join(','));
   ok(g, 'sin desborde horizontal con el bloque', r.sw <= 1, r.sw);
+  const ig = await page.evaluate(() => { const a = document.querySelector('.historias__titulo a.historias__perfil'), sp = document.querySelector('.historias__cuenta'); if (!a) return null; const ca = getComputedStyle(a), cs = getComputedStyle(sp); return { txt: a.textContent, titulo: document.querySelector('.historias__titulo').textContent.replace(/\s+/g, ' ').trim(), href: a.href, target: a.target, rel: a.rel, label: a.getAttribute('aria-label'), mismoColor: ca.color === cs.color, mismoTam: ca.fontSize === cs.fontSize && ca.fontWeight === cs.fontWeight, sinSubrayado: ca.textDecorationLine === 'none' }; });
+  ok(g, '«@bartirua» del título «Novedades» es un enlace al perfil de Instagram, en pestaña nueva y con rel seguro', ig && ig.txt === '@bartirua' && ig.href === 'https://www.instagram.com/bartirua/' && ig.target === '_blank' && /noopener/.test(ig.rel) && /noreferrer/.test(ig.rel), JSON.stringify(ig));
+  ok(g, 'el título sigue diciendo «Novedades @bartirua» y el enlace conserva color, tamaño y peso (sin subrayado en reposo)', ig && ig.titulo === 'Novedades @bartirua' && ig.mismoColor && ig.mismoTam && ig.sinSubrayado, JSON.stringify(ig));
+  ok(g, 'el enlace tiene nombre accesible que dice que abre en pestaña nueva', ig && /@bartirua/.test(ig.label || '') && /pestaña nueva/.test(ig.label || ''), ig && ig.label);
+  await page.hover('.historias__perfil');
+  ok(g, 'al apuntar el enlace se subraya', await page.evaluate(() => getComputedStyle(document.querySelector('.historias__perfil')).textDecorationLine === 'underline'));
   ok(g, 'burbujas táctiles (≥ 44 px de ancho)', r.btn.every((w) => w >= 44), r.btn.join(','));
   const bot = await page.evaluate(() => { const rr = document.querySelector('.hero__acciones').getBoundingClientRect(), n = document.querySelector('.historias').getBoundingClientRect(); return { botones: Math.round(rr.bottom), rail: Math.round(n.top) }; });
   ok(g, 'las burbujas quedan bajo los botones del hero (sin solaparse)', bot.rail >= bot.botones - 1, JSON.stringify(bot));

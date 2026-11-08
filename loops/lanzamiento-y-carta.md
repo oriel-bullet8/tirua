@@ -109,3 +109,7 @@ REPORTING: estado final, evidencia de la DoD, hecho y pendiente.
 - Hecho: selector de 2 niveles (`data-grupo`, botón «Todos los mazos», Esc/X vuelven al nivel 1); `css/fondo.css` + `.fondo-vivo` en index.html; títulos centrados; ver DESIGN.md → «Fondo continuo».
 - Evidencia fresca: `carta-baraja` 91/91, `test:carta` 67/67, `test:recursos` 262/262, `test:historias` 59/59; scroll p95 17 ms (escritorio y móvil, Chromium sin GPU); con `backdrop-filter` en el sello era 33 ms → se quitó.
 - Pendiente: reservar.html y carta.html no llevan el fondo nuevo (decisión de Pablo); pruebas viejas (`movil-estrecho`, inmersivo, vuelta2, baraja:fotos) siguen sin adaptar.
+
+## Ciclo 6 · 2026-11-07 — listado sin imagen y enlace de Instagram
+- `docs/productos-sin-imagen-2026-11-07.docx`: 86 de 251 productos sin foto en Justo (datos/carta.json), agrupados por bloque y sección, con precio, descripción y casilla «Foto». Mayores faltas: Rincón de los sour 13/13, Jarras y licores 13/13, Vino 19/20, Bebida 14/21, Espumantes 5/5, Cafetería 4/4, Shot 4/4.
+- Hero: «@bartirua» de «Novedades» es enlace a https://www.instagram.com/bartirua/ (pestaña nueva, rel seguro, aria-label). Mismo color, tamaño y peso en reposo; subrayado y tinta más oscura solo al apuntar/enfocar. Sin cambios en títulos, tipografía ni colores. `historias.cjs` 67/67.

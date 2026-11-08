@@ -178,7 +178,11 @@
   }).then(function (lista) {
     items = lista;
     if (!items.length) { sinNovedades(); return; }   // el CSS reserva el tamaño del hero con historias
-    raiz.querySelector('.historias__cuenta').textContent = '@' + cuenta;
+    // «@cuenta» es un enlace al perfil de Instagram (misma apariencia que antes; se subraya solo al apuntarlo o enfocarlo)
+    var spanCuenta = raiz.querySelector('.historias__cuenta'), enlace = el('a', 'historias__perfil', '@' + cuenta);
+    enlace.href = 'https://www.instagram.com/' + cuenta + '/'; enlace.target = '_blank'; enlace.rel = 'noopener noreferrer';
+    enlace.setAttribute('aria-label', 'Abrir el Instagram de @' + cuenta + ' (se abre en una pestaña nueva)');
+    spanCuenta.textContent = ''; spanCuenta.appendChild(enlace);
     pintarBurbujas();
     raiz.classList.remove('historias--espera'); raiz.hidden = false;
     hero.classList.add('hay-historias');
