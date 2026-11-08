@@ -63,27 +63,11 @@
   var btnJoker = $('#joker-btn'), btnLista = $('#abrir-lista');
   var elAnuncio = $('#anuncio');
   var elPanelCerrada = $('#panel-cerrada'), elPanelProd = $('#panel-producto'), elAvisoCat = $('#aviso-cat');
-  var pDesc = $('#p-desc'), pJoker = $('#p-joker'), pVincular = $('#p-vincular');
-  var rotuloBtn = $('#rotulo-btn'), rotuloDet = $('#rotulo-detalle');
+  var pDesc = $('#p-desc'), pJoker = $('#p-joker');
   var dlg = $('#hoja'), dlgLista = $('#hoja-lista'), dlgSub = $('#hoja-sub'), dlgCerrar = $('#hoja-cerrar');
   var fondoBrillo = $('.br-carta__brillo'), fondoAnillos = $('.br-carta__anillos');
 
   elCarta.style.setProperty('--br-joker', (D.joker && D.joker.acento) || '#6b46c9');
-
-  /* ---------- Único rótulo de demostración: sello + detalle desplegable (textos en datos.js) ---------- */
-  (function () {
-    var R = D.rotulo || {};
-    $('.br-rotulo__sello').textContent = R.sello || 'Demostración';
-    $('.br-rotulo__mas').textContent = R.boton || 'Qué significa';
-    rotuloDet.innerHTML = '<ul>' + (R.detalle || []).map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul>';
-    function abrir(v) {
-      rotuloDet.hidden = !v;
-      rotuloBtn.setAttribute('aria-expanded', String(v));
-    }
-    rotuloBtn.addEventListener('click', function () { abrir(rotuloDet.hidden); });
-    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !rotuloDet.hidden) { e.preventDefault(); abrir(false); rotuloBtn.focus(); } });   // preventDefault: el Esc de la carta inmersiva ve que ya se usó y no la cierra
-    document.addEventListener('click', function (e) { if (!rotuloDet.hidden && !e.target.closest('#rotulo')) { abrir(false); } });
-  })();
 
   /* ---------- Preferencias de movimiento ---------- */
   var mqReducir = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -520,10 +504,9 @@
         var verJoker = S.joker || S.jokerVisto;       // boca abajo no se adelanta nada
         pDesc.hidden = true;
         pJoker.hidden = !verJoker; pJoker.textContent = D.joker.texto;
-        pVincular.hidden = true;                       // cómo se canjea el beneficio lo define el Bar: por ahora no se muestra un botón deshabilitado al cliente
       } else {
         pDesc.hidden = !p.descripcion; pDesc.textContent = p.descripcion;
-        pJoker.hidden = true; pVincular.hidden = true;
+        pJoker.hidden = true;
       }
     }
 
@@ -1237,7 +1220,6 @@
   btnInmOpc.addEventListener('click', function () { bandeja(!elCarta.classList.contains('br-bandeja-abierta')); });
   document.addEventListener('keydown', function (e) {
     if (e.key !== 'Escape' || !inm.on || dlg.open || e.defaultPrevented) { return; }
-    if (!rotuloDet.hidden) { return; }
     if (elCarta.classList.contains('br-bandeja-abierta')) { bandeja(false); btnInmOpc.focus({ preventScroll: true }); return; }
     btnInmCerrar.click();
   });

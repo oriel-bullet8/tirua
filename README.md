@@ -1,9 +1,9 @@
 # Tirúa · Bar Restorán (sitio demo)
 
-**Versión: Volumen 4 · «Fogón» (4.0.1, 2026-10-24, cerrado; el Volumen 5 está en curso).** Historial y qué toca después: [docs/VERSIONES.md](docs/VERSIONES.md).
+**Versión: Volumen 5 · «Carta» (2026-11-07, en curso).** Historial y qué toca después: [docs/VERSIONES.md](docs/VERSIONES.md).
 
 Sitio estático (HTML/CSS/JS sin build) de Tirúa Bar-Restorán, Pirque. La raíz de este repositorio **es** la raíz de la web.
-Estado y pendientes: [CONTINUIDAD.md](CONTINUIDAD.md). Detalle técnico de la demo: [docs/DEMO-README.md](docs/DEMO-README.md). Cifras: [docs/INFORME.md](docs/INFORME.md).
+Estado y pendientes: [CONTINUIDAD.md](CONTINUIDAD.md). Diseño: [DESIGN.md](DESIGN.md) y [PRODUCT.md](PRODUCT.md).
 
 ## Arrancar (un solo comando)
 
@@ -31,31 +31,25 @@ Con el servidor andando, **una prueba por vez** (se pisan las capturas y el CPU 
 
 ```bash
 npm run test:recursos         # todos los js/css/assets/páginas responden 200 (el chequeo de los 404)
-npm run test:inmersivo        # portal + modo inmersivo de la carta, tema claro/oscuro (escritorio, móvil, 320 px, movimiento reducido)
-npm run test:baraja:fotos     # datos de Justo ↔ manifiesto ↔ WebP (los originales solo si defines TIRUA_JUSTO)
-npm run test:vuelta2
-npm run test:reservas-datos   # reservar en cascada: preguntas que se abren solas, mensaje en vivo, enlace wa.me, copiar, teclado, «hoy»
-npm run verificar             # las de arriba, en cadena
-
-# Heredadas (pensadas para el diseño oscuro con la baraja dentro de la página: miden herramientas y cabecera que ya no están a la vista).
-# Siguen en pruebas/ pero NO están en `verificar` hasta adaptarlas al modo inmersivo:
-#   baraja-funcional.cjs m390|d1440 · baraja-extra.cjs · baraja-campana.cjs · movil-estrecho.cjs · prueba.cjs · reservas.cjs (asistente de pasos anterior a la cascada, ya no corresponde a la página)
+npm run test:carta            # carta.html (versión tradicional) y su PDF contra la captura de Justo
+npm run test:baraja           # baraja: 4 mazos + Bebestibles en 3, joker, búsqueda, teclado, fluidez, 250 cartas
+npm run test:historias        # «Novedades» del hero y el enlace @bartirua
+npm run test:instagram-sync   # sincronización de Instagram (inactiva)
+npm run test:reservas         # reservar en cascada: mensaje en vivo, «Enviar por Instagram», teclado, «hoy»
+npm run verificar             # todas, en cadena
 ```
 
-Las pruebas usan `BASE=http://127.0.0.1:4195/` por defecto. Salidas (capturas, resultados) quedan en `capturas/` y `pruebas/resultados/`, ignoradas por Git.
-Nunca envían una reserva: ninguna prueba pulsa «Enviar por WhatsApp» (solo leen el enlace `wa.me` generado) y la navegación a Instagram/Google/Justo se bloquea.
+Las pruebas usan `BASE=http://127.0.0.1:4195/` por defecto. Las salidas quedan en `capturas/` y `pruebas/resultados/`, ignoradas por Git.
+Nunca envían una reserva: la navegación a Instagram/Google/Justo se bloquea.
 
 Advertencia conocida (no es un error): `assets/video/hero.mp4` no existe todavía; el sitio lo detecta solo cuando se agregue, y mientras tanto el navegador registra un 404 de ese archivo.
 
-## Datos y originales
+## Datos de la carta
 
-- `datos/justo/carta-justo.json` (+ `LEEME.md`): inventario de la carta pública de Justo. Va en el repo.
-- Los **originales de Justo (~203 MB)** y las capturas crudas **no** van en el repo. Viven en la carpeta de Pablo `…/est-2/outputs/bar-tirua-justo/`. Para verificar hashes de originales: `TIRUA_JUSTO=<esa carpeta> npm run test:baraja:fotos`.
-- Las fotos usadas por el sitio son copias WebP en `assets/productos/` (el uso de las fotos de Justo sigue pendiente de confirmar con el local).
-- `loops/` y `docs/` conservan registros históricos con las rutas antiguas; no son parte de la ejecución.
+- La carta sale de la captura pública de Justo del bar (`archivo/2026-11-07-justo/`, fuera de Git). `npm run carta:construir` genera `js/baraja-productos.js`, `js/carta-datos.js`, `datos/carta.json` y `assets/carta/*.webp`; `npm run carta:pdf` genera `assets/carta/carta-tirua.pdf`. Nombres de secciones tal cual en Justo; los eventos especiales no son carta.
+- `datos/justo/carta-justo.json` (+ `LEEME.md`): inventario anterior (2026-10-18) de Justo. Las 8 fotos con recorte propio viven en `assets/productos/` (`js/baraja-arte.js`).
+- Listado de productos sin foto: `docs/productos-sin-imagen-2026-11-07.docx`.
 
 ## Reservas
 
-`reservar.html` es una **cascada de cuatro preguntas** (personas → fecha → hora → tus datos): al responder una se abre la siguiente, las respondidas quedan plegadas con su respuesta y «Cambiar», y desde la primera respuesta aparece al lado el **mensaje que se va armando** (lo que falta se ve como `[fecha]`). Con el mensaje completo se habilitan «Enviar por WhatsApp» (enlace `wa.me` con el texto ya escrito) y «Copiar mensaje». El bar confirma la disponibilidad **a mano**; la página no envía nada por sí sola.
-
-**Número de WhatsApp del bar:** aún no está cargado (`LOCAL.whatsapp` en `js/contenido.js`, hoy `null`). Con el número (solo dígitos y código de país, p. ej. `569XXXXXXXX`) el enlace pasa a ser `https://wa.me/<número>?text=<mensaje>` y abre WhatsApp directo en el chat del bar. Mientras sea `null`, WhatsApp se abre con el mensaje escrito y la persona elige el chat. Instagram queda solo como enlace al perfil `@bartirua`; no hay sincronización automática de reservas.
+`reservar.html` es una **cascada de cuatro preguntas** (personas → fecha → hora → tus datos): al responder una se abre la siguiente, las respondidas quedan plegadas con su respuesta y «Cambiar», y desde la primera respuesta aparece el **mensaje que se va armando** (lo que falta se ve como `[fecha]`). Con el mensaje completo se habilita «Enviar por Instagram»: copia la solicitud y abre el chat `https://ig.me/m/bartirua`; la persona la pega y la envía (Instagram no deja un texto escrito de antemano). El bar confirma la disponibilidad **a mano**; la página no envía nada por sí sola. No hay sincronización automática de reservas.

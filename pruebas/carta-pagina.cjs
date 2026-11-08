@@ -12,7 +12,7 @@ function chequea(nombre, cond, detalle) {
 
 (async () => {
   const ref = fs.existsSync(FUENTE) ? JSON.parse(fs.readFileSync(FUENTE, 'utf8')) : null;
-  const prods = ref ? ref.productos.filter((p) => p.secciones.length) : null;
+  const prods = ref ? ref.productos.filter((p) => p.secciones.length && p.nombre.trim().toUpperCase() !== 'HALLOWEEN') : null;   // eventos especiales no son carta
   const browser = await lanzar();
   try {
     for (const [nombre, w, h] of [['320×640', 320, 640], ['390×844', 390, 844], ['768×1024', 768, 1024], ['1440×900', 1440, 900]]) {
@@ -60,7 +60,7 @@ function chequea(nombre, cond, detalle) {
         chequea(t + 'formato de precio chileno ($26.900)', entr && d.precios[d.nombres.indexOf('Entraña')] === '$' + String(entr.precio).replace(/\B(?=(\d{3})+(?!\d))/g, '.'));
         // cada producto cae en la sección que Justo le dio
         const secPorProd = await page.evaluate(() => { const m = {}; document.querySelectorAll('.cp-sec').forEach((s) => { const t = s.querySelector('.cp-sec__titulo').firstChild.textContent; s.querySelectorAll('.cp-item__nombre').forEach((n) => { (m[n.textContent] = m[n.textContent] || []).push(t); }); }); return m; });
-        const norm = (x) => x === 'Entradas Frias' ? 'Entradas frías' : x === 'Shop' ? 'Schop' : x;
+        const norm = (x) => x;   // los nombres de las secciones son los de Justo, sin correcciones
         const malas = prods.filter((p) => !(secPorProd[p.nombre.trim()] || []).includes(norm(p.secciones[0]))).map((p) => p.nombre);
         chequea(t + 'cada producto está en la sección que le dio Justo', malas.length === 0, malas.slice(0, 5));
       }

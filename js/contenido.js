@@ -16,10 +16,7 @@ var LOCAL = {
   // Horario que figura en la bio («Mar a sáb · desde las 18:00»). NO está confirmado por el local y la hora de cierre se desconoce.
   horario: { texto: 'Martes a sábado desde las 18:00', fuente: 'según el Instagram del bar', cierre: 'Hora de cierre: por confirmar' },
   rasgos: ['Terraza cerrada y calefaccionada', 'Pet friendly'],   // de la bio de Instagram
-  reservas: 'Solicitud por WhatsApp; el bar la confirma a mano',
-  // WhatsApp del bar para recibir las solicitudes: SOLO dígitos con código de país (ej. '569XXXXXXXX'). Falta que Oriel lo entregue.
-  // Con null el botón «Enviar por WhatsApp» abre WhatsApp con el mensaje ya escrito y la persona elige el chat.
-  whatsapp: null,
+  reservas: 'Solicitud por Instagram; el bar la confirma a mano',
   // Enlace de carta y pedidos que el bar usa en su bio. Hay 2 enlaces más que no se conocen.
   pedidos: 'https://cuenta.getjusto.com/client/start/jM5QpLn7ETXwZ5SJp/menu',
   // «Cómo llegar»: enlace normal a la búsqueda de Google Maps (no se incrusta nada de Google).
@@ -85,9 +82,9 @@ window.TIRUA_CONTENIDO = {
   },
 
   // ---------- INSTAGRAM (solicitud de reserva) ----------
-  // usuario: viene de local.instagram. «Abrir Instagram» es un enlace normal a https://www.instagram.com/{usuario}/
-  // en otra pestaña: SOLO abre el perfil. Los enlaces de Instagram no dejan un mensaje escrito de forma fiable
-  // (y la página nunca copia al portapapeles sin que se pulse «Copiar mensaje»).
+  // usuario: viene de local.instagram. Las solicitudes de reserva se envían por mensaje directo a la cuenta del bar
+  // (https://ig.me/m/{usuario}). Instagram no deja un texto escrito de antemano: al pulsar «Enviar por Instagram»
+  // se copia la solicitud y se abre el chat; la persona solo la pega y la envía.
   instagram: {
     usuario: LOCAL.instagram
   },
@@ -97,14 +94,13 @@ window.TIRUA_CONTENIDO = {
     titulo: 'Reservas',
     bajada: 'Pide tu mesa en un minuto.',
     pasos: 'Personas, fecha y hora',
-    nota: 'Solicita tu mesa por WhatsApp. El bar te confirma la disponibilidad.',
+    nota: 'Solicita tu mesa por Instagram. El bar te confirma la disponibilidad.',
     cta: 'Reservar mesa'
   },
 
   // ---------- RESERVAS: asistente de reservar.html (personas → fecha → hora → solicitud) ----------
   reserva: {
     titulo: 'Reservar mesa',
-    demostracion: 'Demostración: la solicitud se prepara aquí y la envías tú por WhatsApp',   // solo si instagram.usuario fuera null
     maxPersonas: 6,              // teselas 1..6 + «7 o más»
     horizonteDias: 90,           // hasta cuántos días hacia adelante se puede pedir
     // Días sin atención (0 = domingo … 6 = sábado): el bar atiende de martes a sábado (su Instagram, confirmado por Pablo 2026-10-24).
@@ -140,12 +136,13 @@ window.TIRUA_CONTENIDO = {
     tituloVista: 'Tu solicitud',
     huecos: { nombre: 'tu nombre', personas: 'personas', fecha: 'fecha', hora: 'hora' },   // lo que aún falta se ve así en el mensaje: [fecha]
     faltaVista: 'Para enviarla falta: {lista}.',
-    listoParaEnviar: 'Tu solicitud está lista. Envíala por WhatsApp.',
-    avisoSolicitud: 'Esto es una solicitud, no una reserva confirmada. El bar confirmará la disponibilidad a mano, por WhatsApp.',
-    enviarWhatsApp: 'Enviar por WhatsApp',
-    whatsappNota: 'Abre WhatsApp en el chat de Tirúa con tu solicitud ya escrita: solo te queda enviarla.',
-    whatsappNotaSinNumero: 'Abre WhatsApp con tu solicitud ya escrita. El número del bar aún no está cargado: elige el chat del bar y envía.',
-    whatsappEtiqueta: 'Enviar la solicitud por WhatsApp, se abre en otra pestaña',
+    listoParaEnviar: 'Tu solicitud está lista. Envíala por Instagram.',
+    avisoSolicitud: 'Esto es una solicitud, no una reserva confirmada. El bar confirmará la disponibilidad a mano, por Instagram.',
+    enviarInstagram: 'Enviar por Instagram',
+    instagramNota: 'Al pulsar, copiamos tu solicitud y se abre el chat de Instagram de Tirúa: solo la pegas y la envías.',
+    instagramCopiado: 'Copiamos tu solicitud. Pégala en el chat de Instagram de Tirúa y envíala.',
+    instagramNoCopio: 'No pudimos copiarla sola: selecciona el mensaje de arriba, cópialo y pégalo en el chat de Instagram.',
+    instagramEtiqueta: 'Enviar la solicitud por Instagram, se abre el chat en otra pestaña',
     cambiar: 'Cambiar',
     sinElegir: 'sin elegir',
     copiar: 'Copiar mensaje',

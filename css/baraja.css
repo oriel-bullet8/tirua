@@ -36,21 +36,8 @@
 .br-ico { flex: none; }
 
 /* ---------- Único rótulo de demostración (sello fino con detalle desplegable) ---------- */
-.br-rotulo { position: relative; }
-.br-rotulo__btn { min-height: 44px; display: inline-flex; align-items: center; gap: .55rem; padding: .25rem .6rem; background: transparent; border: 0; cursor: pointer; color: var(--br-blanco); }
-.br-rotulo__sello { font: 600 .6875rem/1 var(--br-f); letter-spacing: .12em; text-transform: uppercase; color: var(--fondo); background: var(--br-blanco); padding: .32rem .5rem; }
-.br-rotulo__mas { white-space: nowrap; font: 400 .875rem/1.2 var(--br-f); color: var(--br-mute); text-decoration: underline; text-underline-offset: 3px; }
-.br-rotulo__btn:hover .br-rotulo__mas, .br-rotulo__btn[aria-expanded="true"] .br-rotulo__mas { color: var(--br-blanco); }
-.br-rotulo__detalle {
-  position: absolute; right: 0; top: calc(100% + .25rem); z-index: 70; width: min(23rem, calc(100vw - 1.5rem));
-  background: var(--br-carta-negro); border: 1px solid var(--br-linea-fuerte); padding: .9rem 1rem; box-shadow: var(--sombra);
-}
-@media (max-width: 899px) { .br-rotulo__detalle { left: 0; right: auto; } }
-.br-rotulo__detalle ul { margin: 0; padding-left: 1.1rem; display: grid; gap: .45rem; font-size: .875rem; line-height: 1.45; }
 
 @media (max-width: 400px) {
-  .br-rotulo__btn { gap: .4rem; padding-inline: .3rem; }
-  .br-rotulo__sello { letter-spacing: .08em; padding: .3rem .4rem; }
   }
 
 /* ---------- Sección ---------- */
@@ -89,8 +76,6 @@
 .br-btn--joker { border-color: var(--br-joker); color: var(--br-joker); white-space: normal; text-align: center; max-width: 100%; }
 .br-btn--joker:hover { background: color-mix(in srgb, var(--br-joker) 14%, var(--br-negro)); }
 .br-btn--joker[aria-pressed="true"] { background: color-mix(in srgb, var(--br-joker) 20%, var(--br-negro)); }
-.br-btn--vincular { text-transform: none; letter-spacing: .01em; font-size: .78rem; padding-inline: .6rem; border-style: dashed; border-color: var(--br-linea-fuerte); color: var(--br-mute); cursor: not-allowed; opacity: 1; margin-top: .6rem; white-space: normal; text-align: center; }
-.br-btn--vincular:hover { background: transparent; }
 
 /* ---------- Herramientas: buscador y lista rápida (una sola fila) ---------- */
 .br-herramientas { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: .5rem; align-items: end; max-width: 46rem; margin-bottom: .5rem; }
@@ -341,10 +326,8 @@
 .br-carta .br-encabezado { display: grid; gap: 4px 24px; align-items: start; padding-top: clamp(40px, 5vw, 64px); margin-bottom: .5rem; }
 .br-carta .br-encabezado .titular { font-size: clamp(2.5rem, 8vw, 4.75rem); line-height: .95; }
 .br-carta .br-encabezado .seccion__bajada { margin-top: .35rem; max-width: 46ch; font-size: clamp(1rem, 1.4vw, 1.125rem); }
-.br-carta .br-rotulo { justify-self: start; margin-left: -.6rem; }
 @media (min-width: 900px) {
   .br-carta .br-encabezado { grid-template-columns: 1fr auto; }
-  .br-carta .br-rotulo { justify-self: end; grid-column: 2; grid-row: 1; margin-left: 0; margin-right: -.6rem; }
 }
 .br-carta .br-carta__in { padding-top: .5rem; padding-bottom: 2rem; }
 /* html ya tiene scroll-padding-top = alto de la cabecera fija; aquí solo se suma un respiro */
@@ -359,15 +342,13 @@
 
 /* ---------- Móvil (<700px): cabecera de la carta compacta ----------
    Objetivo (390×844): naipe completo + descripción + flechas sin desplazar tras llegar a #carta.
-   Solo espaciado y distribución: título y rótulo en la misma fila, bajada debajo; no cambia el tamaño del naipe,
+   Solo espaciado y distribución: título y bajada; no cambia el tamaño del naipe,
    la tipografía, el buscador, los chips ni los controles. */
 @media (max-width: 699.98px) {
-  .br-carta .br-encabezado { grid-template-columns: minmax(0, 1fr) auto; grid-template-areas: "titulo rotulo" "bajada bajada"; align-items: center; gap: 0 .5rem; padding-top: 6px; margin-bottom: 6px; }
+  .br-carta .br-encabezado { grid-template-columns: minmax(0, 1fr); grid-template-areas: "titulo" "bajada"; align-items: center; gap: 0 .5rem; padding-top: 6px; margin-bottom: 6px; }
   .br-carta .br-encabezado > div:first-child { display: contents; }
   .br-carta .br-encabezado .titular { grid-area: titulo; }
   .br-carta .br-encabezado .seccion__bajada { grid-area: bajada; margin-top: 0; line-height: 1.4; }
-  .br-carta .br-rotulo { grid-area: rotulo; justify-self: end; margin-left: 0; margin-right: -.3rem; }
-  .br-carta .br-rotulo__detalle { left: auto; right: 0; width: min(22rem, calc(100vw - 2rem)); }
   .br-carta .br-carta__in { padding-top: 0; }
   .br-carta .br-herramientas { margin-bottom: .25rem; }
 }
@@ -377,10 +358,6 @@
    (+23 px, «Qué significa» cortado); «Lista» quedaba 1 px fuera. Aquí solo se compacta ese rótulo, el título y el botón. */
 @media (max-width: 359.98px) {
   .br-carta .br-encabezado .titular { font-size: 2.25rem; }
-  .br-carta .br-rotulo { margin-right: -.2rem; }
-  .br-rotulo__btn { gap: .3rem; padding-inline: .2rem; }
-  .br-rotulo__sello { letter-spacing: .04em; padding: .28rem .35rem; }
-  .br-rotulo__mas { font-size: .6875rem; }
   .br-btn--lista { padding-inline: .6rem; gap: .4rem; }
 }
 
@@ -418,10 +395,9 @@
 .br-joker__titulo { font-family: var(--br-fd); font-weight: 400; }
 .br-hoja__titulo, .br-vacio__titulo { font-family: var(--br-fd); font-weight: 400; text-transform: none; }
 .br-hoja__valor, .br-hoja__precio { font-family: var(--br-fd); font-weight: 400; }
-.br-btn, .br-chip__nombre, .br-buscador__label, .br-rotulo__sello, .br-demo__titulo { text-transform: none; letter-spacing: .01em; font-weight: 500; }
+.br-btn, .br-chip__nombre, .br-buscador__label, .br-demo__titulo { text-transform: none; letter-spacing: .01em; font-weight: 500; }
 .br-btn { font-size: 1rem; }
 .br-buscador__label, .br-demo__titulo { font-size: .875rem; }
-.br-rotulo__sello { font-size: .875rem; font-weight: 700; border-radius: 2px; }
 .br-chip__nombre { font-size: .9375rem; }
 .br-contador { font-family: var(--br-fd); font-weight: 400; font-size: 1.25rem; letter-spacing: .02em; }
 
@@ -447,7 +423,6 @@ html.br-inm-abierto { overflow: hidden; }
 .br-carta.br-inm > .envoltura { position: absolute; top: max(.5rem, env(safe-area-inset-top)); left: .5rem; right: 7.5rem; z-index: 6; pointer-events: none; padding: 0; width: auto; }
 .br-carta.br-inm .br-encabezado { display: block; padding: 0; margin: 0; }
 .br-carta.br-inm .br-encabezado > div:first-child { display: block; position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-.br-carta.br-inm .br-rotulo { pointer-events: auto; margin: 0; }
 .br-carta.br-inm .br-carta__in { padding: 0; width: 100%; }
 .br-carta.br-inm .br-carta__in > :not(.br-bloque):not(.br-chips) { width: 100%; }
 .br-carta.br-inm .br-enlace-carta, .br-carta.br-inm .br-cierre, .br-carta.br-inm #cerrar { display: none; }
@@ -493,7 +468,6 @@ html.br-inm-abierto { overflow: hidden; }
 
 /* Portal: título de la sección con la voz del sitio */
 .br-carta:not(.br-inm) .br-panel__cerrada .br-btn--grande { font-family: var(--br-fd); font-weight: 400; font-size: 1.25rem; letter-spacing: .01em; min-height: 58px; padding-inline: 2.4rem; }
-@media (max-width: 480px) { .br-carta.br-inm .br-rotulo__mas { display: none; } .br-carta.br-inm .br-rotulo__btn { padding-inline: .2rem; } }
 
 /* ---------- Pantalla apaisada y baja (celular girado, ventanas anchas y bajas): la carta manda ----------
    La experiencia pensada es horizontal. Con poco alto la descripción pasa a una leyenda sobre el borde inferior, las flechas

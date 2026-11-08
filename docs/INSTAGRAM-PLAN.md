@@ -1,13 +1,13 @@
 # Plan: conectar el sitio con Instagram (@bartirua) — borrador 2026-10-23
 
-Estado hoy: el sitio solo enlaza al perfil. La reserva sale por WhatsApp. Nada se sincroniza.
+Estado hoy: el sitio solo enlaza al perfil. La reserva sale por mensaje directo: «Enviar por Instagram» copia la solicitud y abre el chat `ig.me/m/bartirua`. Nada se sincroniza.
 Perfil visto en público (sin iniciar sesión): ~17,6 mil seguidores, destacadas «Horarios · Liga · Carta digital · Reservas · Sociales · Eventos», link de bio a Justo (+2 enlaces más), reels sobre todo verticales y con gráfica de texto.
 
 ## Qué se podría automatizar (de menos a más esfuerzo)
 1. **Últimas publicaciones en el sitio** (galería «Del Instagram del bar»): una tarea programada baja las N últimas publicaciones y el sitio las muestra.
 2. **Video del hero y fotos del local**: salen del feed solo si el bar entrega los originales (ver abajo); no se bajan de Instagram.
 3. **Horario / eventos**: hoy están en destacadas e imágenes; no hay API para leerlas como dato. Mejor que Oriel los mantenga en un archivo simple (`js/contenido.js`) o en una planilla que el sitio lea.
-4. **Reservas por DM**: descartado por ahora. La API de mensajes exige app aprobada por Meta y respuestas dentro de 24 h; el flujo WhatsApp con confirmación a mano ya funciona.
+4. **Reservas por DM**: descartado por ahora. La API de mensajes exige app aprobada por Meta y respuestas dentro de 24 h; la página no envía nada: la persona pega el mensaje y el bar confirma a mano.
 
 ## Cómo hacer el punto 1 sin romper las reglas del sitio (sin scripts de terceros)
 - La **API de Instagram con Instagram Login** (reemplazo del Basic Display API, cerrado el 4-dic-2024) permite leer `GET /me/media` (id, caption, media_type, media_url, thumbnail_url, permalink, timestamp) **solo si la cuenta es Business o Creator**. Hay que verificar el tipo de cuenta de @bartirua.

@@ -23,13 +23,15 @@ LADO_MAX, CALIDAD = 720, 78
 BLOQUES = [
     ('compartir', 'Para compartir', ['Para Picar', 'Entradas Frias', 'Papitas para Compartir']),
     ('platos', 'Platos', ['Sushi', 'Ensaladas', 'Sándwich', 'Pizzas']),
-    ('postres', 'Postres y café', ['Postres', 'Cafetería']),
+    ('postres', 'Postres', ['Postres']),
     ('cocteleria', 'Coctelería', ['Coctelería de autor', 'Coctelería Internacional', 'Rincón de los sour', 'Spritz', 'Mocktail', 'Jarras y licores', 'Shot']),
     ('destilados', 'Destilados, vinos y espumantes', ['Vodka', 'Gin', 'Pisco', 'Whisky', 'Ron', 'Tequila', 'Espumantes', 'Vino']),
-    ('cervezas', 'Cervezas y bebidas', ['Cerveza', 'Shop', 'Bebida']),
+    ('cervezas', 'Cervezas y bebidas', ['Cerveza', 'Shop', 'Bebida', 'Cafetería']),   # Cafetería va con los bebestibles, como en Justo
 ]
-# Nombre visible de las secciones cuyo nombre en Justo tiene un error evidente de tipeo (se corrige solo el rótulo, no los productos).
-ROTULO = {'Entradas Frias': 'Entradas frías', 'Shop': 'Schop'}
+# Los nombres de las secciones son los de Justo, tal cual (decisión de Pablo, 2026-11-07).
+# Eventos especiales y promos no son carta (decisión de Pablo, 2026-11-07): se dejan fuera aunque Justo los liste en una sección.
+EVENTOS = {'HALLOWEEN'}
+es_evento = lambda p: p['nombre'].strip().upper() in EVENTOS
 
 archivo = glob.glob(os.path.join(FUENTE, 'carta-justo-*.json'))[0]
 datos = json.load(open(archivo, encoding='utf-8'))
@@ -58,7 +60,7 @@ for bid, bnombre, secciones in BLOQUES:
     for sn in secciones:
         productos = []
         for p in datos['productos']:
-            if p['secciones'] != [sn]:
+            if p['secciones'] != [sn] or es_evento(p):
                 continue
             f = foto(p)
             item = {'id': p['id'], 'nombre': p['nombre'].strip()}
@@ -69,8 +71,8 @@ for bid, bnombre, secciones in BLOQUES:
             if f:
                 item['foto'] = f['src']; item['w'] = f['w']; item['h'] = f['h']; con_foto += 1
             productos.append(item); total += 1
-        bloque['secciones'].append({'id': re.sub(r'[^a-z0-9]+', '-', ROTULO.get(sn, sn).lower().replace('á', 'a').replace('é', 'e').replace('í', 'i').replace('ó', 'o').replace('ú', 'u')).strip('-'),
-                                    'nombre': ROTULO.get(sn, sn), 'productos': productos})
+        bloque['secciones'].append({'id': re.sub(r'[^a-z0-9]+', '-', sn.lower().replace('á', 'a').replace('é', 'e').replace('í', 'i').replace('ó', 'o').replace('ú', 'u')).strip('-'),
+                                    'nombre': sn, 'productos': productos})
     salida.append(bloque)
 
 meta = {'fuente': datos['fuente'], 'capturado': datos['extraido'][:10], 'productos': total, 'conFoto': con_foto,
@@ -105,13 +107,13 @@ def escena(pid):  # paisaje pintado de fondo (0-7), estable por producto
 bprods, bsecs, arte, vistos = [], [], {}, set()
 for palo, secciones in PALOS:
     for sn in secciones:
-        bsecs.append({'id': re.sub(r'[^a-z0-9]+', '-', ROTULO.get(sn, sn).lower().replace('á','a').replace('é','e').replace('í','i').replace('ó','o').replace('ú','u')).strip('-'),
-                      'nombre': ROTULO.get(sn, sn), 'categoria': palo})
+        bsecs.append({'id': re.sub(r'[^a-z0-9]+', '-', sn.lower().replace('á','a').replace('é','e').replace('í','i').replace('ó','o').replace('ú','u')).strip('-'),
+                      'nombre': sn, 'categoria': palo})
         for p in datos['productos']:
-            if p['secciones'] != [sn]:
+            if p['secciones'] != [sn] or es_evento(p):
                 continue
             vistos.add(p['id'])
-            d = {'categoria': palo, 'seccion': bsecs[-1]['id'], 'nombre': p['nombre'].strip(), 'justo': ROTULO.get(sn, sn), 'precio': p['precio'] or None, 'etiquetas': []}
+            d = {'categoria': palo, 'seccion': bsecs[-1]['id'], 'nombre': p['nombre'].strip(), 'justo': sn, 'precio': p['precio'] or None, 'etiquetas': []}
             if p['descripcion'] and p['descripcion'].strip():
                 d['descripcion'] = p['descripcion'].strip()
             if p['id'] in DESTACADAS:

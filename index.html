@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Tirúa · Bar Restorán</title>
-  <meta name="description" content="Tirúa Bar-Restorán en Pirque. Carta completa en formato baraja, con fotos y precios; reservas por WhatsApp y delivery.">
+  <meta name="description" content="Tirúa Bar-Restorán en Pirque. Carta completa en formato baraja, con fotos y precios; reservas por Instagram y delivery.">
   <!-- Vista previa al compartir: metadatos estáticos, disponibles sin JavaScript. -->
   <link rel="canonical" href="https://tirua-website.vercel.app/">
   <meta property="og:type" content="website">
@@ -30,12 +30,11 @@
   <link rel="preload" href="assets/fonts/AlegreyaSans-Regular.ttf" as="font" type="font/ttf" crossorigin>
   <script>document.documentElement.classList.add('js');</script>
   <script>(function(){try{var q=new URLSearchParams(location.search).get('tema');if(q==='oscuro'||q==='claro'){localStorage.setItem('tirua-tema',q);}var t=localStorage.getItem('tirua-tema');if(t==='oscuro'){document.documentElement.setAttribute('data-tema','oscuro');var m=document.querySelector('meta[name=theme-color]');if(m){m.content='#000000';}}}catch(e){}})();</script>
-  <link rel="stylesheet" href="css/styles.css?v=20261107a">
-  <link rel="stylesheet" href="css/baraja.css?v=20261107a">
+  <link rel="stylesheet" href="css/styles.css?v=20261107b">
+  <link rel="stylesheet" href="css/baraja.css?v=20261107b">
   <link rel="stylesheet" href="css/baraja-atelier.css?v=20261107e">
   <link rel="stylesheet" href="css/reservas-campo.css?v=20261031f">
-  <link rel="stylesheet" href="css/fondo.css?v=20261107d">
-  <script>(function(){try{var q=new URLSearchParams(location.search).get('madera');try{localStorage.removeItem('tirua-madera');}catch(e){}if(q==='1'){document.documentElement.classList.add('vista-madera');var l=document.createElement('link');l.rel='stylesheet';l.href='css/preview-madera.css?v=20261107e';document.head.appendChild(l);}}catch(e){}})();</script>
+  <link rel="stylesheet" href="css/fondo.css?v=20261107e">
 </head>
 <body>
   <!-- Fondo continuo de toda la página (css/fondo.css): sello de vidrio sobre luces lentas. Solo decorativo. -->
@@ -183,13 +182,6 @@
             <h2 class="titular" id="carta-titulo" data-texto="carta.titulo"></h2>
             <p class="seccion__bajada" data-texto="carta.bajada"></p>
           </div>
-          <!-- ÚNICO rótulo de demostración: sello visible + detalle desplegable (textos en js/baraja-datos.js) -->
-          <div class="br-rotulo" id="rotulo" hidden>
-            <button type="button" class="br-rotulo__btn" id="rotulo-btn" aria-expanded="false" aria-controls="rotulo-detalle">
-              <span class="br-rotulo__sello">Demostración</span><span class="br-rotulo__mas">Qué significa</span>
-            </button>
-            <div class="br-rotulo__detalle" id="rotulo-detalle" role="region" aria-label="Qué significa «demostración»" hidden></div>
-          </div>
         </div>
       </div>
     
@@ -222,7 +214,6 @@
             <div class="br-panel__producto" id="panel-producto" hidden>
               <p class="br-panel__desc" id="p-desc">Descripción</p>
               <p class="br-panel__joker" id="p-joker" hidden></p>
-              <button type="button" class="br-btn br-btn--vincular" id="p-vincular" disabled aria-disabled="true" hidden></button>
             </div>
             <p class="br-panel__medida" id="panel-medida" aria-hidden="true"></p>
           </div>
@@ -382,13 +373,13 @@
   </footer>
 
   <script src="js/contenido.js?v=20261107a"></script>
-  <script src="js/baraja-datos.js?v=20261107b"></script>
-  <script src="js/baraja-productos.js?v=20261107a"></script>
+  <script src="js/baraja-datos.js?v=20261107c"></script>
+  <script src="js/baraja-productos.js?v=20261107b"></script>
   <script src="js/render.js?v=20261107b"></script>
   <script src="js/main.js?v=20261024b" defer></script>
   <script src="js/menu.js?v=20261024b" defer></script>
   <script src="js/baraja-arte.js?v=20261107a"></script>
-  <script src="js/baraja.js?v=20261107i" defer></script>
+  <script src="js/baraja.js?v=20261107j" defer></script>
   <script src="js/carta.js?v=20261024b" defer></script>
   <script src="js/hero.js?v=20261024b" defer></script>
   <script src="js/historias.js?v=20261107a" defer></script>

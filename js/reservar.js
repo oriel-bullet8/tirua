@@ -1,8 +1,8 @@
 // Solicitud de reserva (reservar.html): una cascada de cuatro preguntas (Personas → Fecha → Hora → Tus datos) y, al lado,
-// el mensaje que se va armando con lo elegido y una sola acción: «Enviar por WhatsApp», con el texto ya escrito.
+// el mensaje que se va armando con lo elegido y una sola acción: «Enviar por Instagram» (copia la solicitud y abre el chat del bar).
 // No hay disponibilidad, cupos ni confirmaciones, y los datos no se guardan ni se envían desde la página: el bar confirma a mano.
 // No hace peticiones de red ni escribe en localStorage, sessionStorage o cookies.
-// Textos, horas, mensaje y número de WhatsApp: js/contenido.js (reserva.* y local.whatsapp).
+// Textos, horas y mensaje: js/contenido.js (reserva.*); la cuenta de Instagram sale de local.instagram.
 //
 // Cascada (decisión de diseño):
 //  - Solo se ve la pregunta en curso y las ya respondidas (plegadas, con su respuesta y «Cambiar»). Las que faltan no existen aún.
@@ -23,7 +23,6 @@
   var listaEtapas = raiz.querySelector('[data-etapas]');
   var vistaEl = raiz.querySelector('[data-vista]');
   var estadoEl = raiz.querySelector('[data-estado]');
-  var rotuloEl = raiz.querySelector('[data-rsv-muestra]');
   raiz.querySelector('[data-rsv-titulo]').textContent = T.titulo;
 
   var reducido = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -417,13 +416,13 @@
       if (ev.key !== 'Enter') return;
       ev.preventDefault();
       if (!s.nombre.trim()) return;
-      // Con todo completo, Enter lleva al botón de WhatsApp (no envía nada por sí solo).
+      // Con todo completo, Enter lleva al botón de Instagram (no envía nada por sí solo).
       if (primeraPendiente() === 'completo') { vista.wa.focus(); vistaEl.scrollIntoView({ block: 'nearest', behavior: reducido.matches ? 'auto' : 'smooth' }); }
     });
     ta.addEventListener('input', function () { s.comentario = ta.value; actualizarVista(); });
   }
 
-  // ---------- Mensaje (vista previa en vivo y WhatsApp) ----------
+  // ---------- Mensaje (vista previa en vivo e Instagram) ----------
   var M0 = '\u0001', M1 = '\u0002';   // marcan los huecos del mensaje
   function hueco(valor, etiqueta) { return valor || (M0 + etiqueta + M1); }
   function textoMensaje(conHuecos) {
@@ -444,13 +443,19 @@
     if (!s.nombre.trim()) f.push(T.huecos.nombre);
     return f;
   }
-  function numeroWhatsApp() {
-    var n = C.local && typeof C.local.whatsapp === 'string' ? C.local.whatsapp.replace(/\D/g, '') : '';
-    return n.length >= 8 ? n : '';
+  // Chat directo con la cuenta del bar. Instagram no admite texto prellenado: por eso el botón copia la solicitud al pulsarse.
+  function urlChatInstagram() {
+    var u = window.TIRUA && window.TIRUA.usuarioInstagram ? window.TIRUA.usuarioInstagram() : null;
+    return u ? 'https://ig.me/m/' + u : null;
   }
-  // Enlace wa.me al número del bar con el texto ya escrito: abre la app de WhatsApp (o WhatsApp Web) directo en ese chat.
-  // Sin número cargado (LOCAL.whatsapp null) abre WhatsApp con el texto y la persona elige el chat.
-  function urlWhatsApp(texto) { return 'https://wa.me/' + numeroWhatsApp() + '?text=' + encodeURIComponent(texto); }
+  function copiarSolicitud() {
+    var t = textoMensaje(false);
+    var fin = function (ok) { vista.nota.textContent = ok ? T.instagramCopiado : T.instagramNoCopio; anunciar(vista.nota.textContent); };
+    try {
+      if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(t).then(function () { fin(true); }, function () { fin(false); }); return; }
+    } catch (e) { /* sin portapapeles */ }
+    fin(false);
+  }
 
   function construirVista() {
     var h = el('h2', 'vista__titulo', T.tituloVista, { id: 'vista-titulo' });
@@ -462,15 +467,15 @@
     vista.grande = el('p', 'vista__nota', T.grandeAviso);
     vistaEl.appendChild(vista.grande);
     var acc = el('div', 'vista__acciones');
-    vista.wa = el('a', 'whatsapp-reserva', null, { 'data-clave': 'whatsapp', 'aria-label': T.whatsappEtiqueta });
-    vista.wa.innerHTML = '<svg class="whatsapp-reserva__icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" d="M20.5 11.7a8.7 8.7 0 0 1-12.8 7.7L3 21l1.5-4.6A8.7 8.7 0 1 1 20.5 11.7Z"/><path fill="currentColor" d="M8.1 6.9c-.2 0-.5.1-.6.3-.5.5-.8 1.2-.8 1.9 0 2.5 3.9 6.6 6.9 7.4.7.2 1.7.2 2.4-.1.5-.3 1.2-1 1.3-1.6l.1-.8c0-.2-.1-.3-.3-.4l-2.2-1c-.2-.1-.4-.1-.5.1l-1 1.2c-.2.2-.4.2-.6.1-1.6-.6-2.9-1.8-3.7-3.3-.1-.2-.1-.4.1-.5l.8-1c.1-.2.2-.4.1-.6L9.2 7.2c-.1-.2-.3-.3-.5-.3h-.6Z"/></svg>';
-    vista.wa.appendChild(el('span', null, T.enviarWhatsApp));
-    vista.wa.setAttribute('role', 'link');
-    vista.wa.setAttribute('aria-describedby', 'vista-falta nota-whatsapp');
-    vista.wa.addEventListener('click', function (ev) { if (vista.wa.getAttribute('aria-disabled') === 'true') ev.preventDefault(); });
-    acc.appendChild(vista.wa);
+    vista.ig = el('a', 'instagram-reserva', null, { 'data-clave': 'instagram', 'aria-label': T.instagramEtiqueta });
+    vista.ig.innerHTML = '<svg class="instagram-reserva__icono" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="3.5" y="3.5" width="17" height="17" rx="5" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.7"/><circle cx="17.1" cy="6.9" r="1.1" fill="currentColor"/></svg>';
+    vista.ig.appendChild(el('span', null, T.enviarInstagram));
+    vista.ig.setAttribute('role', 'link');
+    vista.ig.setAttribute('aria-describedby', 'vista-falta nota-instagram');
+    vista.ig.addEventListener('click', function (ev) { if (vista.ig.getAttribute('aria-disabled') === 'true') { ev.preventDefault(); return; } copiarSolicitud(); });
+    acc.appendChild(vista.ig);
     vistaEl.appendChild(acc);
-    vista.nota = el('p', 'vista__nota', '', { id: 'nota-whatsapp' });
+    vista.nota = el('p', 'vista__nota', '', { id: 'nota-instagram' });
     vistaEl.appendChild(vista.nota);
     vistaEl.appendChild(el('p', 'vista__aviso', T.avisoSolicitud));
   }
@@ -489,12 +494,12 @@
     vista.falta.textContent = completo ? '' : reemplazar(T.faltaVista, { lista: falta.join(', ') });
     vista.falta.hidden = completo;
     vista.grande.hidden = !s.grande;
-    vista.nota.textContent = numeroWhatsApp() ? T.whatsappNota : T.whatsappNotaSinNumero;
+    vista.nota.textContent = T.instagramNota;
     vistaEl.classList.toggle('vista--completa', completo);
 
-    var wa = vista.wa;
-    if (completo) { wa.setAttribute('href', urlWhatsApp(textoMensaje(false))); wa.setAttribute('target', '_blank'); wa.setAttribute('rel', 'noopener noreferrer'); wa.removeAttribute('aria-disabled'); wa.removeAttribute('tabindex'); }
-    else { wa.removeAttribute('href'); wa.removeAttribute('target'); wa.removeAttribute('rel'); wa.setAttribute('aria-disabled', 'true'); wa.setAttribute('tabindex', '0'); }
+    var ig = vista.ig, chat = urlChatInstagram();
+    if (completo && chat) { ig.setAttribute('href', chat); ig.setAttribute('target', '_blank'); ig.setAttribute('rel', 'noopener noreferrer'); ig.removeAttribute('aria-disabled'); ig.removeAttribute('tabindex'); }
+    else { ig.removeAttribute('href'); ig.removeAttribute('target'); ig.removeAttribute('rel'); ig.setAttribute('aria-disabled', 'true'); ig.setAttribute('tabindex', '0'); }
   }
 
   // ---------- Cascada ----------
@@ -553,9 +558,6 @@
     var guardado = null;
     if (!s.foco && a && a !== document.body && a.getAttribute && a.getAttribute('data-clave') && nodos[s.abierta] && nodos[s.abierta].contenido.contains(a) && s.abierta !== 'datos') guardado = { clave: a.getAttribute('data-clave'), sinScroll: true };
     var pend = primeraPendiente(), tope = pend === 'completo' ? ETAPAS.length - 1 : ETAPAS.indexOf(pend);
-    var url = window.TIRUA && window.TIRUA.urlInstagram ? window.TIRUA.urlInstagram() : null;
-    rotuloEl.textContent = url ? '' : T.demostracion;   // «Demostración…» mientras Instagram no esté conectado
-    rotuloEl.hidden = !!url;
     ETAPAS.forEach(function (e, i) {
       var n = nodos[e], visible = i <= tope;
       if (visible && !n.visible) {

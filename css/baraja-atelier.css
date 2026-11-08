@@ -120,7 +120,6 @@
 .br-carta .br-punto { color: #b57a72; }
 .br-carta .br-hint { color: #b6a990; }
 .br-carta .br-panel__desc { display: none; }
-.br-carta .br-rotulo__sello { background: #c4a570; color: #15120d; }
 .br-carta .br-hoja { background: #111212; color: #eadfc9; }
 .br-carta .br-card--joker .br-idx__palo { fill: #c7aa73; }
 @media (prefers-reduced-motion: reduce) {

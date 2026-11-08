@@ -4,14 +4,14 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Reservar mesa · Tirúa</title>
-  <meta name="description" content="Reservar mesa en Tirúa: elige personas, fecha y hora y envía la solicitud por WhatsApp. El bar te confirma a mano.">
+  <meta name="description" content="Reservar mesa en Tirúa: elige personas, fecha y hora y envía la solicitud por Instagram. El bar te confirma a mano.">
   <!-- Vista previa al compartir: metadatos estáticos, disponibles sin JavaScript. -->
   <link rel="canonical" href="https://tirua-website.vercel.app/reservar.html">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="es_CL">
   <meta property="og:site_name" content="Tirúa Bar Restorán">
   <meta property="og:title" content="Reservas y cumpleaños · Tirúa, Pirque">
-  <meta property="og:description" content="Solicita tu mesa o celebración de cumpleaños en Tirúa. El bar confirma la disponibilidad por WhatsApp.">
+  <meta property="og:description" content="Solicita tu mesa o celebración de cumpleaños en Tirúa. El bar confirma la disponibilidad por Instagram.">
   <meta property="og:url" content="https://tirua-website.vercel.app/reservar.html">
   <meta property="og:image" content="https://tirua-website.vercel.app/assets/brand/logo-original.png?compartir=20261102">
   <meta property="og:image:secure_url" content="https://tirua-website.vercel.app/assets/brand/logo-original.png?compartir=20261102">
@@ -21,7 +21,7 @@
   <meta property="og:image:alt" content="Logo original de Tirúa: letras blancas y marco circular sobre fondo negro">
   <meta name="twitter:card" content="summary">
   <meta name="twitter:title" content="Reservas y cumpleaños · Tirúa, Pirque">
-  <meta name="twitter:description" content="Solicita tu mesa o celebración de cumpleaños en Tirúa. El bar confirma la disponibilidad por WhatsApp.">
+  <meta name="twitter:description" content="Solicita tu mesa o celebración de cumpleaños en Tirúa. El bar confirma la disponibilidad por Instagram.">
   <meta name="twitter:image" content="https://tirua-website.vercel.app/assets/brand/logo-original.png?compartir=20261102">
   <meta name="theme-color" content="#ffffff">
   <meta name="color-scheme" content="light dark">
@@ -30,10 +30,13 @@
   <link rel="preload" href="assets/fonts/AlegreyaSans-Regular.ttf" as="font" type="font/ttf" crossorigin>
   <script>document.documentElement.classList.add('js');</script>
   <script>(function(){try{var q=new URLSearchParams(location.search).get('tema');if(q==='oscuro'||q==='claro'){localStorage.setItem('tirua-tema',q);}var t=localStorage.getItem('tirua-tema');if(t==='oscuro'){document.documentElement.setAttribute('data-tema','oscuro');var m=document.querySelector('meta[name=theme-color]');if(m){m.content='#000000';}}}catch(e){}})();</script>
-  <link rel="stylesheet" href="css/styles.css?v=20261031e">
-  <link rel="stylesheet" href="css/reservas-campo.css?v=20261031f">
+  <link rel="stylesheet" href="css/styles.css?v=20261107b">
+  <link rel="stylesheet" href="css/reservas-campo.css?v=20261107a">
+  <link rel="stylesheet" href="css/fondo.css?v=20261107e">
 </head>
 <body data-pagina="reservar">
+  <!-- Fondo continuo (css/fondo.css), el mismo del inicio. Solo decorativo. -->
+  <div class="fondo-vivo" aria-hidden="true"><i class="fondo-vivo__luz fondo-vivo__luz--verde"></i><i class="fondo-vivo__luz fondo-vivo__luz--ambar"></i><i class="fondo-vivo__luz fondo-vivo__luz--rojo"></i><span class="fondo-vivo__vidrio"></span><span class="fondo-vivo__filo"></span></div>
   <a class="saltar" href="#contenido">Saltar al contenido</a>
 
   <noscript><p class="sin-js">Este sitio necesita JavaScript para mostrar el menú, las categorías y el logo.</p></noscript>
@@ -59,7 +62,6 @@
       <div class="envoltura">
         <div class="rsv__cab">
           <h1 class="titular titular--medio" id="rsv-titulo" data-rsv-titulo></h1>
-          <p class="rsv__muestra" data-rsv-muestra></p>
         </div>
 
         <div class="rsv__cols">
@@ -93,7 +95,7 @@
   <script src="js/render.js?v=20261107a"></script>
   <script src="js/main.js?v=20261024b" defer></script>
   <script src="js/menu.js?v=20261024b" defer></script>
-  <script src="js/reservar.js?v=20261031f" defer></script>
+  <script src="js/reservar.js?v=20261107a" defer></script>
 </body>
 </html>
 

@@ -10,7 +10,7 @@ const PALOS = { compartir: ['para-picar', 'entradas-frias', 'papitas-para-compar
 PALOS.bebestibles = secciones.map((s) => s.id).filter((id) => !Object.values(PALOS).flat().includes(id));
 const MAZOS = { cocteleria: ['cocteleria-de-autor', 'cocteleria-internacional', 'rincon-de-los-sour', 'spritz', 'mocktail'],
   destilados: ['vodka', 'gin', 'pisco', 'whisky', 'ron', 'tequila', 'shot', 'jarras-y-licores', 'espumantes', 'vino'],
-  cervezas: ['cerveza', 'schop', 'bebida', 'cafeteria'], individuales: PALOS.individuales, postres: PALOS.postres, compartir: PALOS.compartir };
+  cervezas: ['cerveza', 'shop', 'bebida', 'cafeteria'], individuales: PALOS.individuales, postres: PALOS.postres, compartir: PALOS.compartir };
 const nSec = (id) => secciones.find((s) => s.id === id).productos.length;
 const nPalo = (palo) => (PALOS[palo] || MAZOS[palo]).reduce((a, id) => a + nSec(id), 0);
 const MAX_MONTADAS = 30;   // con la ventana de cartas (±5 + 12 del abanico + joker) nunca debería acercarse a esto
@@ -54,7 +54,7 @@ const elegir = async (page, palo) => {
       chequea(t + '«Abrir la carta» muestra «Escoger mazo» en menos de 1,5 s, sin abrir ninguna baraja', Date.now() - t1 < 1500 && (await page.evaluate(() => !document.querySelector('#carta').classList.contains('br-is-open'))), Date.now() - t1);
       const mz = await page.evaluate(() => [...document.querySelectorAll('.br-mazo')].map((b) => ({ id: b.dataset.grupo || b.dataset.id, txt: b.textContent })));
       const raiz = ['bebestibles', 'individuales', 'postres', 'compartir'];
-      chequea(t + 'al abrir hay solo 4 mazos (Bebestibles, Comidas individuales, Postres, Para compartir) con su cantidad de cartas', mz.length === 4 && mz.map((m) => m.id).join() === raiz.join() && mz.every((m) => new RegExp(String(m.id === 'bebestibles' ? 196 : nPalo(m.id)) + ' cartas').test(m.txt)), mz);
+      chequea(t + 'al abrir hay solo 4 mazos (Bebestibles, Comidas individuales, Postres, Para compartir) con su cantidad de cartas', mz.length === 4 && mz.map((m) => m.id).join() === raiz.join() && mz.every((m) => new RegExp(String(m.id === 'bebestibles' ? nPalo('bebestibles') : nPalo(m.id)) + ' cartas').test(m.txt)), mz);
       // Bebestibles se despliega en sus 3 partes y se puede volver
       await page.click('.br-mazo[data-grupo="bebestibles"]'); await page.waitForSelector('.br-mazo[data-id="cocteleria"]', { timeout: 3000 }); await page.waitForTimeout(700);
       const sub = await page.evaluate(() => ({ ids: [...document.querySelectorAll('.br-mazo')].map((b) => b.dataset.id), tit: document.querySelector('#mazos-titulo').textContent, volver: !document.querySelector('#mazos-volver').hidden }));

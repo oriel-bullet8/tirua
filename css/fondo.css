@@ -86,3 +86,6 @@ html.br-inm-abierto .fondo-vivo { display: none; }
 /* El sello de vidrio es un susurro: menos presencia aún en pantallas angostas, donde sus letras cruzarían los títulos */
 .fondo-vivo__vidrio, .fondo-vivo__filo { opacity: 0.85; }
 @media (max-width: 700px) { .fondo-vivo__vidrio, .fondo-vivo__filo { opacity: 0.65; } }
+
+/* Página de reservar: mismo fondo que el inicio */
+.rsv { background: transparent; }
