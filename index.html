@@ -32,11 +32,14 @@
   <script>(function(){try{var q=new URLSearchParams(location.search).get('tema');if(q==='oscuro'||q==='claro'){localStorage.setItem('tirua-tema',q);}var t=localStorage.getItem('tirua-tema');if(t==='oscuro'){document.documentElement.setAttribute('data-tema','oscuro');var m=document.querySelector('meta[name=theme-color]');if(m){m.content='#000000';}}}catch(e){}})();</script>
   <link rel="stylesheet" href="css/styles.css?v=20261031e">
   <link rel="stylesheet" href="css/baraja.css?v=20261107a">
-  <link rel="stylesheet" href="css/baraja-atelier.css?v=20261107d">
+  <link rel="stylesheet" href="css/baraja-atelier.css?v=20261107e">
   <link rel="stylesheet" href="css/reservas-campo.css?v=20261031f">
+  <link rel="stylesheet" href="css/fondo.css?v=20261107d">
   <script>(function(){try{var q=new URLSearchParams(location.search).get('madera');try{localStorage.removeItem('tirua-madera');}catch(e){}if(q==='1'){document.documentElement.classList.add('vista-madera');var l=document.createElement('link');l.rel='stylesheet';l.href='css/preview-madera.css?v=20261107e';document.head.appendChild(l);}}catch(e){}})();</script>
 </head>
 <body>
+  <!-- Fondo continuo de toda la página (css/fondo.css): sello de vidrio sobre luces lentas. Solo decorativo. -->
+  <div class="fondo-vivo" aria-hidden="true"><i class="fondo-vivo__luz fondo-vivo__luz--verde"></i><i class="fondo-vivo__luz fondo-vivo__luz--ambar"></i><i class="fondo-vivo__luz fondo-vivo__luz--rojo"></i><span class="fondo-vivo__vidrio"></span><span class="fondo-vivo__filo"></span></div>
   <a class="saltar" href="#contenido">Saltar al contenido</a>
 
   <noscript><p class="sin-js">Este sitio necesita JavaScript para mostrar el menú, las categorías y el logo.</p></noscript>
@@ -151,8 +154,12 @@
     <!-- Paso «Escoger mazo»: aparece al pulsar «Abrir la carta»; elegir un mazo carga solo sus cartas (js/baraja.js) -->
     <div class="br-mazos" id="mazos" hidden role="group" aria-labelledby="mazos-titulo">
       <div class="br-mazos__in">
+        <button type="button" class="br-mazos__volver" id="mazos-volver" hidden>
+          <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Todos los mazos
+        </button>
         <h3 class="br-mazos__titulo" id="mazos-titulo">Escoge un mazo</h3>
-        <p class="br-mazos__sub">Cada mazo reúne una parte de la carta.</p>
+        <p class="br-mazos__sub" id="mazos-sub">Cada mazo reúne una parte de la carta.</p>
         <ul class="br-mazos__lista" id="mazos-lista"></ul>
       </div>
     </div>
@@ -381,7 +388,7 @@
   <script src="js/main.js?v=20261024b" defer></script>
   <script src="js/menu.js?v=20261024b" defer></script>
   <script src="js/baraja-arte.js?v=20261107a"></script>
-  <script src="js/baraja.js?v=20261107h" defer></script>
+  <script src="js/baraja.js?v=20261107i" defer></script>
   <script src="js/carta.js?v=20261024b" defer></script>
   <script src="js/hero.js?v=20261024b" defer></script>
   <script src="js/historias.js?v=20261027c" defer></script>

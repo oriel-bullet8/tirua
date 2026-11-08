@@ -31,3 +31,13 @@ Titulares en Young Serif, sentence case, sin interletraje; cuerpo Alegreya Sans 
 - Nada de hosts externos salvo el mapa de Google.
 - Todo motivo nuevo respeta `prefers-reduced-motion` (las animaciones `br-*` se anulan).
 - El logo se usa invertido a tinta sobre claro (decisión de Pablo, 2026-10-24: se queda así, no hace falta pedir versión en negro).
+
+
+## Fondo continuo (2026-11-07, `css/fondo.css`)
+Pedido de Pablo: un solo fondo llamativo para toda la página, distinto solo en la Carta; se acabó el alternar blanco/beige entre hero, mapa y delivery.
+- **Idea:** el sello de Tirúa hecho vidrio flota fijo (`.fondo-vivo`, `position: fixed`) sobre un papel cálido `--suelo #f3eee5`, con tres luces lentas por debajo (verde bosque, ámbar de estufa y un toque de rojo) que se ven a través del vidrio. Todo el contenido scrollea por encima.
+- **Una sola superficie:** hero, categorías, reservas, mapa, delivery y pie son transparentes. La Carta (`.carta`) conserva su fondo negro propio y es lo único distinto.
+- **Vidrio:** el sello usa el PNG del logo como máscara (`mask`), relleno blanco translúcido en degradé y un filo de luz arriba a la izquierda (máscara desplazada con `mask-composite: subtract`). Sin `backdrop-filter` en el sello: partía a la mitad los cuadros del scroll sin GPU y no se notaba. Cabecera, aviso y paneles (`.sede`, `.delivery__caja`) sí llevan vidrio esmerilado liviano.
+- **Movimiento:** solo `transform` de las luces (40–52 s, alternate); con `prefers-reduced-motion` quedan quietas. Con la Carta a pantalla completa (`html.br-inm-abierto`) la capa se apaga.
+- **Títulos de sección centrados** (`.seccion__cab`, título de la Carta).
+- Nota de criterio: el skill `design-taste-frontend` desaconseja vidrio y títulos centrados; aquí se aplicó la petición expresa de Pablo y se conservaron sus principios (un suelo, una tinta, un acento, sin líneas finas entre secciones, sin sombras en reposo).

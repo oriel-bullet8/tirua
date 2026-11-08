@@ -20,7 +20,11 @@ const chequea = (n, c, d) => { if (c) { ok++; console.log('OK    ' + n); } else 
 const contador = (page) => page.evaluate(() => (document.querySelector('.br-contador__txt') || {}).textContent);
 const montadas = (page) => page.evaluate(() => document.querySelectorAll('.br-card').length);
 const ruidoConocido = (u) => /hero(-vertical)?\.mp4/.test(u);   // el video del hero aún no existe: advertencia conocida
-const elegir = async (page, palo) => { await page.click(`.br-mazo[data-id="${palo}"]`); await page.waitForTimeout(1500); };
+const SUB = ['cocteleria', 'destilados', 'cervezas'];   // partes de Bebestibles: se eligen en un segundo nivel
+const elegir = async (page, palo) => {
+  if (SUB.includes(palo)) { await page.click('.br-mazo[data-grupo="bebestibles"]'); await page.waitForSelector(`.br-mazo[data-id="${palo}"]`, { timeout: 3000 }); await page.waitForTimeout(700); }
+  await page.click(`.br-mazo[data-id="${palo}"]`); await page.waitForTimeout(1500);
+};
 
 (async () => {
   const browser = await lanzar();
@@ -48,9 +52,16 @@ const elegir = async (page, palo) => { await page.click(`.br-mazo[data-id="${pal
       const t1 = Date.now();
       await page.click('#abrir'); await page.waitForSelector('#mazos:not([hidden])', { timeout: 3000 }); await page.waitForTimeout(900);
       chequea(t + '«Abrir la carta» muestra «Escoger mazo» en menos de 1,5 s, sin abrir ninguna baraja', Date.now() - t1 < 1500 && (await page.evaluate(() => !document.querySelector('#carta').classList.contains('br-is-open'))), Date.now() - t1);
-      const mz = await page.evaluate(() => [...document.querySelectorAll('.br-mazo')].map((b) => ({ id: b.dataset.id, txt: b.textContent })));
-      chequea(t + 'hay 6 mazos (Bebestibles partido en 3; el resto, uno por categoría) con su cantidad de cartas', mz.length === 6 && mz.map((m) => m.id).join() === Object.keys(MAZOS).join() && mz.every((m) => new RegExp(String(nPalo(m.id)) + ' cartas').test(m.txt)), mz);
-      chequea(t + 'el foco queda en el primer mazo', await page.evaluate(() => document.activeElement && document.activeElement.classList.contains('br-mazo')));
+      const mz = await page.evaluate(() => [...document.querySelectorAll('.br-mazo')].map((b) => ({ id: b.dataset.grupo || b.dataset.id, txt: b.textContent })));
+      const raiz = ['bebestibles', 'individuales', 'postres', 'compartir'];
+      chequea(t + 'al abrir hay solo 4 mazos (Bebestibles, Comidas individuales, Postres, Para compartir) con su cantidad de cartas', mz.length === 4 && mz.map((m) => m.id).join() === raiz.join() && mz.every((m) => new RegExp(String(m.id === 'bebestibles' ? 196 : nPalo(m.id)) + ' cartas').test(m.txt)), mz);
+      // Bebestibles se despliega en sus 3 partes y se puede volver
+      await page.click('.br-mazo[data-grupo="bebestibles"]'); await page.waitForSelector('.br-mazo[data-id="cocteleria"]', { timeout: 3000 }); await page.waitForTimeout(700);
+      const sub = await page.evaluate(() => ({ ids: [...document.querySelectorAll('.br-mazo')].map((b) => b.dataset.id), tit: document.querySelector('#mazos-titulo').textContent, volver: !document.querySelector('#mazos-volver').hidden }));
+      chequea(t + 'al pulsar Bebestibles se despliegan sus 3 mazos con el título «Bebestibles» y un botón para volver', sub.ids.join() === SUB.join() && sub.tit === 'Bebestibles' && sub.volver, sub);
+      await page.keyboard.press('Escape'); await page.waitForTimeout(600);
+      chequea(t + 'Esc dentro de Bebestibles vuelve a los 4 mazos sin cerrar el selector', await page.evaluate(() => !document.querySelector('#mazos').hidden && document.querySelectorAll('.br-mazo').length === 4 && document.querySelector('#mazos-volver').hidden));
+      chequea(t + 'el foco queda en un mazo', await page.evaluate(() => document.activeElement && document.activeElement.classList.contains('br-mazo')));
       chequea(t + 'mientras se escoge no hay cartas abiertas ni controles de la baraja a la vista', await page.evaluate(() => getComputedStyle(document.querySelector('#bloque')).visibility === 'hidden'));
       chequea(t + 'Esc cierra el paso «Escoger mazo» y vuelve al portal', await (async () => { await page.keyboard.press('Escape'); await page.waitForTimeout(700); return page.evaluate(() => !document.querySelector('#carta').classList.contains('br-inm') && document.querySelector('#mazos').hidden); })());
       await page.evaluate(() => document.getElementById('carta').scrollIntoView({ behavior: 'instant' }));
@@ -164,7 +175,7 @@ const elegir = async (page, palo) => { await page.click(`.br-mazo[data-id="${pal
       await page.evaluate(() => document.getElementById('carta').scrollIntoView({ behavior: 'instant' })); await page.waitForTimeout(700);
       await page.click('#abrir'); await page.waitForSelector('#mazos:not([hidden])'); await page.waitForTimeout(900);
       await page.evaluate(() => { window.__f = []; let u = performance.now(); (function f(t) { window.__f.push(t - u); u = t; if (window.__f.length < 240) requestAnimationFrame(f); })(u); });
-      await page.click('.br-mazo[data-id="destilados"]'); await page.waitForTimeout(2600);
+      await page.click('.br-mazo[data-grupo="bebestibles"]'); await page.waitForTimeout(900); await page.evaluate(() => { window.__f = []; let u = performance.now(); (function f(t) { window.__f.push(t - u); u = t; if (window.__f.length < 240) requestAnimationFrame(f); })(u); }); await page.click('.br-mazo[data-id="destilados"]'); await page.waitForTimeout(2600);
       const fr = await page.evaluate(() => { const f = window.__f.slice(1).sort((a, b) => a - b); return { n: f.length, p95: Math.round(f[Math.floor(f.length * 0.95)]), max: Math.round(f[f.length - 1]), lt: window.__lt }; });
       chequea('[rendimiento] apertura del mazo más grande (84 cartas): fotogramas p95 ≤ 34 ms y máximo ≤ 100 ms', fr.p95 <= 34 && fr.max <= 100, fr);
       chequea('[rendimiento] sin tareas largas (≥ 50 ms) durante la apertura', fr.lt.length === 0, fr.lt);

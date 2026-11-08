@@ -161,11 +161,11 @@
   padding: max(4.5rem, calc(env(safe-area-inset-top) + 3.5rem)) 1rem 2rem;
 }
 .br-mazos[hidden] { display: none; }
-.br-mazos__in { width: min(43rem, 100%); text-align: center; }
+.br-mazos__in { width: min(64rem, 100%); text-align: center; position: relative; }
 .br-mazos__titulo { margin: 0; font: 400 clamp(1.75rem, 4.2vw, 2.75rem)/1.1 var(--display); color: #ead8b8; }
 .br-mazos__sub { margin: .45rem 0 clamp(1.25rem, 3vw, 2rem); font-size: 1.0625rem; color: #b6a990; }
 .br-mazos__lista { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin: 0; padding: 0; list-style: none; }
-@media (min-width: 760px) { .br-mazos__lista { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; } .br-mazo { aspect-ratio: 5 / 6; } }
+@media (min-width: 760px) { .br-mazos__lista { grid-template-columns: repeat(var(--br-cols, 4), minmax(0, 1fr)); gap: 22px; } .br-mazo { aspect-ratio: 5 / 7; } }
 .br-mazo {
   position: relative; isolation: isolate; width: 100%; aspect-ratio: 5 / 7; padding: 1rem .75rem;
   display: flex; flex-direction: column; align-items: center; justify-content: center; gap: .5rem; text-align: center;
@@ -204,3 +204,13 @@
   .br-mazo:hover { transform: none; }
 }
 .br-carta.br-sin-movimiento.br-inm { animation: none; }
+
+/* Dos niveles: 4 mazos y, al elegir Bebestibles, sus 3 partes (la lista pasa a 3 columnas) */
+.br-mazos__lista:has(.br-mazos__item:nth-child(3):last-child) { --br-cols: 3; max-width: 46rem; margin-inline: auto; }
+.br-mazos__volver { display: inline-flex; align-items: center; gap: .4rem; margin: 0 0 .9rem; padding: .5rem .9rem .5rem .6rem; font: 600 .9375rem/1 var(--sans); color: #ead8b8; background: transparent; border: 1px solid #c3a36b66; border-radius: 999px; cursor: pointer; }
+.br-mazos__volver[hidden] { display: none; }
+.br-mazos__volver:hover { border-color: #ead8b8; }
+.br-mazos__volver:focus-visible { outline: 2px solid #ead8b8; outline-offset: 3px; }
+.br-mazo--grupo .br-mazo__n::after { content: " ›"; }
+.br-mazos--cambia .br-mazo:not(.br-mazo--elegido) { opacity: 0; transform: scale(.94); }
+.br-mazos--cambia .br-mazo--elegido { opacity: 0; transition: opacity .2s ease-out .08s, transform .35s cubic-bezier(.16, 1, .3, 1); }

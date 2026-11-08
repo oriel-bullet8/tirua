@@ -1,0 +1,88 @@
+/* ==========================================================================
+   Fondo continuo de la página (2026-11-07)
+   Idea: el sello de Tirúa, hecho vidrio, flota fijo sobre un papel cálido con dos luces lentas
+   (verde bosque y ámbar de estufa) que pasan por debajo y se ven a través del vidrio.
+   Es UN solo suelo para toda la página: hero, categorías, reservas, mapa y delivery ya no
+   alternan blanco/beige. La Carta es la única que cambia (queda negra, con su propio fondo).
+   Todo vive en .fondo-vivo (position: fixed) y solo anima transform; sin movimiento si se pide reducido.
+   ========================================================================== */
+:root {
+  --suelo: #f3eee5;                 /* papel cálido, un paso bajo el blanco */
+  --luz-verde: 43 75 54;            /* = --acento */
+  --luz-ambar: 201 133 47;
+  --luz-rojo: 179 32 42;
+}
+html { background: var(--suelo); }
+body { background: transparent; }
+
+/* Todas las secciones dejan ver el fondo; la Carta conserva el suyo */
+.hero, .seccion:not(.carta), .pie { background: transparent; }
+.seccion { border-top: 0; }
+.pie { border-top: 0; }
+.reservas__anillos { display: none; }   /* sus anillos competían con el sello de vidrio */
+
+/* ---------- La capa fija ---------- */
+.fondo-vivo { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; contain: strict; }
+.fondo-vivo__luz { position: absolute; border-radius: 50%; will-change: transform; }
+.fondo-vivo__luz--verde {
+  width: 78vmax; height: 78vmax; left: -26vmax; top: -22vmax;
+  background: radial-gradient(closest-side, rgb(var(--luz-verde) / 0.42), rgb(var(--luz-verde) / 0.12) 55%, transparent 100%);
+  animation: fv-deriva-a 46s ease-in-out infinite alternate;
+}
+.fondo-vivo__luz--ambar {
+  width: 70vmax; height: 70vmax; right: -24vmax; bottom: -24vmax;
+  background: radial-gradient(closest-side, rgb(var(--luz-ambar) / 0.5), rgb(var(--luz-ambar) / 0.14) 55%, transparent 100%);
+  animation: fv-deriva-b 52s ease-in-out infinite alternate;
+}
+.fondo-vivo__luz--rojo {
+  width: 40vmax; height: 40vmax; right: 8vmax; top: -10vmax;
+  background: radial-gradient(closest-side, rgb(var(--luz-rojo) / 0.14), transparent 100%);
+  animation: fv-deriva-c 40s ease-in-out infinite alternate;
+}
+@keyframes fv-deriva-a { to { transform: translate3d(22vmax, 16vmax, 0); } }
+@keyframes fv-deriva-b { to { transform: translate3d(-26vmax, -14vmax, 0); } }
+@keyframes fv-deriva-c { to { transform: translate3d(-18vmax, 30vmax, 0); } }
+
+/* El sello, en vidrio: relleno translúcido claro que deja pasar las luces + un filo de luz arriba a la izquierda */
+.fondo-vivo__vidrio, .fondo-vivo__filo {
+  position: absolute; left: 50%; top: 52%; width: max(118vmin, 620px); aspect-ratio: 792 / 800; transform: translate(-50%, -50%);
+  -webkit-mask: url("../assets/brand/logo-blanco-recorte.png") center / contain no-repeat;
+          mask: url("../assets/brand/logo-blanco-recorte.png") center / contain no-repeat;
+}
+.fondo-vivo__vidrio {
+  background: linear-gradient(150deg, rgb(255 255 255 / 0.6) 0%, rgb(255 255 255 / 0.12) 48%, rgb(255 255 255 / 0.34) 100%);
+  /* Sin backdrop-filter a propósito: lo de atrás ya son luces suaves (el desenfoque no se notaba) y en pantallas sin GPU partía los cuadros del scroll a la mitad */
+}
+.fondo-vivo__filo {
+  background: rgb(255 255 255 / 0.7);
+  -webkit-mask: url("../assets/brand/logo-blanco-recorte.png") 50% 50% / contain no-repeat, url("../assets/brand/logo-blanco-recorte.png") calc(50% + 0.35vmin) calc(50% + 0.45vmin) / contain no-repeat;
+  -webkit-mask-composite: source-out;
+          mask: url("../assets/brand/logo-blanco-recorte.png") 50% 50% / contain no-repeat, url("../assets/brand/logo-blanco-recorte.png") calc(50% + 0.35vmin) calc(50% + 0.45vmin) / contain no-repeat;
+          mask-composite: subtract;
+}
+
+@media (prefers-reduced-motion: reduce) { .fondo-vivo__luz { animation: none; } }
+
+/* ---------- Títulos de sección: centrados ---------- */
+.seccion__cab, .br-encabezado > div { text-align: center; justify-items: center; justify-content: center; }
+.seccion__cab .titular, .seccion__cab .titular--medio, .br-encabezado .titular { margin-inline: auto; max-width: none; text-align: center; }
+.seccion__cab .seccion__bajada, .br-encabezado .seccion__bajada { margin-inline: auto; text-align: center; }
+.delivery__titulo { text-align: left; }
+
+/* El hero también deja ver el fondo (cuando entre el video, .hay-video lo cubre como antes) */
+.portada__luz { background: transparent; }
+
+/* Cabecera y aviso: vidrio esmerilado en vez de blanco liso (sigue legible: el texto es tinta casi negra) */
+.cabecera.es-solida .cabecera__fila, .cabecera.menu-abierto .cabecera__fila { background-color: rgb(255 255 255 / 0.62); -webkit-backdrop-filter: blur(18px) saturate(1.4); backdrop-filter: blur(18px) saturate(1.4); }
+.aviso { background-color: rgb(255 255 255 / 0.5); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); }
+
+/* Paneles sobre el fondo: papel casi opaco con un velo de vidrio, para que el texto siga firme */
+.sede, .delivery__caja { background: rgb(255 255 255 / 0.55); -webkit-backdrop-filter: blur(14px) saturate(1.2); backdrop-filter: blur(14px) saturate(1.2); }
+.pedido { background: rgb(255 255 255 / 0.6); }
+
+/* Con la Carta a pantalla completa el fondo no se ve: se apaga para no gastar GPU debajo de las animaciones de las cartas */
+html.br-inm-abierto .fondo-vivo { display: none; }
+
+/* El sello de vidrio es un susurro: menos presencia aún en pantallas angostas, donde sus letras cruzarían los títulos */
+.fondo-vivo__vidrio, .fondo-vivo__filo { opacity: 0.85; }
+@media (max-width: 700px) { .fondo-vivo__vidrio, .fondo-vivo__filo { opacity: 0.65; } }

@@ -102,3 +102,10 @@ REPORTING: estado final, evidencia de la DoD, hecho y pendiente.
 - Joker real: `datos.js → joker` (`activo`, `probabilidad` 0,12 por reparto, `maxPorVisita` 1, `texto`). Se esconde boca abajo, nunca entre las primeras cartas, se da vuelta al detenerse 0,5 s, no cuenta en «N de M». `?joker=1` fuerza que salga (prueba). El botón de demostración sigue.
 - Pendiente del Bar: definir el beneficio real y cómo se canjea (hoy `texto` dice que es demostración). Sin botón de canje visible.
 - Evidencia fresca: `node pruebas/carta-baraja.cjs` 87/87, `test:carta` 67/67, `test:recursos` 261/261. Capturas G/H/I en `capturas/revision-carta-2026-11-07/`.
+
+## Ciclo 5 · 2026-11-07 — fondo continuo, títulos centrados, 4 mazos
+- Punto de restauración ANTES del cambio: tag git `punto-restauracion-2026-11-07-carta-joker` (commit e883b74) + `respaldos/tirua-carta-joker-2026-11-07-antes-fondo.zip` (+ .sha256).
+- Pedido de Pablo: (1) 4 mazos al inicio y Bebestibles se despliega en 3; (2) títulos de sección centrados; (3) un solo fondo llamativo (vidrio / logo translúcido) en toda la página, distinto solo en la Carta.
+- Hecho: selector de 2 niveles (`data-grupo`, botón «Todos los mazos», Esc/X vuelven al nivel 1); `css/fondo.css` + `.fondo-vivo` en index.html; títulos centrados; ver DESIGN.md → «Fondo continuo».
+- Evidencia fresca: `carta-baraja` 91/91, `test:carta` 67/67, `test:recursos` 262/262, `test:historias` 59/59; scroll p95 17 ms (escritorio y móvil, Chromium sin GPU); con `backdrop-filter` en el sello era 33 ms → se quitó.
+- Pendiente: reservar.html y carta.html no llevan el fondo nuevo (decisión de Pablo); pruebas viejas (`movil-estrecho`, inmersivo, vuelta2, baraja:fotos) siguen sin adaptar.

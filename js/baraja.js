@@ -161,6 +161,7 @@
     p: 0,
     anim: null,
     joker: false,            // vista previa forzada (botón de demostración)
+    grupo: null,             // categoría desplegada en el paso «Escoger mazo» (null = los 4 mazos)
     secs: null,              // secciones del mazo elegido (null = toda la categoría)
     jokerReparto: false,     // este reparto lleva el joker escondido
     jokerFrac: 0, jokerVisto: false,
@@ -896,23 +897,62 @@
       });
     });
   }
-  function buildMazos() {
-    armarMazos();
-    var html = '';
-    listaMazos.forEach(function (m, i) {
-      var c = catById[m.categoria], n = m.n;
-      html += '<li class="br-mazos__item" style="--i:' + i + '"><button type="button" class="br-mazo" data-id="' + m.id + '" style="--br-m:' + (c.acentoVivo || c.acento) + '" aria-label="' + esc(m.nombre) + ', ' + n + (n === 1 ? ' carta' : ' cartas') + '">' +
-        '<span class="br-mazo__pila" aria-hidden="true"><i></i><i></i><i></i></span>' +
-        paloSvg(c.palo, 'br-mazo__palo') +
-        '<span class="br-mazo__nombre">' + esc(m.nombre) + '</span>' +
-        (m.descripcion ? '<span class="br-mazo__desc">' + esc(m.descripcion) + '</span>' : '') +
-        '<span class="br-mazo__n">' + n + (n === 1 ? ' carta' : ' cartas') + '</span></button></li>';
-    });
-    elMazosLista.innerHTML = html;
+  /* Primer nivel: un mazo por categoría (4). Si la categoría se parte en varios (Bebestibles), su tarjeta se despliega en un segundo nivel. */
+  var elMazosTit = $('#mazos-titulo'), elMazosSub = $('#mazos-sub'), btnMazosVolver = $('#mazos-volver');
+  var TIT_RAIZ = elMazosTit.textContent, SUB_RAIZ = elMazosSub.textContent;
+  function tarjetaMazo(o, i) {
+    var c = catById[o.categoria], n = o.n, atr = o.grupo ? 'data-grupo="' + o.id + '"' : 'data-id="' + o.id + '"';
+    var cuenta = n + (n === 1 ? ' carta' : ' cartas') + (o.grupo ? ' · ' + o.grupo + ' mazos' : '');
+    return '<li class="br-mazos__item" style="--i:' + i + '"><button type="button" class="br-mazo' + (o.grupo ? ' br-mazo--grupo' : '') + '" ' + atr + ' style="--br-m:' + (c.acentoVivo || c.acento) + '" aria-label="' + esc(o.nombre) + ', ' + cuenta + (o.grupo ? ', se abre para elegir entre ' + o.grupo + ' mazos' : '') + '"' + (o.grupo ? ' aria-haspopup="true"' : '') + '>' +
+      '<span class="br-mazo__pila" aria-hidden="true"><i></i><i></i><i></i></span>' +
+      paloSvg(c.palo, 'br-mazo__palo') +
+      '<span class="br-mazo__nombre">' + esc(o.nombre) + '</span>' +
+      (o.descripcion ? '<span class="br-mazo__desc">' + esc(o.descripcion) + '</span>' : '') +
+      '<span class="br-mazo__n">' + cuenta + '</span></button></li>';
   }
+  function raiz() {
+    var out = [];
+    activas.forEach(function (c) {
+      var ms = listaMazos.filter(function (m) { return m.categoria === c.id; });
+      if (!ms.length) { return; }
+      if (ms.length === 1) { out.push(ms[0]); return; }
+      out.push({ id: c.id, categoria: c.id, nombre: c.nombre, descripcion: descMazo[c.id] || '', n: ms.reduce(function (a, m) { return a + m.n; }, 0), grupo: ms.length });
+    });
+    return out;
+  }
+  function pintarMazos(items, titulo, sub, volver) {
+    elMazosLista.innerHTML = items.map(tarjetaMazo).join('');
+    elMazosTit.textContent = titulo; elMazosSub.textContent = sub;
+    btnMazosVolver.hidden = !volver;
+    if (reduced) { return; }
+    elMazos.classList.remove('br-mazos--entra'); void elMazos.offsetWidth; elMazos.classList.add('br-mazos--entra');   // reinicia la cascada de entrada
+  }
+  function buildMazos() { armarMazos(); pintarMazos(raiz(), TIT_RAIZ, SUB_RAIZ, false); }
+  function entrarGrupo(id, btn) {
+    var c = catById[id], ms = listaMazos.filter(function (m) { return m.categoria === id; });
+    var ir = function () {
+      S.grupo = id;
+      elMazos.classList.remove('br-mazos--cambia');
+      pintarMazos(ms, c.nombre, 'Escoge qué parte quieres ver.', true);
+      var primero = elMazosLista.querySelector('.br-mazo'); if (primero) { primero.focus({ preventScroll: true }); }
+      elAnuncio.textContent = c.nombre + ': escoge uno de ' + ms.length + ' mazos.';
+    };
+    if (reduced) { ir(); return; }
+    btn.classList.add('br-mazo--elegido');
+    elMazos.classList.add('br-mazos--cambia');
+    setTimeout(ir, 220);
+  }
+  function volverARaiz() {
+    var id = S.grupo; S.grupo = null;
+    pintarMazos(raiz(), TIT_RAIZ, SUB_RAIZ, false);
+    var b = id && elMazosLista.querySelector('[data-grupo="' + id + '"]'); (b || elMazosLista.querySelector('.br-mazo')).focus({ preventScroll: true });
+    elAnuncio.textContent = 'Escoge un mazo de la carta.';
+  }
+  btnMazosVolver.addEventListener('click', volverARaiz);
   function abrirSelector() {
     if (S.phase !== 'closed' || !elMazosLista.children.length) { openDeck({ focus: true }); return; }
     S.elegir = true; S.userClosed = false;
+    if (S.grupo) { S.grupo = null; pintarMazos(raiz(), TIT_RAIZ, SUB_RAIZ, false); }
     inmersivo(true);
     elCarta.classList.add('br-eligiendo');
     elMazos.classList.remove('br-mazos--sale');
@@ -927,7 +967,7 @@
     S.elegir = false;
     elCarta.classList.remove('br-eligiendo');
     elMazos.hidden = true;
-    elMazos.classList.remove('br-mazos--entra', 'br-mazos--sale');
+    elMazos.classList.remove('br-mazos--entra', 'br-mazos--sale', 'br-mazos--cambia');
     Array.prototype.forEach.call(elMazosLista.querySelectorAll('.br-mazo--elegido'), function (b) { b.classList.remove('br-mazo--elegido'); });
   }
   function elegirMazo(id, btn) {
@@ -949,7 +989,8 @@
   }
   elMazosLista.addEventListener('click', function (e) {
     var b = e.target.closest('.br-mazo');
-    if (b && !elMazos.classList.contains('br-mazos--sale')) { elegirMazo(b.dataset.id, b); }
+    if (!b || elMazos.classList.contains('br-mazos--sale') || elMazos.classList.contains('br-mazos--cambia')) { return; }
+    if (b.dataset.grupo) { entrarGrupo(b.dataset.grupo, b); } else { elegirMazo(b.dataset.id, b); }
   });
   btnAbrir.addEventListener('click', abrirSelector);
   btnCambiar.addEventListener('click', function () { bandeja(false); closeDeck({ user: true, then: abrirSelector }); });
@@ -1184,6 +1225,7 @@
     }
   }
   btnInmCerrar.addEventListener('click', function () {
+    if (S.elegir && S.grupo) { volverARaiz(); return; }   // Esc / X dentro de Bebestibles: vuelve a los 4 mazos
     if (S.elegir) { cerrarSelector(); inmersivo(false); btnAbrir.focus({ preventScroll: true }); return; }
     if (S.phase === 'open') { closeDeck({ user: true, focusAbrir: true }); }
     else if (S.phase === 'opening') { skipAnim(); closeDeck({ user: true, focusAbrir: true }); }
