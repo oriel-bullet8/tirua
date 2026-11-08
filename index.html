@@ -12,19 +12,21 @@
   <meta property="og:site_name" content="Tirúa Bar Restorán">
   <meta property="og:title" content="Tirúa · Bar Restorán en Pirque">
   <meta property="og:description" content="Conoce Tirúa Bar Restorán en Pirque: carta de bebestibles, cumpleaños y solicitudes de reserva.">
-  <meta property="og:url" content="https://tirua-website.vercel.app/">
-  <meta property="og:image" content="https://tirua-website.vercel.app/assets/brand/logo-original.png?compartir=20261102">
-  <meta property="og:image:secure_url" content="https://tirua-website.vercel.app/assets/brand/logo-original.png?compartir=20261102">
-  <meta property="og:image:type" content="image/png">
-  <meta property="og:image:width" content="1080">
-  <meta property="og:image:height" content="1080">
-  <meta property="og:image:alt" content="Logo original de Tirúa: letras blancas y marco circular sobre fondo negro">
-  <meta name="twitter:card" content="summary">
+  <meta property="og:url" content="https://tirua-website.vercel.app/?v=bosque-20261108">
+  <meta property="og:image" content="https://tirua-website.vercel.app/assets/brand/tirua-bosque-whatsapp-20261108.jpg">
+  <meta property="og:image:secure_url" content="https://tirua-website.vercel.app/assets/brand/tirua-bosque-whatsapp-20261108.jpg">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Logo de Tirúa centrado sobre el bosque verde y la luz cálida de la portada">
+  <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Tirúa · Bar Restorán en Pirque">
   <meta name="twitter:description" content="Conoce Tirúa Bar Restorán en Pirque: carta de bebestibles, cumpleaños y solicitudes de reserva.">
-  <meta name="twitter:image" content="https://tirua-website.vercel.app/assets/brand/logo-original.png?compartir=20261102">
-  <meta name="theme-color" content="#ffffff">
-  <meta name="color-scheme" content="light dark">
+  <meta name="twitter:image" content="https://tirua-website.vercel.app/assets/brand/tirua-bosque-whatsapp-20261108.jpg">
+  <meta name="theme-color" content="#f4edcf">
+  <meta name="color-scheme" content="light">
+  <link rel="preload" as="image" href="assets/img/bosque-tirua-20261108.webp" media="(min-width: 701px)">
+  <link rel="preload" as="image" href="assets/img/bosque-tirua-movil-20261108.webp" media="(max-width: 700px)">
   <link rel="icon" type="image/png" href="assets/brand/favicon.png">
   <link rel="preload" href="assets/fonts/YoungSerif-Regular.ttf" as="font" type="font/ttf" crossorigin>
   <link rel="preload" href="assets/fonts/AlegreyaSans-Regular.ttf" as="font" type="font/ttf" crossorigin>
@@ -34,11 +36,16 @@
   <link rel="stylesheet" href="css/baraja.css?v=20261107b">
   <link rel="stylesheet" href="css/baraja-atelier.css?v=20261107e">
   <link rel="stylesheet" href="css/reservas-campo.css?v=20261031f">
-  <link rel="stylesheet" href="css/fondo.css?v=20261107e">
+  <link rel="stylesheet" href="css/fondo.css?v=20261108b">
 </head>
 <body>
-  <!-- Fondo continuo de toda la página (css/fondo.css): sello de vidrio sobre luces lentas. Solo decorativo. -->
-  <div class="fondo-vivo" aria-hidden="true"><i class="fondo-vivo__luz fondo-vivo__luz--verde"></i><i class="fondo-vivo__luz fondo-vivo__luz--ambar"></i><i class="fondo-vivo__luz fondo-vivo__luz--rojo"></i><span class="fondo-vivo__vidrio"></span><span class="fondo-vivo__filo"></span></div>
+  <!-- Fondo continuo de toda la página (css/fondo.css): bosque con profundidad sutil. Solo decorativo. -->
+  <div class="fondo-vivo" aria-hidden="true">
+    <div class="fondo-vivo__profundidad"><picture>
+      <source media="(max-width: 700px)" srcset="assets/img/bosque-tirua-movil-20261108.webp">
+      <img class="fondo-vivo__imagen" src="assets/img/bosque-tirua-20261108.webp" alt="" width="1536" height="1024" fetchpriority="high" decoding="async">
+    </picture></div>
+  </div>
   <a class="saltar" href="#contenido">Saltar al contenido</a>
 
   <noscript><p class="sin-js">Este sitio necesita JavaScript para mostrar el menú, las categorías y el logo.</p></noscript>
@@ -62,40 +69,13 @@
   <main id="contenido" tabindex="-1">
     <!-- ============ HERO ============ -->
     <section class="hero" id="inicio" tabindex="-1" aria-label="Inicio" data-hero>
-      <div class="hero__fondo" aria-hidden="true">
-        <!-- Portada estática (se ve siempre que no haya video reproduciéndose) -->
-        <div class="portada" data-portada>
-          <div class="portada__luz"></div>
-          <div class="portada__grano"></div>
-        </div>
-
-        <!--
-          VIDEO DE FONDO. Pon el archivo en assets/video/hero.mp4 (y, si quieres, hero.webm y
-          escribe su ruta en data-webm). data-video: "auto" comprueba UNA vez con HEAD si existe;
-          "si" lo carga sin comprobar; "no" no lo intenta (portada fija).
-        -->
-        <video class="hero__video" data-video="auto"
-               data-mp4="assets/video/hero.mp4" data-mp4-vertical="assets/video/hero-vertical.mp4" data-webm=""
-               muted loop playsinline preload="none" tabindex="-1"
-               aria-hidden="true" disablepictureinpicture disableremoteplayback></video>
-        <div class="hero__velo"></div>
-      </div>
-
       <div class="hero__contenido">
         <h1 class="hero__logo">
           <span class="logo">
             <span class="logo__img">
               <!-- Logo: ruta en js/contenido.js → marca.principal -->
-              <img data-logo="principal" data-alt fetchpriority="high" alt="Tirúa, bar restorán">
+              <img src="assets/brand/logo-blanco-recorte.png" width="792" height="800" data-logo="principal" data-alt fetchpriority="high" alt="Tirúa, bar restorán">
             </span>
-            <svg class="logo__anillos" viewBox="-400 -400 800 800" aria-hidden="true" focusable="false">
-              <g class="anillo anillo--1"><ellipse rx="112" ry="105" pathLength="1"/></g>
-              <g class="anillo anillo--2"><ellipse rx="126" ry="116" pathLength="1"/></g>
-              <g class="anillo anillo--3"><ellipse rx="146" ry="140" pathLength="1"/></g>
-              <g class="anillo anillo--4"><ellipse rx="184" ry="170" pathLength="1"/></g>
-              <g class="anillo anillo--5"><ellipse rx="236" ry="222" pathLength="1"/></g>
-              <g class="anillo anillo--6"><ellipse rx="300" ry="284" pathLength="1"/></g>
-            </svg>
           </span>
         </h1>
         <p class="hero__frase" data-texto="local.frase"></p>
@@ -103,22 +83,16 @@
           <a class="btn btn--principal" href="#carta"><span>Ver carta</span><svg class="btn__flecha" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 5v14M6 13l6 6 6-6"/></svg></a>
           <a class="btn btn--linea" href="reservar.html"><span>Reservar</span></a>
         </div>
+
+      </div>
+    </section>
+
+    <section class="novedades" aria-label="Novedades de Tirúa">
         <!-- Novedades del Instagram del bar (js/historias.js, datos/instagram.json). Sin publicaciones reales muestra ejemplos marcados (datos/instagram.demo.json). -->
         <nav class="historias historias--espera" data-historias aria-label="Novedades del bar en Instagram">
           <p class="historias__titulo">Novedades <span class="historias__cuenta"></span></p>
           <ul class="historias__lista"></ul>
         </nav>
-      </div>
-
-      <!-- Datos del local, inmediatamente después de las historias. -->
-      <div class="cinta cinta--inicio" data-cinta aria-hidden="true"><div class="cinta__pista" data-cinta-pista></div></div>
-
-      <a class="bajar" href="#categorias" aria-label="Bajar a las categorías"><span class="bajar__linea" aria-hidden="true"></span></a>
-
-      <button class="hero__pausa" type="button" data-pausa hidden aria-pressed="false" aria-label="Pausar video de fondo">
-        <svg class="ico-pausa" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 6v12M15 6v12"/></svg>
-        <svg class="ico-play" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 6.5v11l9-5.5z"/></svg>
-      </button>
     </section>
 
     <!-- ============ CATEGORÍAS ============ -->
@@ -381,7 +355,7 @@
   <script src="js/baraja-arte.js?v=20261107a"></script>
   <script src="js/baraja.js?v=20261107j" defer></script>
   <script src="js/carta.js?v=20261024b" defer></script>
-  <script src="js/hero.js?v=20261024b" defer></script>
+  <script src="js/hero.js?v=20261108b" defer></script>
   <script src="js/historias.js?v=20261107a" defer></script>
 </body>
 </html>

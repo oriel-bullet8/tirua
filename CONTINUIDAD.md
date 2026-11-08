@@ -1,4 +1,4 @@
-# Continuidad · Bar Tirúa (estado al 2026-11-07)
+# Continuidad · Bar Tirúa (estado al 2026-11-08)
 
 Leer esto antes de tocar el sitio. Arranque y pruebas: `README.md`. Diseño: `DESIGN.md` y `PRODUCT.md`. Loop de trabajo vigente: `loops/lanzamiento-y-carta.md`. Versiones: `docs/VERSIONES.md`.
 
@@ -9,8 +9,8 @@ Pablo sube el trabajo a la rama `carta-y-lanzamiento` del repo de GitHub; **Orie
 
 ## Dónde quedamos
 Sitio estático (HTML/CSS/JS, sin build). `index.html`:
-- **Hero** con el logo (ahí irá el video de marketing) y «Novedades @bartirua» (historias de Instagram; `@bartirua` enlaza al perfil).
-- **Categorías**, **Carta**, **Reservas**, **Mapa** y **Delivery**, con títulos centrados y **un solo fondo** para toda la página (sello de vidrio sobre papel cálido y luces lentas, `css/fondo.css`). La Carta es lo único con fondo distinto (negro). `reservar.html` lleva el mismo fondo; `carta.html` (la versión tradicional/PDF) no.
+- **Hero** a pantalla completa con el bosque elegido por Oriel (2026-11-08), logo centrado, entrada suave y botones. «Novedades @bartirua» queda inmediatamente debajo de la primera pantalla. Paisaje horizontal y vertical optimizados en `assets/img/bosque-tirua-*`; desplazamiento leve al hacer scroll en escritorio y fijo en celular o con movimiento reducido (`js/hero.js`).
+- **Categorías**, **Carta**, **Reservas**, **Mapa** y **Delivery**, con títulos centrados y **un solo fondo** para toda la página (bosque fotográfico con velos claros para legibilidad, `css/fondo.css`). La Carta es lo único con fondo distinto (negro). `reservar.html` lleva el mismo fondo; `carta.html` (la versión tradicional/PDF) no.
 - **Carta en baraja** (`js/baraja.js`): «Abrir la carta» → «Escoger mazo» → se reparte el mazo. Hay 4 mazos (Bebestibles, Comidas individuales, Postres, Para compartir); Bebestibles se despliega en 3 (Coctelería, Destilados y vinos, Cervezas y bebidas, definidos en `js/baraja-datos.js → mazos`). Las cartas se montan bajo demanda (rendimiento).
 - **Joker** escondido en el mazo: 12 % por reparto, máximo 1 por visita, boca abajo, se descubre al detenerse en él (`js/baraja-datos.js → joker`; `?joker=1` fuerza que salga; el botón de la lupa lo muestra a demanda).
 - **Carta tradicional:** `carta.html` + `assets/carta/carta-tirua.pdf` (se genera con `npm run carta:pdf`).
@@ -29,7 +29,7 @@ Sin foto/fondo de madera (descartado) · el sello «Demostración» se quitó ·
 ## Pendiente
 - **Dominio:** lo define el dueño del bar. Cuando exista: cambiar `canonical` y `og:url` (hoy `tirua-website.vercel.app`) en `index.html`, `reservar.html` y `carta.html`.
 - **Beneficio del Joker:** se define al final con el Bar (hoy el texto dice que es una demostración).
-- **Hero:** lo define el equipo de marketing del local (video; mecanismo listo en `assets/video/hero.mp4`, que aún no existe).
+- **Hero:** bosque aprobado por Oriel y publicado por su instrucción. La portada de WhatsApp usa ese mismo paisaje con el logo en el centro: `assets/brand/tirua-bosque-whatsapp-20261108.jpg` (1200 × 630). Composición editable en `diseno/compartir-bosque.html`. Ya no se consulta un video ausente.
 - **Fotos faltantes:** 85 productos (ver el Word). **Horario de cierre** del bar (las horas de reserva son de muestra hasta las 22:30). Zonas, costos y tiempos de delivery.
 - **Probar en teléfono real y Safari/iOS** (`python3 servir.py --red`): todo lo medido fue en Chromium emulado.
 
